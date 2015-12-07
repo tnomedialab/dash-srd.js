@@ -37,7 +37,7 @@ function getMPD (var url) {
     
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
-            var mpdFile = xhttp.responseXML;
+            mpdFile = xhttp.responseXML;
             
         }
         else {
