@@ -27,8 +27,10 @@
 
 // Function to perform MPD retrieval
 // Returns MPD (XML) file in case of succes
+// Test version, probably only works on local XML file
+// TODO fix global support
 
-function getMPD (var url) {
+exports.getMPD = function(var url) {
     "use strict";
     
     // Assign variables and perform XMLHttpRequest
@@ -38,20 +40,19 @@ function getMPD (var url) {
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
             mpdFile = xhttp.responseXML;
+                
+            // Return MPD file if retrieved (defaults to null if failed)
+            return mpdFile;
             
         }
         else {
             // Undefined error case
-            log("Connection error");
+            console.log("Connection error");
         }
         
     };
     
     xhttp.open("GET", url, true);
     xhttp.send();
-    
-    // Return MPD file if retrieved (defaults to null if failed)
-    return mpdFile;
-    
-}
-    
+       
+};

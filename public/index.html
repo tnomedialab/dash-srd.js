@@ -4,13 +4,90 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+
+<!--
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+            parseXML(xhttp);
+        }
+    };
+    xhttp.open("GET", "cd_catalog.xml", true);
+    xhttp.send();
+-->
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>parseXML demo</title>
+</head>
+
+<body>   
+  
+<p id="clickCount"></p>
+<p id="artistField"></p>
+<p id="cdTitleField"></p>
+<button onclick="getArtistAndTitle()">Get artist</button>
+
+<script>
+
+var i = 0;
+xmlFile = null;
+function getArtistAndTitle (url) {
+
+    var url = "cd_catalog.xml";
+    xmlFile = getMPD(url);
+    
+    
+    function getMPD (url) {
+        "use strict";
+
+        // Assign variables and perform XMLHttpRequest
+        var mpdFile = null;
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                mpdFile = xhttp.responseXML;
+                return mpdFile;//parseXML(mpdFile);
+
+            }
+            else {
+                // Undefined error case
+                console.log("Connection error");
+            }
+
+        };
+
+        xhttp.open("GET", url, true);
+        xhttp.send();
+
+        // Return MPD file if retrieved (defaults to null if failed)
+        parseXML(mpdFile);
+    }
+
+    function parseXML(xmlFile) {
+
+        var catalog = xmlFile.getElementsByTagName("CATALOG")[0];
+        numberOfCds = catalog.childElementCount;
+        
+        var cd = catalog.getElementsByTagName("CD")[i];
+
+        var artist = cd.getElementsByTagName('TITLE')[0];
+        document.getElementById("cdTitleField").innerHTML = artist.childNodes[0].nodeValue; 
+
+        var artist = cd.getElementsByTagName('ARTIST')[0];
+        document.getElementById("artistField").innerHTML = artist.childNodes[0].nodeValue; 
+      
+    document.getElementById("clickCount").innerHTML = i + 1;
+    
+    if (i + 1 < numberOfCds)
+        i++;
+    }
+}  
+
+
+</script>
+ 
+</body>
 </html>

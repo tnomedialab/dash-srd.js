@@ -1,8 +1,17 @@
 {
-    "name": "TiledStreaming4DASH",
-    "version": "1.0.0",
-    "keywords": ["util", "functional", "server", "client", "browser"],
-    "author": "jorritvandenberg",
-    "contributors": [],
-    "dependencies": {}
+  "name": "TiledStreaming4DASH",
+  "version": "1.0.0",
+  "keywords": [
+    "util",
+    "functional",
+    "server",
+    "client",
+    "browser"
+  ],
+  "author": "jorritvandenberg",
+  "contributors": [],
+  "dependencies": {
+    "xml-stream": "^0.4.5",
+    "xml2js": "^0.4.15"
+  }
 }
