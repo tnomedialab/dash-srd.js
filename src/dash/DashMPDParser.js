@@ -25,47 +25,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Basic script to retrieve MPD files and convert them to JSON.
+// Basic script to parse JSON extracted from MPD file (JSON retrieved by DashMPDRetriever.js).
 
 "use strict";
 
-var http = require("http");
-var parseString = require("xml2js").parseString;
-var dashMPDParser = require("./DashMPDParser.js");
+var mpdJSON = null;
+
+exports.parseMPD = function (mpdJSON) {
     
-function retrieveAndConvert (url, callback) {
-    var req = http.get(url, function(res) {
-    var xml = " ";
+    var baseUrl = mpdJSON.MPD.BaseURL; 
+    var extension = "testvideo.mp4"; 
     
-    res.on("data", function(chunk) {
-      xml += chunk;
-    });
-
-    res.on("error", function(e) {
-      callback(e, null);
-    }); 
-
-    res.on("timeout", function(e) {
-      callback(e, null);
-    }); 
-
-    res.on("end", function() { 
-      parseString(xml, function(err, result) {
-        callback(null, result);
-      });
-    });
-  });
+    var mediaUrl = baseUrl + extension;
+    
+    // TODO: page with default mediaplayer served for testing, refactor
+    
+    var http = require("http");
+    http.createServer(function(request, response) {  
+      response.writeHead(200, {"Content-Type": "text/html"});  
+      response.write('<video src="' + mediaUrl + '" autoplay controls></video>');  
+      response.end();
+    }).listen(8080);
+    console.log('Server is listening to http://localhost/ on port 8080…');
+    
 };
-
-exports.getMPD = function (url) {
-    
-  retrieveAndConvert (url, function(err, data) {
-  
-      if (err) {
-      
-    return console.err(err);
-  }
-  
-  dashMPDParser.parseMPD(data);
- 
-});};

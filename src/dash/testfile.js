@@ -24,17 +24,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-
-var url = "http://www.w3schools.com/xml/cd_catalog.xml";
+var url = "http://localhost:8000/output.mpd";
 var mpdJSON = null;
 var DashMPDRetriever = require("./DashMPDRetriever.js");
 
 
 mpdJSON = DashMPDRetriever.getMPD(url);
-
-
-
-
-
-

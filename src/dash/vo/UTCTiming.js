@@ -30,12 +30,14 @@
  */
 /*globals Dash */
 
-class UTCTiming {
-    constructor() {
-        // UTCTiming is a DescriptorType and doesn't have any additional fields
-        this.schemeIdUri = "";
-        this.value = "";
-    }
-}
+Dash.vo.UTCTiming = function () {
+    "use strict";
 
-export default UTCTiming;
+    // UTCTiming is a DescriptorType and doesn't have any additional fields
+    this.schemeIdUri = "";
+    this.value = "";
+};
+
+Dash.vo.UTCTiming.prototype = {
+    constructor: Dash.vo.UTCTiming
+};
