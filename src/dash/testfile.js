@@ -1,6 +1,5 @@
 /* 
- * Created bij Jorrit van den Berg on 07/12/15.
- * Copyright (c) 2015, TNO.
+ * Copyright (c) 2015, jorritvandenberg
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,43 +24,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-var http = require("http");
-var parseString = require("xml2js").parseString;
-    
-function retrieveAndParse (url, callback) {
-    var req = http.get(url, function(res) {
-    var xml = " ";
-    
-    res.on("data", function(chunk) {
-      xml += chunk;
-    });
 
-    res.on("error", function(e) {
-      callback(e, null);
-    }); 
 
-    res.on("timeout", function(e) {
-      callback(e, null);
-    }); 
+var url = "http://www.w3schools.com/xml/cd_catalog.xml";
+var mpdJSON = null;
+var DashMPDRetriever = require("./DashMPDRetriever.js");
 
-    res.on("end", function() { 
-      parseString(xml, function(err, result) {
-        callback(null, result);
-      });
-    });
-  });
-};
 
-exports.getMPD = function (url) {
-    
-  retrieveAndParse (url, function(err, data) {
-  
-      if (err) {
-      
-    return console.err(err);
-  }
+mpdJSON = DashMPDRetriever.getMPD(url);
 
-  //TODO : add subsequent function (now just logs to console)
-  console.log(JSON.stringify(data, null, 2));
- 
-});};
+
+
+
+
+
