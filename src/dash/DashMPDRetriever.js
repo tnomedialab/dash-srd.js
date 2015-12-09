@@ -31,10 +31,15 @@
 
 var http = require("http");
 var parseString = require("xml2js").parseString;
-var dashMPDParser = require("./DashMPDParser.js");
-    
-function retrieveAndConvert (url, callback) {
-    var req = http.get(url, function(res) {
+var serviceBus = require("./utils/ServiceBus.js");
+
+var MPDRetriever = function (params) {
+    this.params = params;
+};
+
+MPDRetriever.prototype = {
+  retrieveAndConvert: function (mpdUrl, callback) {
+    var req = http.get(mpdUrl, function(res) {
     var xml = " ";
     
     res.on("data", function(chunk) {
@@ -55,17 +60,20 @@ function retrieveAndConvert (url, callback) {
       });
     });
   });
-};
+},
 
-exports.getMPD = function (url) {
+  getMPD: function () {
     
-  retrieveAndConvert (url, function(err, data) {
+    this.retrieveAndConvert (this.params.mpdUrl, function(err, data) {
   
       if (err) {
       
     return console.err(err);
-  }
-  
-  dashMPDParser.parseMPD(data);
+    }
+      
+    serviceBus.messenger.publish("MPD-incoming", data);
  
-});};
+});}
+};
+
+exports.MPDRetriever = MPDRetriever;

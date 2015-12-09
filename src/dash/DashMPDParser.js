@@ -25,27 +25,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Basic script to parse JSON extracted from MPD file (JSON retrieved by DashMPDRetriever.js).
+// Basic script to parse JSON extracted from incoming MPD file.
 
 "use strict";
 
-var mpdJSON = null;
+var serviceBus = require("./utils/ServiceBus.js");
 
-exports.parseMPD = function (mpdJSON) {
+var MPDParser = function() {
+  serviceBus.messenger.subscribe("MPD-incoming", this.parseMPD);
+};
+
+MPDParser.prototype = {
+  parseMPD: function (data) {
     
-    var baseUrl = mpdJSON.MPD.BaseURL; 
+    //TODO: implement parsing routine and remove console.log
+ 
+    var baseUrl = data.MPD.BaseURL; 
     var extension = "testvideo.mp4"; 
-    
     var mediaUrl = baseUrl + extension;
     
-    // TODO: page with default mediaplayer served for testing, refactor
-    
-    var http = require("http");
-    http.createServer(function(request, response) {  
-      response.writeHead(200, {"Content-Type": "text/html"});  
-      response.write('<video src="' + mediaUrl + '" autoplay controls></video>');  
-      response.end();
-    }).listen(8080);
-    console.log('Server is listening to http://localhost/ on port 8080…');
-    
+    console.log("Broadcasting works: " + mediaUrl);    
+  }
 };
+
+exports.MPDParser = MPDParser;

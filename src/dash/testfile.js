@@ -24,9 +24,35 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-var url = "http://localhost:8000/output.mpd";
+var mpdUrl = "http://localhost:8000/output.mpd";
 var mpdJSON = null;
-var DashMPDRetriever = require("./DashMPDRetriever.js");
+var serviceBus = require("./utils/ServiceBus.js");
+var MPDRetriever = require("./DashMPDRetriever.js").MPDRetriever;
+var MPDParser = require("./DashMPDParser.js").MPDParser;
 
 
-mpdJSON = DashMPDRetriever.getMPD(url);
+ 
+//mpdJSON = DashMPDRetriever.getMPD(url);
+
+mpdParser = new MPDParser;
+mpdRetriever = new MPDRetriever({mpdUrl: mpdUrl});
+mpdRetriever.getMPD();
+
+mpdUrl = "http://localhost:8000/BigBuckBunny_10s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd";
+
+mpdRetriever.params.mpdUrl = mpdUrl;
+
+mpdRetriever.getMPD();
+
+// TODO: page with default mediaplayer served for testing, refactor
+
+//var http = require("http");
+//http.createServer(function(request, response) {  
+//  response.writeHead(200, {"Content-Type": "text/html"});  
+//  response.write('<video src="' + mediaUrl + '" autoplay controls></video>');  
+//  response.end();
+// }).listen(8080);
+// console.log('Server is listening to http://localhost/ on port 8080…');
+
+
+
