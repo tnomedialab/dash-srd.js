@@ -5,50 +5,6 @@
         <data xmlns="http://www.netbeans.org/ns/clientside-project/1">
             <name>TiledStreaming4DASH</name>
         </data>
-        <libraries xmlns="http://www.netbeans.org/ns/cdnjs-libraries/1">
-            <library name="video.js" version="5.4.2">
-                <file localPath="public/js/libs/video.js/alt/video.novtt.js" path="alt/video.novtt.js"/>
-                <file localPath="public/js/libs/video.js/alt/video.novtt.min.js" path="alt/video.novtt.min.js"/>
-                <file localPath="public/js/libs/video.js/alt/video.novtt.min.js.map" path="alt/video.novtt.min.js.map"/>
-                <file localPath="public/js/libs/video.js/font/VideoJS.eot" path="font/VideoJS.eot"/>
-                <file localPath="public/js/libs/video.js/font/VideoJS.svg" path="font/VideoJS.svg"/>
-                <file localPath="public/js/libs/video.js/font/VideoJS.ttf" path="font/VideoJS.ttf"/>
-                <file localPath="public/js/libs/video.js/font/VideoJS.woff" path="font/VideoJS.woff"/>
-                <file localPath="public/js/libs/video.js/ie8/videojs-ie8.js" path="ie8/videojs-ie8.js"/>
-                <file localPath="public/js/libs/video.js/ie8/videojs-ie8.min.js" path="ie8/videojs-ie8.min.js"/>
-                <file localPath="public/js/libs/video.js/lang/ar.js" path="lang/ar.js"/>
-                <file localPath="public/js/libs/video.js/lang/ba.js" path="lang/ba.js"/>
-                <file localPath="public/js/libs/video.js/lang/bg.js" path="lang/bg.js"/>
-                <file localPath="public/js/libs/video.js/lang/ca.js" path="lang/ca.js"/>
-                <file localPath="public/js/libs/video.js/lang/cs.js" path="lang/cs.js"/>
-                <file localPath="public/js/libs/video.js/lang/da.js" path="lang/da.js"/>
-                <file localPath="public/js/libs/video.js/lang/de.js" path="lang/de.js"/>
-                <file localPath="public/js/libs/video.js/lang/es.js" path="lang/es.js"/>
-                <file localPath="public/js/libs/video.js/lang/fi.js" path="lang/fi.js"/>
-                <file localPath="public/js/libs/video.js/lang/fr.js" path="lang/fr.js"/>
-                <file localPath="public/js/libs/video.js/lang/hr.js" path="lang/hr.js"/>
-                <file localPath="public/js/libs/video.js/lang/hu.js" path="lang/hu.js"/>
-                <file localPath="public/js/libs/video.js/lang/it.js" path="lang/it.js"/>
-                <file localPath="public/js/libs/video.js/lang/ja.js" path="lang/ja.js"/>
-                <file localPath="public/js/libs/video.js/lang/ko.js" path="lang/ko.js"/>
-                <file localPath="public/js/libs/video.js/lang/nl.js" path="lang/nl.js"/>
-                <file localPath="public/js/libs/video.js/lang/pt-BR.js" path="lang/pt-BR.js"/>
-                <file localPath="public/js/libs/video.js/lang/ru.js" path="lang/ru.js"/>
-                <file localPath="public/js/libs/video.js/lang/sr.js" path="lang/sr.js"/>
-                <file localPath="public/js/libs/video.js/lang/sv.js" path="lang/sv.js"/>
-                <file localPath="public/js/libs/video.js/lang/tr.js" path="lang/tr.js"/>
-                <file localPath="public/js/libs/video.js/lang/uk.js" path="lang/uk.js"/>
-                <file localPath="public/js/libs/video.js/lang/vi.js" path="lang/vi.js"/>
-                <file localPath="public/js/libs/video.js/lang/zh-CN.js" path="lang/zh-CN.js"/>
-                <file localPath="public/js/libs/video.js/lang/zh-TW.js" path="lang/zh-TW.js"/>
-                <file localPath="public/js/libs/video.js/video-js.css" path="video-js.css"/>
-                <file localPath="public/js/libs/video.js/video-js.min.css" path="video-js.min.css"/>
-                <file localPath="public/js/libs/video.js/video-js.swf" path="video-js.swf"/>
-                <file localPath="public/js/libs/video.js/video.js" path="video.js"/>
-                <file localPath="public/js/libs/video.js/video.js.map" path="video.js.map"/>
-                <file localPath="public/js/libs/video.js/video.min.js" path="video.min.js"/>
-                <file localPath="public/js/libs/video.js/video.min.js.map" path="video.min.js.map"/>
-            </library>
-        </libraries>
+        <libraries xmlns="http://www.netbeans.org/ns/cdnjs-libraries/1"/>
     </configuration>
 </project>

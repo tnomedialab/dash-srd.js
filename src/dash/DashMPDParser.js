@@ -44,7 +44,7 @@ MPDParser.prototype = {
     var extension = "testvideo.mp4"; 
     var mediaUrl = baseUrl + extension;
     
-    console.log("Broadcasting works: " + mediaUrl);    
+    console.log("Broadcasting works: " + mediaUrl);   
   }
 };
 

@@ -8,32 +8,47 @@
 
 "use strict";
 
+var lastUid = -1;
+
 var messenger = {
+    
   topics: {},
 
   subscribe: function(topic, listener) {
+      
     // Create the topic if not yet created
     if(!this.topics[topic]) this.topics[topic] = [];
+    
+    // Create unsubscribe token and add the listener  
+    var token = (++lastUid).toString();
 
-    // Add the listener
-    this.topics[topic].push(listener);
+        this.topics[topic].push({listener: listener, token: token});
 
+    // Return token for unsubscribing
+    return token;
   },
+  
+  unsubscribe: function(topic, token) {
+      
+    for (var i = 0; i < this.topics[topic].length; i++) {
 
-  // TODO: implement unsubscribe function if necessary
-  // (for instance when the ServiceBus is used for a large scale of messages)
-  unsubscribe: function(topic, listener) {     
+      if (this.topics[topic][i]['token'] === token){
+        this.topics[topic].splice(i, 1);        
+      }
+    }
+      
   },
 
   publish: function(topic, data) {
     // Return if the topic doesn't exist, or there are no listeners
-    if(!this.topics[topic] || this.topics[topic].length < 1) return;
+    var numberOfListeners = this.topics[topic].length; 
+    if(!this.topics[topic] || numberOfListeners < 1) return;
 
-    // Send the event to all listeners
-    this.topics[topic].forEach(function(listener) {
+    for (var i = 0; i < numberOfListeners; i++) {
+      var listener = this.topics[topic][i]['listener'];
       listener(data || {});
-
-    });
+    }
+   
   }
 
 };
