@@ -23,68 +23,36 @@ and open the template in the editor.
 </head>
 
 <body>   
-  
-<p id="clickCount"></p>
-<p id="artistField"></p>
-<p id="cdTitleField"></p>
-<button onclick="getArtistAndTitle()">Get artist</button>
+<script>  
+var mpdUrl = "http://localhost:8000/BigBuckBunny_10s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd";
+var mpdJSON = null;
+import ServiceBus from "./utils/ServiceBus.js";
+var MPDRetriever = require("./DashMPDRetriever.js").MPDRetriever;
+var MPDParser = require("./DashMPDParser.js").MPDParser;
+ 
+//mpdJSON = DashMPDRetriever.getMPD(url);
 
-<script>
+var mpdParser = new MPDParser;
+var mpdRetriever = new MPDRetriever({mpdUrl: mpdUrl});
+mpdRetriever.getMPD();
 
-var i = 0;
-xmlFile = null;
-function getArtistAndTitle (url) {
 
-    var url = "cd_catalog.xml";
-    xmlFile = getMPD(url);
+
+// TODO: page with default mediaplayer served for testing, refactor
+
+var videoLauncher = function () {
+  ServiceBus.subscribe("Video-incoming", this.launchVideo, "Video launcher");
+};
+
+videoLauncher.prototype = {
+  launchVideo: function (message) {
+
+    console.log('Server is listening to http://localhost/ on port 8080…');   
+  }
+};
+
+new videoLauncher;
     
-    
-    function getMPD (url) {
-        "use strict";
-
-        // Assign variables and perform XMLHttpRequest
-        var mpdFile = null;
-        var xhttp = new XMLHttpRequest();
-
-        xhttp.onreadystatechange = function() {
-            if (xhttp.readyState == 4 && xhttp.status == 200) {
-                mpdFile = xhttp.responseXML;
-                return mpdFile;//parseXML(mpdFile);
-
-            }
-            else {
-                // Undefined error case
-                console.log("Connection error");
-            }
-
-        };
-
-        xhttp.open("GET", url, true);
-        xhttp.send();
-
-        // Return MPD file if retrieved (defaults to null if failed)
-        parseXML(mpdFile);
-    }
-
-    function parseXML(xmlFile) {
-
-        var catalog = xmlFile.getElementsByTagName("CATALOG")[0];
-        numberOfCds = catalog.childElementCount;
-        
-        var cd = catalog.getElementsByTagName("CD")[i];
-
-        var artist = cd.getElementsByTagName('TITLE')[0];
-        document.getElementById("cdTitleField").innerHTML = artist.childNodes[0].nodeValue; 
-
-        var artist = cd.getElementsByTagName('ARTIST')[0];
-        document.getElementById("artistField").innerHTML = artist.childNodes[0].nodeValue; 
-      
-    document.getElementById("clickCount").innerHTML = i + 1;
-    
-    if (i + 1 < numberOfCds)
-        i++;
-    }
-}  
 
 
 </script>

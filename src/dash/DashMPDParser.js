@@ -29,23 +29,39 @@
 
 "use strict";
 
-var serviceBus = require("./utils/ServiceBus.js");
+import ServiceBus from "./utils/ServiceBus.js";
 
 var MPDParser = function() {
-  serviceBus.messenger.subscribe("MPD-incoming", this.parseMPD);
+  ServiceBus.subscribe("MPD-incoming", this.parseMPD, "MPDParser");
 };
 
 MPDParser.prototype = {
   parseMPD: function (data) {
     
     //TODO: implement parsing routine and remove console.log
- 
-    var baseUrl = data.MPD.BaseURL; 
-    var extension = "testvideo.mp4"; 
-    var mediaUrl = baseUrl + extension;
+  
+    var id = data.MPD.Period.AdaptationSet.Representation[0]._id;
+    var codecs = data.MPD.Period.AdaptationSet.Representation[0]._codecs;
+    var mimeType = data.MPD.Period.AdaptationSet.Representation[0]._mimeType;
+    var startWithSAP = data.MPD.Period.AdaptationSet.Representation[0]._startWithSAP;
+    var bandwidth = data.MPD.Period.AdaptationSet.Representation[0]._bandwidth;
+    var duration = data.MPD.Period.AdaptationSet.Representation[0].SegmentList._duration;
+  
+    var initializationWidth = data.MPD.Period.AdaptationSet.Representation[0]._width;
+    var initializationHeight = data.MPD.Period.AdaptationSet.Representation[0]._height;
     
-    console.log("Broadcasting works: " + mediaUrl);   
+    var baseURL = data.MPD.BaseURL;     
+    var initializationSourceURL = data.MPD.Period.AdaptationSet.Representation[0].SegmentBase.Initialization._sourceURL;
+    var segmentURLs = data.MPD.Period.AdaptationSet.Representation[0].SegmentList.SegmentURL;
+      
+    // var mediaURL = baseURL + initializationSourceURL;
+    
+    var message = {initializationWidth: initializationWidth, initializationHeight: initializationHeight, baseURL: baseURL, segmentURLs: segmentURLs};
+    
+    console.log(segmentURLs);
+    ServiceBus.publish("Video-incoming", message);
+    
   }
 };
 
-exports.MPDParser = MPDParser;
+export default MPDParser;

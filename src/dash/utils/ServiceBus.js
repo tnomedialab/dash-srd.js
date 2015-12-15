@@ -10,11 +10,11 @@
 
 var lastUid = -1;
 
-var messenger = {
+var ServiceBus = {
     
   topics: {},
 
-  subscribe: function(topic, listener) {
+  subscribe: function(topic, listener, subscriber) {
       
     // Create the topic if not yet created
     if(!this.topics[topic]) this.topics[topic] = [];
@@ -22,7 +22,10 @@ var messenger = {
     // Create unsubscribe token and add the listener  
     var token = (++lastUid).toString();
 
-        this.topics[topic].push({listener: listener, token: token});
+        this.topics[topic].push({listener: listener, token: token, subscriber: subscriber});
+
+        var subscriber = subscriber;
+        console.log("Subscribing " + subscriber + " to topic " + topic);      
 
     // Return token for unsubscribing
     return token;
@@ -33,6 +36,7 @@ var messenger = {
     for (var i = 0; i < this.topics[topic].length; i++) {
 
       if (this.topics[topic][i]['token'] === token){
+        console.log("Unsubscribing " + this.topics[topic][i]['subscriber'] + " from topic" + topic);  
         this.topics[topic].splice(i, 1);        
       }
     }
@@ -46,6 +50,7 @@ var messenger = {
 
     for (var i = 0; i < numberOfListeners; i++) {
       var listener = this.topics[topic][i]['listener'];
+            console.log("Publishing topic " + topic + " to subscriber " + this.topics[topic][i]['subscriber']);
       listener(data || {});
     }
    
@@ -53,4 +58,4 @@ var messenger = {
 
 };
 
-exports.messenger = messenger;
+export default ServiceBus;

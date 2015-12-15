@@ -29,9 +29,8 @@
 
 "use strict";
 
-var http = require("http");
-var parseString = require("xml2js").parseString;
-var serviceBus = require("./utils/ServiceBus.js");
+import ServiceBus from "./utils/ServiceBus.js";
+import X2JS from "../externals/xml2json.js";
 
 var MPDRetriever = function (params) {
     this.params = params;
@@ -39,6 +38,7 @@ var MPDRetriever = function (params) {
 
 MPDRetriever.prototype = {
   retrieveAndConvert: function (mpdUrl, callback) {
+    /* TODO: remove old code
     var req = http.get(mpdUrl, function(res) {
     var xml = " ";
     
@@ -55,11 +55,28 @@ MPDRetriever.prototype = {
     }); 
 
     res.on("end", function() { 
-      parseString(xml, function(err, result) {
-        callback(null, result);
-      });
+
+      callback(null, x2js.xml2json(xml));
+      
     });
   });
+  */
+ 
+    // TODO: currently only supports browsers on http://www.html5rocks.com/en/tutorials/cors/
+    var xhttp = new XMLHttpRequest();
+    var requestParams = "action=getManifest";
+    xhttp.open('GET', mpdUrl, true);
+    xhttp.onreadystatechange = function() {if (xhttp.readyState == 4)
+      var x2js = new X2JS();
+      var MPD = xhttp.responseXML;
+      callback(null, x2js.xml2json(MPD);   
+        } else {
+          callback(e, null);
+      };  
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.setRequestHeader("Content-length", requestParams.length);
+    xhttp.setRequestHeader("Connection", "close");
+    xhttp.send(requestParams);
 },
 
   getMPD: function () {
@@ -71,9 +88,8 @@ MPDRetriever.prototype = {
     return console.err(err);
     }
       
-    serviceBus.messenger.publish("MPD-incoming", data);
+    ServiceBus.publish("MPD-incoming", data);
  
 });}
 };
 
-exports.MPDRetriever = MPDRetriever;

@@ -24,39 +24,21 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-"use strict";
+function getKeys(keys, obj, path) {
+var key;
+    for(key in obj) {
+        var currpath = path+'/'+key;
+        keys.push([key, currpath]);
+        if(typeof(obj[key]) == 'object' && !(obj[key] instanceof Array))
+            getKeys(keys, obj[key], currpath);
+    }
+}
 
-var mpdUrl = "http://localhost:8000/BigBuckBunny_10s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd";
-var mpdJSON = null;
-import ServiceBus from "./utils/ServiceBus.js";
-var MPDRetriever = require("./DashMPDRetriever.js").MPDRetriever;
-var MPDParser = require("./DashMPDParser.js").MPDParser;
- 
-//mpdJSON = DashMPDRetriever.getMPD(url);
-
-var mpdParser = new MPDParser;
-var mpdRetriever = new MPDRetriever({mpdUrl: mpdUrl});
-mpdRetriever.getMPD();
-
-
-
-// TODO: page with default mediaplayer served for testing, refactor
-
-var videoLauncher = function () {
-  ServiceBus.subscribe("Video-incoming", this.launchVideo, "Video launcher");
+exports.printJSONTRee = function() {
+var keys = [];
+getKeys(keys, data, '');
+for(var i=0; i<keys.length; i++)
+    console.log(keys[i][0] + '=' + keys[i][1]);
 };
 
-videoLauncher.prototype = {
-  launchVideo: function (message) {
 
-    var http = require("http");
-    http.createServer(function(request, response) {  
-      response.writeHead(200, {"Content-Type": "text/html"});  
-      response.write('<video width="' + message.initializationWidth + '\" height=\"' + message.baseURL + message.segmentURLs[0]._media + '\" src=\"' + message.mediaURL + '" autoplay controls></video>');  
-      response.end();
-    }).listen(8080);
-    console.log('Server is listening to http://localhost/ on port 8080…');   
-  }
-};
-
-new videoLauncher;
