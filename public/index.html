@@ -5,57 +5,78 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 
-<!--
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (xhttp.readyState == 4 && xhttp.status == 200) {
-            parseXML(xhttp);
-        }
-    };
-    xhttp.open("GET", "cd_catalog.xml", true);
-    xhttp.send();
--->
 
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <title>parseXML demo</title>
+  
+  <script src="../externals/require.js"></script>
+  <script>
+      
+  // var ServiceBus = require("./utils/ServiceBus.js");
+  // var MPDRetriever = require("./DashMPDRetriever.js").MPDRetriever;
+  // var MPDParser = require("./DashMPDParser.js").MPDParser;
+  
+  require.config({
+    baseUrl: '/',
+    paths: {
+        "ServiceBus": "src/dash/utils/ServiceBus",
+        "MPDRetriever": "src/dash/DashMPDRetriever",
+        "MPDParser": "src/dash/DashMPDParser",
+        "xml2json": "externals/xml2json"
+    }
+  });
+    
+  // var ServiceBus = require('ServiceBus');
+  
+  /*require(['ServiceBus'], function (ServiceBus) {
+    //ServiceBus.subscribe('Test', 'test',  'index');
+    var testVar = 'test';
+  });
+  
+  alert(testVar); 
+ 
+  require(['MPDRetriever'], function (MPDRetriever) {
+    alert("Succes");
+  });
+  
+  require(['MPDParser'], function (MPDParser) {
+    alert("Succes");
+  }); */
+  
+  function openVideo (){
+      var mpdURL = document.getElementById('MPD_URL').value;
+     
+      // var serviceBus = new ServiceBus;
+      
+      // serviceBus.subscribe('Test', 'test', 'test')
+      
+      
+      /*
+      require(['MPDParser'], function () {
+        var mpdParser = new MPDParser;
+        
+      });   */   
+      
+      require(['MPDRetriever'], function () {
+        var mpdRetriever = new MPDRetriever({mpdURL: mpdURL});
+        mpdRetriever.getMPD();
+      });
+      
+
+
+  } 
+      
+  </script>
 </head>
 
-<body>   
-<script>  
-var mpdUrl = "http://localhost:8000/BigBuckBunny_10s_isoffmain_DIS_23009_1_v_2_1c2_2011_08_30.mpd";
-var mpdJSON = null;
-import ServiceBus from "./utils/ServiceBus.js";
-var MPDRetriever = require("./DashMPDRetriever.js").MPDRetriever;
-var MPDParser = require("./DashMPDParser.js").MPDParser;
- 
-//mpdJSON = DashMPDRetriever.getMPD(url);
+<body>       
+<div>
+</div>
 
-var mpdParser = new MPDParser;
-var mpdRetriever = new MPDRetriever({mpdUrl: mpdUrl});
-mpdRetriever.getMPD();
-
-
-
-// TODO: page with default mediaplayer served for testing, refactor
-
-var videoLauncher = function () {
-  ServiceBus.subscribe("Video-incoming", this.launchVideo, "Video launcher");
-};
-
-videoLauncher.prototype = {
-  launchVideo: function (message) {
-
-    console.log('Server is listening to http://localhost/ on port 8080…');   
-  }
-};
-
-new videoLauncher;
-    
-
-
-</script>
+<input type="text" id="MPD_URL" style="width: 400px;">
+<input type="submit" name="Open video" id="mpdButton" onclick="openVideo()" value="Open video" />
  
 </body>
 </html>

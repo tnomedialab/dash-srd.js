@@ -29,67 +29,46 @@
 
 "use strict";
 
-import ServiceBus from "./utils/ServiceBus.js";
-import X2JS from "../externals/xml2json.js";
+define(['MPDRetriever'], function() { 
+    var ServiceBus = require("ServiceBus");
+    var X2JS = require("xml2json");
 
-var MPDRetriever = function (params) {
-    this.params = params;
-};
+    var MPDRetriever = function (params) {
+        this.params = params;
+    };
 
-MPDRetriever.prototype = {
-  retrieveAndConvert: function (mpdUrl, callback) {
-    /* TODO: remove old code
-    var req = http.get(mpdUrl, function(res) {
-    var xml = " ";
-    
-    res.on("data", function(chunk) {
-      xml += chunk;
-    });
+    MPDRetriever.prototype = {
+      retrieveAndConvert: function (mpdURL, callback) {
 
-    res.on("error", function(e) {
-      callback(e, null);
-    }); 
-
-    res.on("timeout", function(e) {
-      callback(e, null);
-    }); 
-
-    res.on("end", function() { 
-
-      callback(null, x2js.xml2json(xml));
-      
-    });
-  });
-  */
- 
-    // TODO: currently only supports browsers on http://www.html5rocks.com/en/tutorials/cors/
-    var xhttp = new XMLHttpRequest();
-    var requestParams = "action=getManifest";
-    xhttp.open('GET', mpdUrl, true);
-    xhttp.onreadystatechange = function() {if (xhttp.readyState == 4)
-      var x2js = new X2JS();
-      var MPD = xhttp.responseXML;
-      callback(null, x2js.xml2json(MPD);   
+        // TODO: currently only supports browsers on http://www.html5rocks.com/en/tutorials/cors/
+        var xhttp = new XMLHttpRequest();
+        var requestParams = "action=getManifest";
+        xhttp.open('GET', mpdURL, true);
+        xhttp.onreadystatechange = function() {if (xhttp.readyState == 4) {
+                
+          var x2js = new X2JS();
+          var MPD = xhttp.responseXML;
+          
+          callback(null, x2js.xml2json(MPD)); 
         } else {
           callback(e, null);
-      };  
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.setRequestHeader("Content-length", requestParams.length);
-    xhttp.setRequestHeader("Connection", "close");
-    xhttp.send(requestParams);
-},
+        }};  
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.setRequestHeader("Content-length", requestParams.length);
+        xhttp.setRequestHeader("Connection", "close");
+        xhttp.send(requestParams);
+    },
 
-  getMPD: function () {
-    
-    this.retrieveAndConvert (this.params.mpdUrl, function(err, data) {
-  
-      if (err) {
-      
-    return console.err(err);
-    }
-      
-    ServiceBus.publish("MPD-incoming", data);
- 
-});}
-};
+      getMPD: function () {
 
+        this.retrieveAndConvert (this.params.mpdURL, function(err, data) {
+
+          if (err) {
+
+        return console.err(err);
+        }
+
+        ServiceBus.messenger.publish("MPD-incoming", data);
+
+    });}
+};});
