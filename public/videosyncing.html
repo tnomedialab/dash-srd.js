@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2015, jorritvandenberg
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+-->
+
+
+<!DOCTYPE html> 
+<html> 
+<body> 
+
+<div style="text-align:center"> 
+  <button onclick="playPause()">Play/Pause</button> 
+  <button onclick="makeBig()">Big</button>
+  <button onclick="makeSmall()">Small</button>
+  <button onclick="makeNormal()">Normal</button>
+  <button onclick="syncVideos()">Synchronize</button>
+  <br><br>
+  
+  <table style="width:100%">
+  <tr>
+    <td>  
+    <video id="video1" width="420">
+    <source src="http://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+    <source src="http://www.w3schools.com/html/mov_bbb.ogg" type="video/ogg">
+    Your browser does not support HTML5 video.
+    </video>
+    </td>
+    <td>
+    <video id="video2" width="420">
+    <source src="http://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+    <source src="http://www.w3schools.com/html/mov_bbb.ogg" type="video/ogg">
+    Your browser does not support HTML5 video.
+    </video>    
+    </td>		
+  </tr>
+  <tr>
+      <td>
+      <video id="video3" width="420">
+      <source src="http://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+      <source src="http://www.w3schools.com/html/mov_bbb.ogg" type="video/ogg">
+      Your browser does not support HTML5 video.
+      </video>
+          
+      </td>
+      <td>
+       <video id="video4" width="420">
+       <source src="http://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+       <source src="http://www.w3schools.com/html/mov_bbb.ogg" type="video/ogg">
+       Your browser does not support HTML5 video.
+      </video>
+      </td>		
+  </tr>
+</table>
+
+  
+</div> 
+
+<script> 
+var video1 = document.getElementById("video1");
+var video2 = document.getElementById("video2"); 
+var video3 = document.getElementById("video3");
+var video4 = document.getElementById("video4"); 
+
+
+
+
+function playPause() { 
+    if (video1.paused) { 
+        video1.play();
+        // video2.play(); 
+        // video3.play();
+        // video4.play(); 
+    } else { 
+        video1.pause();
+        video2.pause(); 
+        video3.pause();
+        video4.pause(); 
+    }
+}
+
+
+function makeBig() { 
+    video1.width = 560; 
+    video2.width = 560; 
+    video3.width = 560; 
+    video4.width = 560; 
+} 
+
+function makeSmall() { 
+    video1.width = 320;
+    video2.width = 320;
+    video3.width = 320;
+    video4.width = 320;  
+} 
+
+function makeNormal() { 
+    video1.width = 420;
+    video2.width = 420;
+    video3.width = 420;
+    video4.width = 420;
+} 
+
+function syncVideos () {
+       
+    function getLeadTime(){
+        var currentTime = video1.currentTime;
+        return currentTime;
+    }
+      
+    if (video2.paused) { 
+      currentTime = getLeadTime();  
+      video2.currentTime = currentTime;  
+      video2.play();
+    
+    } else {
+        video3.pause();
+    }
+    
+    if (video3.paused) { 
+      currentTime = getLeadTime();
+      video3.currentTime = currentTime;  
+      video3.play();
+    
+    } else {
+        video3.pause();
+    }
+    
+     if (video4.paused) { 
+      currentTime = getLeadTime();
+      video4.currentTime = currentTime;  
+      video4.play();
+    
+    } else {
+        video4.pause();
+    }
+    
+}
+
+</script> 
+
+<p>Video courtesy of <a href="http://www.bigbuckbunny.org/" target="_blank">Big Buck Bunny</a>.</p>
+</body> 
+</html>

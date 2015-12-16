@@ -1,0 +1,17 @@
+{
+  "name": "TiledStreaming4DASH",
+  "version": "1.0.0",
+  "keywords": [
+    "util",
+    "functional",
+    "server",
+    "client",
+    "browser"
+  ],
+  "author": "jorritvandenberg",
+  "contributors": [],
+  "dependencies": {},
+  "devDependencies": {
+    "video.js": "^5.3.0"
+  }
+}

@@ -29,46 +29,55 @@
 
 "use strict";
 
-define(['MPDRetriever'], function() { 
-    var ServiceBus = require("ServiceBus");
-    var X2JS = require("xml2json");
+var MPDRetriever = function (params) {
+    this.params = params;
+};
 
-    var MPDRetriever = function (params) {
-        this.params = params;
-    };
+MPDRetriever.prototype = {
+  retrieveAndConvert: function (mpdURL, callback) {
 
-    MPDRetriever.prototype = {
-      retrieveAndConvert: function (mpdURL, callback) {
+    /* TODO: old code, fix or remove
+    var xhttp = new XMLHttpRequest();
+    var requestParams = "action=someting";
+    xhttp.open('GET', mpdURL, true);
+    xhttp.onreadystatechange = function() {if (xhttp.readyState == 4 && xhttp.status == 200)  
 
-        // TODO: currently only supports browsers on http://www.html5rocks.com/en/tutorials/cors/
-        var xhttp = new XMLHttpRequest();
-        var requestParams = "action=getManifest";
-        xhttp.open('GET', mpdURL, true);
-        xhttp.onreadystatechange = function() {if (xhttp.readyState == 4) {
-                
-          var x2js = new X2JS();
-          var MPD = xhttp.responseXML;
-          
-          callback(null, x2js.xml2json(MPD)); 
-        } else {
-          callback(e, null);
-        }};  
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.setRequestHeader("Content-length", requestParams.length);
-        xhttp.setRequestHeader("Connection", "close");
-        xhttp.send(requestParams);
-    },
+      var x2js = new X2JS();
+      var MPD = xhttp.responseXML;
 
-      getMPD: function () {
+      callback(null, x2js.xml2json(MPD)); 
+    //} else {
+      //callback(e, null);
+    };  
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.setRequestHeader("Content-length", requestParams.length);
+    xhttp.setRequestHeader("Connection", "close");
+    xhttp.send(requestParams); */
+    
+    crossOriginRequest(mpdURL, function(err, data) {
 
-        this.retrieveAndConvert (this.params.mpdURL, function(err, data) {
+      if (err) {
 
-          if (err) {
+    return console.err(err);
+    }
+    
+    var x2js = new X2JS();
+    var xmlString = x2js.parseXmlString(data);
+    callback(null, x2js.xml2json(xmlString)); 
+  }); 
+  
+},
 
-        return console.err(err);
-        }
+  getMPD: function () {
 
-        ServiceBus.messenger.publish("MPD-incoming", data);
+    this.retrieveAndConvert (this.params.mpdURL, function(err, data) {
 
-    });}
-};});
+      if (err) {
+
+    return console.err(err);
+    }
+
+    ServiceBus.publish("MPD-incoming", data);
+
+});}
+};

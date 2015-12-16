@@ -1,0 +1,80 @@
+/* 
+ * Copyright (c) 2015, jorritvandenberg
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+function crossOriginRequest (url, callback){
+    
+    var isIE8 = window.XDomainRequest ? true : false;
+    var invocation = createCrossOriginRequest();
+
+    function createCrossOriginRequest(url, crossOriginRequestHandler) {
+      var request;
+      if (isIE8) {
+        request = new window.XDomainRequest();
+        }
+        else {
+          request = new XMLHttpRequest();
+        }
+      return request;
+    }
+
+    function callOtherDomain() {
+      if (invocation) {
+        if(isIE8) {
+          invocation.onload = returnResult;
+          invocation.open("GET", url, true);
+          invocation.send();
+        }
+        else {
+          invocation.open('GET', url, true);
+          invocation.onreadystatechange = crossOriginRequestHandler;
+          invocation.send();
+        }
+      }
+      else {
+        console.log("callOtherDomain: " + "No Invocation TookPlace At All");
+      }
+    }
+
+    function crossOriginRequestHandler(evtXHR) {
+      if (invocation.readyState == 4) {
+          if (invocation.status == 200) {
+              returnResult();
+          }
+          else {
+            console.log("crossOriginRequestHandler: " + "Invocation Errors Occured");
+          }
+      }
+    }
+    
+    function returnResult () {
+      var response = invocation.responseText;
+      callback(null, response);
+  }
+  
+  callOtherDomain();
+}
+
+

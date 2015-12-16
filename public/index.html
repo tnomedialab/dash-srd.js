@@ -11,61 +11,47 @@ and open the template in the editor.
   <meta charset="utf-8">
   <title>parseXML demo</title>
   
-  <script src="../externals/require.js"></script>
+  <script src="../build/tiledstreaming4dash.min.js"></script>
+  <script src="../src/dash/utils/CrossOriginRequest.js"></script>
+  <script src="../externals/xml2json.js"></script>
+  
   <script>
       
   // var ServiceBus = require("./utils/ServiceBus.js");
   // var MPDRetriever = require("./DashMPDRetriever.js").MPDRetriever;
   // var MPDParser = require("./DashMPDParser.js").MPDParser;
   
-  require.config({
-    baseUrl: '/',
-    paths: {
-        "ServiceBus": "src/dash/utils/ServiceBus",
-        "MPDRetriever": "src/dash/DashMPDRetriever",
-        "MPDParser": "src/dash/DashMPDParser",
-        "xml2json": "externals/xml2json"
+  var url = 'http://localhost:8000/Documents/output.mpd';
+  
+
+  
+  window.onload = crossOriginRequest(url, function(err, data) {
+
+      if (err) {
+
+    return console.err(err);
     }
-  });
     
-  // var ServiceBus = require('ServiceBus');
-  
-  /*require(['ServiceBus'], function (ServiceBus) {
-    //ServiceBus.subscribe('Test', 'test',  'index');
-    var testVar = 'test';
-  });
-  
-  alert(testVar); 
+
+    var x2js = new X2JS();
+    var xml = x2js.xml_str2json(data);
+
+    //var testJSON = x2js.xml2json(xml);
+    //console.log(JSON.stringify(testJSON, null, 4));
+    console.log(xml);
+  });   
  
-  require(['MPDRetriever'], function (MPDRetriever) {
-    alert("Succes");
-  });
-  
-  require(['MPDParser'], function (MPDParser) {
-    alert("Succes");
-  }); */
-  
+    
   function openVideo (){
       var mpdURL = document.getElementById('MPD_URL').value;
      
       // var serviceBus = new ServiceBus;
       
       // serviceBus.subscribe('Test', 'test', 'test')
-      
-      
-      /*
-      require(['MPDParser'], function () {
-        var mpdParser = new MPDParser;
-        
-      });   */   
-      
-      require(['MPDRetriever'], function () {
-        var mpdRetriever = new MPDRetriever({mpdURL: mpdURL});
-        mpdRetriever.getMPD();
-      });
-      
-
-
+           
+      var mpdParser = new MPDParser;
+      var mpdRetriever = new MPDRetriever({mpdURL: mpdURL});
+      mpdRetriever.getMPD();    
   } 
       
   </script>

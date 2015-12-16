@@ -28,41 +28,40 @@
 // Basic script to parse JSON extracted from incoming MPD file.
 
 "use strict";
+   
+var MPDParser = function() {
+  ServiceBus.subscribe("MPD-incoming", this.parseMPD, "MPDParser");
+};
 
-define(['MPDParser'], function() {
-    
-    var ServiceBus = require("ServiceBus");
-    
-    var MPDParser = function() {
-      ServiceBus.subscribe("MPD-incoming", this.parseMPD, "MPDParser");
-    };
+MPDParser.prototype = {
+  parseMPD: function (data) {
 
-    MPDParser.prototype = {
-      parseMPD: function (data) {
+    /*TODO: implement parsing routine and remove console.log
 
-        //TODO: implement parsing routine and remove console.log
+    var id = data.MPD.Period.AdaptationSet.Representation[0]._id;
+    var codecs = data.MPD.Period.AdaptationSet.Representation[0]._codecs;
+    var mimeType = data.MPD.Period.AdaptationSet.Representation[0]._mimeType;
+    var startWithSAP = data.MPD.Period.AdaptationSet.Representation[0]._startWithSAP;
+    var bandwidth = data.MPD.Period.AdaptationSet.Representation[0]._bandwidth;
+    var duration = data.MPD.Period.AdaptationSet.Representation[0].SegmentList._duration;
 
-        var id = data.MPD.Period.AdaptationSet.Representation[0]._id;
-        var codecs = data.MPD.Period.AdaptationSet.Representation[0]._codecs;
-        var mimeType = data.MPD.Period.AdaptationSet.Representation[0]._mimeType;
-        var startWithSAP = data.MPD.Period.AdaptationSet.Representation[0]._startWithSAP;
-        var bandwidth = data.MPD.Period.AdaptationSet.Representation[0]._bandwidth;
-        var duration = data.MPD.Period.AdaptationSet.Representation[0].SegmentList._duration;
+    var initializationWidth = data.MPD.Period.AdaptationSet.Representation[0]._width;
+    var initializationHeight = data.MPD.Period.AdaptationSet.Representation[0]._height;
 
-        var initializationWidth = data.MPD.Period.AdaptationSet.Representation[0]._width;
-        var initializationHeight = data.MPD.Period.AdaptationSet.Representation[0]._height;
+    var baseURL = data.MPD.BaseURL;     
+    var initializationSourceURL = data.MPD.Period.AdaptationSet.Representation[0].SegmentBase.Initialization._sourceURL;
+    var segmentURLs = data.MPD.Period.AdaptationSet.Representation[0].SegmentList.SegmentURL;
 
-        var baseURL = data.MPD.BaseURL;     
-        var initializationSourceURL = data.MPD.Period.AdaptationSet.Representation[0].SegmentBase.Initialization._sourceURL;
-        var segmentURLs = data.MPD.Period.AdaptationSet.Representation[0].SegmentList.SegmentURL;
+    // var mediaURL = baseURL + initializationSourceURL;
 
-        // var mediaURL = baseURL + initializationSourceURL;
+    var message = {initializationWidth: initializationWidth, initializationHeight: initializationHeight, baseURL: baseURL, segmentURLs: segmentURLs};
 
-        var message = {initializationWidth: initializationWidth, initializationHeight: initializationHeight, baseURL: baseURL, segmentURLs: segmentURLs};
+    */
+   
+    console.log(JSON.stringify(data, null, 4));
 
-        console.log(segmentURLs);
-        ServiceBus.messenger.publish("Video-incoming", message);
+    // console.log(segmentURLs);
+    // ServiceBus.publish("Video-incoming", message);
 
-      }
-    };
-});
+  }
+};
