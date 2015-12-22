@@ -24,21 +24,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-function getKeys(keys, obj, path) {
-var key;
-    for(key in obj) {
-        var currpath = path+'/'+key;
-        keys.push([key, currpath]);
-        if(typeof(obj[key]) == 'object' && !(obj[key] instanceof Array))
-            getKeys(keys, obj[key], currpath);
-    }
+function getClickPosition(e) {
+    var parentPosition = getPosition(e.currentTarget);
+    var xPosition = e.clientX - parentPosition.x - (tiletable.clientWidth / 2);
+    var yPosition = e.clientY - parentPosition.y - (tiletable.clientHeight / 2);
+    
+    setTimeout(function(){
+    swapVideos();
+    tiletable.style.left = xPosition + 'px';
+    tiletable.style.top = yPosition + 'px';
+    }, 600);
 }
-
-exports.printJSONTRee = function() {
-var keys = [];
-getKeys(keys, data, '');
-for(var i=0; i<keys.length; i++)
-    console.log(keys[i][0] + '=' + keys[i][1]);
-};
+ 
+function getPosition(element) {
+    var xPosition = 0;
+    var yPosition = 0;
+      
+    while (element) {
+        xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+        yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
+        element = element.offsetParent;
+    }
+    return { x: xPosition, y: yPosition };
+}
 
 

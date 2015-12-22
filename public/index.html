@@ -1,68 +1,112 @@
 <!DOCTYPE html>
 <!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
+Copyright (c) 2015, jorritvandenberg
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
 -->
 
+<html> 
+   
+<script src="http://cdn.dashjs.org/latest/dash.all.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="http://cdn.popcornjs.org/code/dist/popcorn.min.js"></script>
 
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>parseXML demo</title>
-  
-  <script src="../build/tiledstreaming4dash.min.js"></script>
-  <script src="../src/dash/utils/CrossOriginRequest.js"></script>
-  <script src="../src/dash/utils/XML2JSON.js"></script>
-  
-  <script>
-      
-  // var ServiceBus = require("./utils/ServiceBus.js");
-  // var MPDRetriever = require("./DashMPDRetriever.js").MPDRetriever;
-  // var MPDParser = require("./DashMPDParser.js").MPDParser;
-  
-  var url = 'http://localhost:8000/Documents/output.mpd';
-  
+<script>
+function loadSRDPlayer() {
+   var script = document.createElement('script');
+   script.src = '../build/tiledstreaming4dash.min.js';
+   // script.type = 'text/javascript';
+   var head = document.getElementsByTagName("head")[0];
+   head.appendChild(script);
+}</script>
 
-  
-  window.onload = crossOriginRequest(url, function(err, data) {
+<link rel="stylesheet" type="text/css" href="srdplayerstyle.css">
 
-      if (err) {
 
-    return console.err(err);
-    }
+<body onLoad="Dash.createAll()"> 
+
+<div id="SRDPlayer">   
+    <div id="videoContainer">
     
+    <div id="bannerbox">
+        <img src="srdbanner.png" alt="SRD Player banner"> 
+    </div>    
+        
+    <table id="tiletable" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>  
+         <video id="video1" width="420" class="dashjs-player"></video>
+        </td>
+        <td>
+         <video id="video2" width="420" class="dashjs-player"></video>
+        </td>    
+      </tr>
+      <tr>		
+        <td>
+         <video id="video3" width="420" class="dashjs-player"></video>       
+        </td>
+        <td>
+         <video id="video4" width="420" class="dashjs-player"></video>
+        </td>		
+      </tr>
+    </table>
 
-    var parser = new DOMParser();
-    var docXML = parser.parseFromString(data, 'text/xml');
-    var testJSON = xml2JSON(docXML);
-
-    console.log(JSON.stringify(testJSON, null, 2));
-    // console.log(docXML);
-  });   
- 
+    <video id="videonormal" width="420" class="dashjs-player"></video>
+    </div>
     
-  function openVideo (){
-      var mpdURL = document.getElementById('MPD_URL').value;
-     
-      // var serviceBus = new ServiceBus;
-      
-      // serviceBus.subscribe('Test', 'test', 'test')
-           
-      var mpdParser = new MPDParser;
-      var mpdRetriever = new MPDRetriever({mpdURL: mpdURL});
-      mpdRetriever.getMPD();    
-  } 
-      
-  </script>
-</head>
+    <div id="playbackControls"> 
+      <button id="playpause" onclick="playPause()">Play/Pause</button> 
+      <button id="makebig" onclick="makeBig()">Big</button>
+      <button id="makesmall" onclick="makeSmall()">Small</button>
+      <button id="makenormal" onclick="makeNormal()">Normal</button>
+      <input id="scrub" type="range" value="0"/>
+    </div> 
+    <br>
 
-<body>       
-<div>
+    <div id="videoLoader"> 
+    <input type="text" id="mpdURL">
+    <input type="submit" name="Open video" id="mpdButton" onclick="openVideo()" value="Open video" />
+    </div>
+    
 </div>
+<br>    
+<br>  
+<br>  
+<br>  
+<p style="position: absolute; bottom: 12%; left: 32%; right: 30%; font-family: Arial; font-size: 14px; color: darkgray;">Example url: http://dash.edgesuite.net/envivio/Envivio-dash2/manifest.mpd</p>
+    
+<script> 
 
-<input type="text" id="MPD_URL" style="width: 400px;">
-<input type="submit" name="Open video" id="mpdButton" onclick="openVideo()" value="Open video" />
- 
-</body>
+
+loadSRDPlayer();
+
+
+
+
+
+
+
+</script> 
+
+</body> 
 </html>

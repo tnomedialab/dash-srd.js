@@ -36,34 +36,15 @@ var MPDRetriever = function (params) {
 MPDRetriever.prototype = {
   retrieveAndConvert: function (mpdURL, callback) {
 
-    /* TODO: old code, fix or remove
-    var xhttp = new XMLHttpRequest();
-    var requestParams = "action=someting";
-    xhttp.open('GET', mpdURL, true);
-    xhttp.onreadystatechange = function() {if (xhttp.readyState == 4 && xhttp.status == 200)  
-
-      var x2js = new X2JS();
-      var MPD = xhttp.responseXML;
-
-      callback(null, x2js.xml2json(MPD)); 
-    //} else {
-      //callback(e, null);
-    };  
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.setRequestHeader("Content-length", requestParams.length);
-    xhttp.setRequestHeader("Connection", "close");
-    xhttp.send(requestParams); */
-    
     crossOriginRequest(mpdURL, function(err, data) {
 
       if (err) {
 
     return console.err(err);
-    }
-    
-    var x2js = new X2JS();
-    var xmlString = x2js.parseXmlString(data);
-    callback(null, x2js.xml2json(xmlString)); 
+    }   
+
+    var mpdJSON = xmlToJSON.parseString(data);
+    callback(null, mpdJSON); 
   }); 
   
 },
