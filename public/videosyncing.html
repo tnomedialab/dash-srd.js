@@ -28,6 +28,7 @@ POSSIBILITY OF SUCH DAMAGE.
 <html> 
 
 <script src="http://cdn.dashjs.org/latest/dash.all.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script src="http://cdn.popcornjs.org/code/dist/popcorn.min.js"></script>
 <link rel="stylesheet" type="text/css" href="srdplayerstyle.css">
 
@@ -64,11 +65,11 @@ POSSIBILITY OF SUCH DAMAGE.
     </div>
     
     <div id="playbackControls"> 
-      <button onclick="playPause()">Play/Pause</button> 
-      <button onclick="makeBig()">Big</button>
-      <button onclick="makeSmall()">Small</button>
-      <button onclick="makeNormal()">Normal</button>
-      <input type="range" value="0" id="scrub" />
+      <button id="playpause" onclick="playPause()">Play/Pause</button> 
+      <button id="makebig" onclick="makeBig()">Big</button>
+      <button id="makesmall" onclick="makeSmall()">Small</button>
+      <button id="makenormal" onclick="makeNormal()">Normal</button>
+      <input id="scrub" type="range" value="0"/>
     </div> 
     <br>
 
@@ -76,17 +77,23 @@ POSSIBILITY OF SUCH DAMAGE.
     <input type="text" id="mpdURL">
     <input type="submit" name="Open video" id="mpdButton" onclick="openVideo()" value="Open video" />
     </div>
+    
 </div>
+<br>    
+<br>  
+<br>  
+<br>  
+<p style="position: absolute; bottom: 12%; left: 32%; right: 30%; font-family: Arial; font-size: 14px; color: darkgray;">Example url: http://dash.edgesuite.net/envivio/Envivio-dash2/manifest.mpd</p>
     
 <script> 
 
 var bannerbox = document.getElementById("bannerbox");
+var videonormal = document.getElementById("videonormal");
+var tiletable = document.getElementById("tiletable");
 var video1 = document.getElementById("video1");
 var video2 = document.getElementById("video2"); 
 var video3 = document.getElementById("video3");
 var video4 = document.getElementById("video4"); 
-var videonormal = document.getElementById("videonormal");
-var tiletable = document.getElementById("tiletable");
 
 videonormal.style.visibility = "visible";
 tiletable.style.visibility = "hidden";
@@ -121,9 +128,7 @@ function getPosition(element) {
     return { x: xPosition, y: yPosition };
 }
 
-var url = "http://dash.edgesuite.net/envivio/Envivio-dash2/manifest.mpd";
-// var url = "http://www-itec.uni-klu.ac.at/dash/js/content/bunny_ibmff_240.mpd";
-videoElements = ['video1', 'video2', 'video3', 'video4', 'videonormal'];
+videoElements = ['videonormal', 'video1', 'video2', 'video3', 'video4'];
 
 function openVideo(){
     
@@ -144,7 +149,7 @@ function openVideo(){
     playerObjects = [];
     for (i = 0; i < videoElements.length; i++) { 
         videoElement = videoElements[i];
-        launchDashPlayer(url, videoElement);
+        launchDashPlayer(mpdURL, videoElement);
     }
     
     setTimeout(function() {playPause();
@@ -152,11 +157,11 @@ function openVideo(){
 }
 
 var videos = {
-    a: Popcorn("#video1"),
-    b: Popcorn("#video2"),
-    c: Popcorn("#video3"),
-    d: Popcorn("#video4"),
-    e: Popcorn("#videonormal")
+    a: Popcorn("#videonormal"),
+    b: Popcorn("#video1"),
+    c: Popcorn("#video2"),
+    d: Popcorn("#video3"),
+    e: Popcorn("#video4")
   },
   scrub = $("#scrub"),
   loadCount = 0,
@@ -262,51 +267,51 @@ function sync() {
 
 function playPause() { 
 
-    if (video1.paused) {
+    if (videonormal.paused) {
+        videonormal.play();
         video1.play();
         video2.play();
         video3.play();
         video4.play();
-        videonormal.play();
 
     } else { 
+        videonormal.pause();
         video1.pause();
         video2.pause();
         video3.pause();
         video4.pause();
-        videonormal.pause();
     }
 }
 
 
 function makeBig() { 
+    videonormal.width = 560;
     videoContainer.width = 560;
     videoContainer.height = 315;
     video1.width = 560; 
     video2.width = 560; 
     video3.width = 560; 
     video4.width = 560; 
-    videonormal.width = 560;
 } 
 
 function makeSmall() { 
+    videonormal.width = 320;
     videoContainer.width = 320;
     videoContainer.height = 180;
     video1.width = 320;
     video2.width = 320;
     video3.width = 320;
     video4.width = 320;
-    videonormal.width = 320;
 } 
 
 function makeNormal() { 
+    videonormal.width = 420;
     videoContainer.width = 420;
     videoContainer.height = 236;
     video1.width = 420;
     video2.width = 420;
     video3.width = 420;
     video4.width = 420;
-    videonormal.width = 420;
 } 
  
 function swapVideos(){

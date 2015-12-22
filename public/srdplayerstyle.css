@@ -73,9 +73,73 @@ td, video {
     height: 25px;
     margin-left: auto;
     margin-right: auto; 
-    text-align: center;
     background-color: black;
 }
+
+button, input:focus {outline:0;}
+
+#playpause {
+    position: relative;
+    left: 2%;
+    border: none;
+    border-radius: 4px;
+    background-color: white;  
+}
+
+#playpause:hover {
+    border: none;
+    border-radius: 4px;
+    background-color: gold;  
+}
+
+#makebig {
+    position: relative;
+    left: 3%;
+    border: none;
+    border-radius: 4px;
+    background-color: white;  
+}
+
+#makebig:hover {
+    border: none;
+    border-radius: 4px;
+    background-color: gold;  
+}
+
+#makesmall {
+    position: relative;
+    left: 4%;
+    border: none;
+    border-radius: 4px;
+    background-color: white;  
+}
+
+#makesmall:hover {
+    border: none;
+    border-radius: 4px;
+    background-color: gold;  
+}
+
+#makenormal {
+    position: relative;
+    left: 5%;
+    border: none;
+    border-radius: 4px;
+    background-color: white;  
+}
+
+#makenormal:hover {
+    border: none;
+    border-radius: 4px;
+    background-color: gold;  
+}
+
+#scrub {
+    position: relative;
+    right: -17%;
+    top: 2px;
+}
+
 
 #tiletable {
     position:absolute; 
@@ -96,5 +160,12 @@ td, video {
 }
 
 #mpdURL {
-    width: 334px;
+    position:absolute;
+    left: 0;
+    width: 330px;
+}
+
+#mpdButton {
+    position:absolute;
+    right: 0;
 }
