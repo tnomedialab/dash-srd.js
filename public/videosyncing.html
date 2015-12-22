@@ -29,70 +29,58 @@ POSSIBILITY OF SUCH DAMAGE.
 
 <script src="http://cdn.dashjs.org/latest/dash.all.js"></script>
 <script src="http://cdn.popcornjs.org/code/dist/popcorn.min.js"></script>
+<link rel="stylesheet" type="text/css" href="srdplayerstyle.css">
 
-<style type="text/css">
-table {
-    display: block;
-    border-collapse: collapse;
-}
-th, tr {
-    padding: 0;
-}
-
-td, video {
-    padding: 0;
-    vertical-align: top;
-}
-
-#videoContainer {
-    position: relative;
-    width: 420px;
-    height: 236px;
-    left:34%;
-    right:34%;  
-    overflow: hidden;
-    cursor: pointer;
-}
-
-</style>
 
 <body onLoad="Dash.createAll()"> 
 
-
-<div style="text-align:center;"> 
-  <button onclick="playPause()">Play/Pause</button> 
-  <button onclick="makeBig()">Big</button>
-  <button onclick="makeSmall()">Small</button>
-  <button onclick="makeNormal()">Normal</button>
-  <input type="range" value="0" id="scrub" />
-  <br><br>
-</div> 
+<div id="SRDPlayer">   
+    <div id="videoContainer">
     
-<div id="videoContainer">
-<table id="tiletable" style="position:absolute; top:0; left: 0;" cellspacing="0" cellpadding="0">
-  <tr>
-    <td>  
-     <video id="video1" width="420" class="dashjs-player"></video>
-    </td>
-    <td>
-     <video id="video2" width="420" class="dashjs-player"></video>
-    </td>    
-  </tr>
-  <tr>		
-    <td>
-     <video id="video3" width="420" class="dashjs-player"></video>       
-    </td>
-    <td>
-     <video id="video4" width="420" class="dashjs-player"></video>
-    </td>		
-  </tr>
-</table>
- 
-<video id="videonormal" width="420" class="dashjs-player" style="position:absolute; top:0; left: 0;"></video>
+    <div id="bannerbox">
+        <img src="srdbanner.png" alt="SRD Player banner"> 
+    </div>    
+        
+    <table id="tiletable" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>  
+         <video id="video1" width="420" class="dashjs-player"></video>
+        </td>
+        <td>
+         <video id="video2" width="420" class="dashjs-player"></video>
+        </td>    
+      </tr>
+      <tr>		
+        <td>
+         <video id="video3" width="420" class="dashjs-player"></video>       
+        </td>
+        <td>
+         <video id="video4" width="420" class="dashjs-player"></video>
+        </td>		
+      </tr>
+    </table>
+
+    <video id="videonormal" width="420" class="dashjs-player"></video>
+    </div>
+    
+    <div id="playbackControls"> 
+      <button onclick="playPause()">Play/Pause</button> 
+      <button onclick="makeBig()">Big</button>
+      <button onclick="makeSmall()">Small</button>
+      <button onclick="makeNormal()">Normal</button>
+      <input type="range" value="0" id="scrub" />
+    </div> 
+    <br>
+
+    <div id="videoLoader"> 
+    <input type="text" id="mpdURL">
+    <input type="submit" name="Open video" id="mpdButton" onclick="openVideo()" value="Open video" />
+    </div>
 </div>
-
-<script> 
     
+<script> 
+
+var bannerbox = document.getElementById("bannerbox");
 var video1 = document.getElementById("video1");
 var video2 = document.getElementById("video2"); 
 var video3 = document.getElementById("video3");
@@ -113,9 +101,12 @@ function getClickPosition(e) {
     var parentPosition = getPosition(e.currentTarget);
     var xPosition = e.clientX - parentPosition.x - (tiletable.clientWidth / 2);
     var yPosition = e.clientY - parentPosition.y - (tiletable.clientHeight / 2);
+    
+    setTimeout(function(){
     swapVideos();
     tiletable.style.left = xPosition + 'px';
     tiletable.style.top = yPosition + 'px';
+    }, 600);
 }
  
 function getPosition(element) {
@@ -134,20 +125,30 @@ var url = "http://dash.edgesuite.net/envivio/Envivio-dash2/manifest.mpd";
 // var url = "http://www-itec.uni-klu.ac.at/dash/js/content/bunny_ibmff_240.mpd";
 videoElements = ['video1', 'video2', 'video3', 'video4', 'videonormal'];
 
-function launchDashPlayer (url, videoElement){
-    var context = new Dash.di.DashContext();
-    var player = new MediaPlayer(context);
-    player.setAutoPlay(false);
-    player.startup();
-    player.attachView(document.querySelector("#" + videoElement));
-    player.attachSource(url);
-    playerObjects.push(player);
-};
+function openVideo(){
+    
+    bannerbox.style.visibility = "hidden";
+    
+    var mpdURL = document.getElementById('mpdURL').value;
+    
+    function launchDashPlayer (mpdURL, videoElement){
+        var context = new Dash.di.DashContext();
+        var player = new MediaPlayer(context);
+        player.setAutoPlay(false);
+        player.startup();
+        player.attachView(document.querySelector("#" + videoElement));
+        player.attachSource(mpdURL);
+        playerObjects.push(player);
+    };
 
-playerObjects = [];
-for (i = 0; i < videoElements.length; i++) { 
-    videoElement = videoElements[i];
-    launchDashPlayer(url, videoElement);
+    playerObjects = [];
+    for (i = 0; i < videoElements.length; i++) { 
+        videoElement = videoElements[i];
+        launchDashPlayer(url, videoElement);
+    }
+    
+    setTimeout(function() {playPause();
+    }, 1000);
 }
 
 var videos = {
@@ -310,7 +311,6 @@ function makeNormal() {
  
 function swapVideos(){
 
-   setTimeout(function(){
    if (videonormal.style.visibility == 'visible' && tiletable.style.visibility == 'hidden'){
        videonormal.style.visibility = 'hidden';
        tiletable.style.visibility = 'visible';
@@ -321,7 +321,7 @@ function swapVideos(){
        videonormal.style.visibility = 'visible';
        tiletable.style.visibility = 'hidden';
        return;
-   }}, 600);
+   }
 }
 
 </script> 
