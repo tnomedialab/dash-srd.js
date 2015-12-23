@@ -61,19 +61,14 @@ function crossOriginRequest (url, callback){
     function crossOriginRequestHandler(evtXHR) {
       if (invocation.readyState == 4) {
           if (invocation.status == 200) {
-              returnResult();
+              var response = invocation.responseText;
+              callback(null, response);
           }
           else {
             console.log("crossOriginRequestHandler: " + "Invocation Errors Occured");
           }
       }
     }
-    
-    function returnResult () {
-      var response = invocation.responseText;
-      callback(null, response);
-  }
-  
   callOtherDomain();
 }
 

@@ -1,6 +1,5 @@
 /* 
- * Created bij Jorrit van den Berg on 07/12/15.
- * Copyright (c) 2015, TNO.
+ * Copyright (c) 2015, jorritvandenberg
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,41 +24,34 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Basic script to retrieve MPD files and convert them to JSON.
+// Global variables
+var bannerbox;
+var videonormal;
+var tiletable;
+var video1;
+var video2;
+var video3;
+var video4;
+var videoElements;
+    
+$(document).ready(function() {
+    bannerbox = document.getElementById("bannerbox");
+    videonormal = document.getElementById("videonormal");
+    tiletable = document.getElementById("tiletable");
+    video1 = document.getElementById("video1");
+    video2 = document.getElementById("video2");
+    video3 = document.getElementById("video3");
+    video4 = document.getElementById("video4");
 
-"use strict";
-
-var MPDRetriever = function (params) {
-    this.params = params;
-};
-
-MPDRetriever.prototype = {
-  retrieveAndConvert: function (mpdURL, callback) {
-
-    crossOriginRequest(mpdURL, function(err, data) {
-
-      if (err) {
-
-    return console.err(err);
-    }   
-
-    callback(null, data); 
-  }); 
-  
-},
-
-  getMPD: function () {
-
-    this.retrieveAndConvert (this.params.mpdURL, function(err, data) {
-
-      if (err) {
-
-    return console.err(err);
-    }
-
-
-    ServiceBus.publish("MPD-incoming", data);
-
-
-});}
-};
+    videoElements = ['videonormal', 'video1', 'video2', 'video3', 'video4'];
+    
+    videonormal.style.visibility = 'visible';
+    tiletable.style.visibility = 'hidden';   
+    
+    video1.muted = true;
+    video2.muted = true;
+    video3.muted = true;
+    video4.muted = true;
+    
+    SynchroniseVideos();
+});

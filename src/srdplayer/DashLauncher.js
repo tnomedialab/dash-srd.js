@@ -1,6 +1,5 @@
 /* 
- * Created bij Jorrit van den Berg on 07/12/15.
- * Copyright (c) 2015, TNO.
+ * Copyright (c) 2015, jorritvandenberg
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,41 +24,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Basic script to retrieve MPD files and convert them to JSON.
+// Launches Dash.js player for videoElement
 
-"use strict";
-
-var MPDRetriever = function (params) {
-    this.params = params;
+function launchDashPlayer (videoElement){
+    var context = new Dash.di.DashContext();
+    var player = new MediaPlayer(context);
+    player.setAutoPlay(false);
+    player.startup();
+    player.attachView(document.querySelector("#" + videoElement));
+    return player;
 };
 
-MPDRetriever.prototype = {
-  retrieveAndConvert: function (mpdURL, callback) {
-
-    crossOriginRequest(mpdURL, function(err, data) {
-
-      if (err) {
-
-    return console.err(err);
-    }   
-
-    callback(null, data); 
-  }); 
-  
-},
-
-  getMPD: function () {
-
-    this.retrieveAndConvert (this.params.mpdURL, function(err, data) {
-
-      if (err) {
-
-    return console.err(err);
-    }
 
 
-    ServiceBus.publish("MPD-incoming", data);
-
-
-});}
-};

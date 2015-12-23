@@ -1,6 +1,5 @@
 /* 
- * Created bij Jorrit van den Berg on 07/12/15.
- * Copyright (c) 2015, TNO.
+ * Copyright (c) 2015, jorritvandenberg
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,41 +24,41 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Basic script to retrieve MPD files and convert them to JSON.
+// Attaches MPD or part of it to Dash player
 
-"use strict";
-
-var MPDRetriever = function (params) {
-    this.params = params;
+var normalVideoAttacher = function() {
+  ServiceBus.subscribe("Non-SRD-MPD", this.attacher, "normalVideoAttacher");
 };
 
-MPDRetriever.prototype = {
-  retrieveAndConvert: function (mpdURL, callback) {
+normalVideoAttacher.prototype = {
+  attacher: function (data) {
 
-    crossOriginRequest(mpdURL, function(err, data) {
+    var player = launchDashPlayer("videonormal"); 
+    player.attachSource(data);
 
-      if (err) {
+    $.when(videonormal.readyState === 4).then(setTimeout(function() {playPause();
+    }, 1));
 
-    return console.err(err);
-    }   
+  }
+};
 
-    callback(null, data); 
-  }); 
-  
-},
+var tiledVideoAttacher = function() {
+  ServiceBus.subscribe("SRD-MPD", this.attacher, "tiledVideoAttacher");
+};
 
-  getMPD: function () {
+tiledVideoAttacher.prototype = {
+  attacher: function (data) {
 
-    this.retrieveAndConvert (this.params.mpdURL, function(err, data) {
+    var playerObjects = [];
 
-      if (err) {
+    for (var i = 0; i < videoElements.length; i++) { 
+        var videoElement = videoElements[i];
+        var player = launchDashPlayer(videoElement);
+        playerObjects.push(player);
 
-    return console.err(err);
+    videoContainer.addEventListener("click", getClickPosition, false);
     }
-
-
-    ServiceBus.publish("MPD-incoming", data);
-
-
-});}
+  }
 };
+
+

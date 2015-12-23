@@ -1,6 +1,5 @@
 /* 
- * Created bij Jorrit van den Berg on 07/12/15.
- * Copyright (c) 2015, TNO.
+ * Copyright (c) 2015, jorritvandenberg
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,41 +24,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Basic script to retrieve MPD files and convert them to JSON.
+// Instantiates parser and retriever objects for MPD processing.
 
-"use strict";
-
-var MPDRetriever = function (params) {
-    this.params = params;
+var MPDManager = function(mpdURL) {
+    new(normalVideoAttacher);
+    new(tiledVideoAttacher);
+    new(MPDParser);
+    var mpdRetriever = new(MPDRetriever);
+    mpdRetriever.params = ({mpdURL: mpdURL});
+    mpdRetriever.getMPD();
 };
 
-MPDRetriever.prototype = {
-  retrieveAndConvert: function (mpdURL, callback) {
-
-    crossOriginRequest(mpdURL, function(err, data) {
-
-      if (err) {
-
-    return console.err(err);
-    }   
-
-    callback(null, data); 
-  }); 
-  
-},
-
-  getMPD: function () {
-
-    this.retrieveAndConvert (this.params.mpdURL, function(err, data) {
-
-      if (err) {
-
-    return console.err(err);
-    }
-
-
-    ServiceBus.publish("MPD-incoming", data);
-
-
-});}
-};

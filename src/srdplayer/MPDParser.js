@@ -36,7 +36,7 @@ var MPDParser = function() {
 MPDParser.prototype = {
   parseMPD: function (data) {
 
-    /*TODO: implement parsing routine and remove console.log
+    /* TODO: implement parsing routine and remove console.log
 
     var id = data.MPD.Period.AdaptationSet.Representation[0]._id;
     var codecs = data.MPD.Period.AdaptationSet.Representation[0]._codecs;
@@ -58,10 +58,12 @@ MPDParser.prototype = {
 
     */
    
-    console.log(JSON.stringify(data, null, 4));
 
-    // console.log(segmentURLs);
-    // ServiceBus.publish("Video-incoming", message);
+    var x2js = new X2JS(matchers,'', true);
+    var xmlDoc = x2js.parseXmlString(data);
+    var mpdJSON = x2js.xml2json(xmlDoc); 
+
+    ServiceBus.publish("Non-SRD-MPD", mpdJSON);
 
   }
 };
