@@ -25,7 +25,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Basic script to parse JSON extracted from incoming MPD file.
+// Basic script to parse JSON extracted from incoming MPD file and route it based on the SupplementalProperty
 
 "use strict";
    
@@ -36,34 +36,20 @@ var MPDParser = function() {
 MPDParser.prototype = {
   parseMPD: function (data) {
 
-    /* TODO: implement parsing routine and remove console.log
-
-    var id = data.MPD.Period.AdaptationSet.Representation[0]._id;
-    var codecs = data.MPD.Period.AdaptationSet.Representation[0]._codecs;
-    var mimeType = data.MPD.Period.AdaptationSet.Representation[0]._mimeType;
-    var startWithSAP = data.MPD.Period.AdaptationSet.Representation[0]._startWithSAP;
-    var bandwidth = data.MPD.Period.AdaptationSet.Representation[0]._bandwidth;
-    var duration = data.MPD.Period.AdaptationSet.Representation[0].SegmentList._duration;
-
-    var initializationWidth = data.MPD.Period.AdaptationSet.Representation[0]._width;
-    var initializationHeight = data.MPD.Period.AdaptationSet.Representation[0]._height;
-
-    var baseURL = data.MPD.BaseURL;     
-    var initializationSourceURL = data.MPD.Period.AdaptationSet.Representation[0].SegmentBase.Initialization._sourceURL;
-    var segmentURLs = data.MPD.Period.AdaptationSet.Representation[0].SegmentList.SegmentURL;
-
-    // var mediaURL = baseURL + initializationSourceURL;
-
-    var message = {initializationWidth: initializationWidth, initializationHeight: initializationHeight, baseURL: baseURL, segmentURLs: segmentURLs};
-
-    */
-   
-
+    var mpdURL = data[0];
     var x2js = new X2JS(matchers,'', true);
-    var xmlDoc = x2js.parseXmlString(data);
-    var mpdJSON = x2js.xml2json(xmlDoc); 
+    var mpdJSON = x2js.xml_str2json(data[1]); 
+    
+    
+    if (typeof(mpdJSON.Period.AdaptationSet[0].SupplementalProperty) !== "undefined") {
 
-    ServiceBus.publish("Non-SRD-MPD", mpdJSON);
+        ServiceBus.publish("SRD-MPD", [mpdURL, mpdJSON]);
 
+    } else {
+        
+        ServiceBus.publish("Non-SRD-MPD", [mpdURL, mpdJSON]);
+        
+    }
+    
   }
 };

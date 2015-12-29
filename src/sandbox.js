@@ -1,6 +1,5 @@
 /* 
- * Created bij Jorrit van den Berg on 07/12/15.
- * Copyright (c) 2015, TNO.
+ * Copyright (c) 2015, jorritvandenberg
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,41 +24,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Basic script to retrieve MPD files and convert them to JSON.
 
-"use strict";
 
-var MPDRetriever = function (params) {
-    this.params = params;
-};
+var id = data.MPD.Period.AdaptationSet.Representation[0]._id;
+var codecs = data.MPD.Period.AdaptationSet.Representation[0]._codecs;
+var mimeType = data.MPD.Period.AdaptationSet.Representation[0]._mimeType;
+var startWithSAP = data.MPD.Period.AdaptationSet.Representation[0]._startWithSAP;
+var bandwidth = data.MPD.Period.AdaptationSet.Representation[0]._bandwidth;
+var duration = data.MPD.Period.AdaptationSet.Representation[0].SegmentList._duration;
 
-MPDRetriever.prototype = {
-  retrieveAndConvert: function (mpdURL, callback) {
+var initializationWidth = data.MPD.Period.AdaptationSet.Representation[0]._width;
+var initializationHeight = data.MPD.Period.AdaptationSet.Representation[0]._height;
 
-    crossOriginRequest(mpdURL, function(err, data) {
+var baseURL = data.MPD.BaseURL;     
+var initializationSourceURL = data.MPD.Period.AdaptationSet.Representation[0].SegmentBase.Initialization._sourceURL;
+var segmentURLs = data.MPD.Period.AdaptationSet.Representation[0].SegmentList.SegmentURL;
 
-      if (err) {
+// var mediaURL = baseURL + initializationSourceURL;
 
-    return console.err(err);
-    }   
+var message = {initializationWidth: initializationWidth, initializationHeight: initializationHeight, baseURL: baseURL, segmentURLs: segmentURLs};
 
-    callback(null, data); 
-  }); 
-  
-},
 
-  getMPD: function () {
- 
-    var mpdURL = this.params.mpdURL;
-
-    this.retrieveAndConvert (mpdURL, function(err, data) {
-
-      if (err) {
-
-    return console.err(err);
-    }
-    
-    ServiceBus.publish("MPD-incoming", [mpdURL, data]);
-
-});}
-};

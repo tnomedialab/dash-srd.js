@@ -25,14 +25,15 @@
  */
 
 // Global variables
-var bannerbox;
-var videonormal;
-var tiletable;
-var video1;
-var video2;
-var video3;
-var video4;
-var videoElements;
+var bannerbox,
+    videonormal,
+    tiletable,
+    video1,
+    video2,
+    video3,
+    video4,
+    videoElements,
+    getClickPositionEnabled;
     
 $(document).ready(function() {
     bannerbox = document.getElementById("bannerbox");
@@ -52,6 +53,7 @@ $(document).ready(function() {
     video2.muted = true;
     video3.muted = true;
     video4.muted = true;
+    getClickPositionEnabled = false;
     
     SynchroniseVideos();
 });

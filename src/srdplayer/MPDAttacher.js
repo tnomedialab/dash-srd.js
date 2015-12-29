@@ -27,13 +27,20 @@
 // Attaches MPD or part of it to Dash player
 
 var normalVideoAttacher = function() {
+    
   ServiceBus.subscribe("Non-SRD-MPD", this.attacher, "normalVideoAttacher");
+
 };
 
 normalVideoAttacher.prototype = {
   attacher: function (data) {
 
-    var player = launchDashPlayer("videonormal"); 
+    if (getClickPositionEnabled === true) {
+
+        videoContainer.removeEventListener("click", getClickPosition);
+    }     
+
+    var player = launchDashPlayer("videonormal");
     player.attachSource(data);
 
     $.when(videonormal.readyState === 4).then(setTimeout(function() {playPause();
@@ -43,21 +50,30 @@ normalVideoAttacher.prototype = {
 };
 
 var tiledVideoAttacher = function() {
+    
   ServiceBus.subscribe("SRD-MPD", this.attacher, "tiledVideoAttacher");
+
 };
 
 tiledVideoAttacher.prototype = {
   attacher: function (data) {
 
+    /*
     var playerObjects = [];
 
     for (var i = 0; i < videoElements.length; i++) { 
         var videoElement = videoElements[i];
         var player = launchDashPlayer(videoElement);
-        playerObjects.push(player);
+        playerObjects.push(player); */
 
-    videoContainer.addEventListener("click", getClickPosition, false);
+    if (getClickPositionEnabled === false) {
+        
+        videoContainer.addEventListener("click", getClickPosition, false);
+        getClickPositionEnabled = true;
+        
     }
+    // }
+      
   }
 };
 
