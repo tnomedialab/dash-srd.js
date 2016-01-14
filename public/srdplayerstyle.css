@@ -31,15 +31,21 @@ POSSIBILITY OF SUCH DAMAGE.
 table {
     display: block;
     border-collapse: collapse;
+    border:none;
+    outline: none;
 }
 
 th, tr {
     padding: 0;
+    border-collapse: collapse;
+    border:none;
+    outline: none;
 }
 
 td, video {
     padding: 0;
     vertical-align: top;
+    outline: none;
 }
 
 #SRDPlayer {
@@ -140,13 +146,13 @@ button, input:focus {outline:0;}
     top: 2px;
 }
 
-#tiletable {
+#frontBackLayer {
     position:absolute; 
     top:0; 
     left: 0;
 }
 
-#videonormal {
+#zoomLayer1, #zoomLayer2 {
     position:absolute; 
     top:0; 
     left: 0;

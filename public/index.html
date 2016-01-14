@@ -43,8 +43,9 @@ POSSIBILITY OF SUCH DAMAGE.
     <div id="bannerbox">
         <img src="srdbanner.png" alt="SRD Player banner"> 
     </div>    
-        
-    <table id="tiletable" cellspacing="0" cellpadding="0">
+    
+    <video id="frontBackLayer" width="420" class="dashjs-player"></video>
+    <table id="zoomLayer1" cellspacing="0" cellpadding="0">
       <tr>
         <td>  
          <video id="video1" width="420" class="dashjs-player"></video>
@@ -62,8 +63,26 @@ POSSIBILITY OF SUCH DAMAGE.
         </td>		
       </tr>
     </table>
+        
+    <table id="zoomLayer2" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>  
+         <video id="video5" width="420" class="dashjs-player"></video>
+        </td>
+        <td>
+         <video id="video6" width="420" class="dashjs-player"></video>
+        </td>    
+      </tr>
+      <tr>		
+        <td>
+         <video id="video7" width="420" class="dashjs-player"></video>       
+        </td>
+        <td>
+         <video id="video8" width="420" class="dashjs-player"></video>
+        </td>		
+      </tr>
+    </table>
 
-    <video id="videonormal" width="420" class="dashjs-player"></video>
     </div>
     
     <div id="playbackControls"> 
@@ -85,7 +104,7 @@ POSSIBILITY OF SUCH DAMAGE.
 <br>  
 <br>  
 <br>  
-<p style="position: absolute; bottom: 12%; left: 32%; right: 30%; font-family: Arial; font-size: 14px; color: darkgray;">Example url: http://dash.edgesuite.net/envivio/Envivio-dash2/manifest.mpd</p>
+<p style="position: absolute; bottom: 12%; left: 32%; right: 30%; font-family: Arial; font-size: 14px; color: darkgray;">Example url: http://localhost:8000/Documents/Test%20content/Sample%20SRD/output.mpd</p>
     
 
 </body> 

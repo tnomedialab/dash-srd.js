@@ -26,34 +26,65 @@
 
 // Global variables
 var bannerbox,
-    videonormal,
-    tiletable,
+    frameRate,
+    frontBackLayer,
+    zoomLayer1,
+    zoomLayer2,
     video1,
     video2,
     video3,
     video4,
-    videoElements,
-    getClickPositionEnabled;
+    video5,
+    video6,
+    video7,
+    video8,
+    zoomLayer1VideoElements,
+    zoomLayer2VideoElements,
+    visibleElement,
+    zoomLayer1PlayerObjects,
+    zoomLayer2PlayerObjects,
+    playbackControls,
+    getClickPositionEnabled,
+    mpdURL,
+    inMPD,
+    currentZoomLevel,
+    maxZoomLevel,
+    zoomLayer1Status;
     
 $(document).ready(function() {
     bannerbox = document.getElementById("bannerbox");
-    videonormal = document.getElementById("videonormal");
-    tiletable = document.getElementById("tiletable");
+    frontBackLayer = document.getElementById("frontBackLayer");
+    zoomLayer1 = document.getElementById("zoomLayer1");
+    zoomLayer2 = document.getElementById("zoomLayer2");
     video1 = document.getElementById("video1");
     video2 = document.getElementById("video2");
     video3 = document.getElementById("video3");
     video4 = document.getElementById("video4");
+    video5 = document.getElementById("video5");
+    video6 = document.getElementById("video6");
+    video7 = document.getElementById("video7");
+    video8 = document.getElementById("video8");
+    playbackControls = document.getElementById("playbackControls");
 
-    videoElements = ['videonormal', 'video1', 'video2', 'video3', 'video4'];
+    zoomLayer1VideoElements = ['video1', 'video2', 'video3', 'video4'];
+    zoomLayer2VideoElements = ['video5', 'video6', 'video7', 'video8'];  
+    zoomLayer1PlayerObjects = [];
+    zoomLayer2PlayerObjects = [];
     
-    videonormal.style.visibility = 'visible';
-    tiletable.style.visibility = 'hidden';   
+    frontBackLayer.style.visibility = 'visible';
+    zoomLayer1.style.visibility = 'hidden';
+    zoomLayer2.style.visibility = 'hidden'; 
     
     video1.muted = true;
     video2.muted = true;
     video3.muted = true;
     video4.muted = true;
+    video5.muted = true;
+    video6.muted = true;
+    video7.muted = true;
+    video8.muted = true;
     getClickPositionEnabled = false;
+    zoomLayer1Status = null;
     
     SynchroniseVideos();
 });

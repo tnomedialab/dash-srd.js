@@ -24,16 +24,36 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-function getClickPosition(e) {
+function onClickEvent(e) {
     var parentPosition = getPosition(e.currentTarget);
-    var xPosition = e.clientX - parentPosition.x - (tiletable.clientWidth / 2);
-    var yPosition = e.clientY - parentPosition.y - (tiletable.clientHeight / 2);
+    var xPosition = -(e.clientX - parentPosition.x);
+    var yPosition = -(e.clientY - parentPosition.y); 
+    var zoomLayer;
     
-    setTimeout(function(){
-    swapVideos();
-    tiletable.style.left = xPosition + 'px';
-    tiletable.style.top = yPosition + 'px';
-    }, 600);
+    // TODO: elaborate on this to suport more zoomlevels   
+    if (typeof currentZoomLevel === "undefined") {
+        zoomLayer = zoomLayer1;
+
+        currentZoomLevel = 0;
+        if (zoomLayer1Status === null){
+
+            ServiceBus.publish("Zoom-level1", [xPosition, yPosition, zoomLayer]);
+            zoomLayer1Status = "attached";
+
+            zoomLayer1.setAttribute('onmousedown', 'dragtool.startMoving(this, "videoContainer", event);');
+            zoomLayer1.setAttribute('onmouseup', 'dragtool.stopMoving("videoContainer");');
+
+        } else {
+            updateVideoContainer(xPosition, yPosition, zoomLayer1, 1);
+        }
+        
+        
+    } else if (currentZoomLevel === 0) {
+        zoomLayer1.removeAttribute('onmousedown');
+        zoomLayer1.removeAttribute('onmouseup');
+        setVisibleElement("frontbacklayer");
+        currentZoomLevel = undefined;
+    }
 }
  
 function getPosition(element) {
@@ -48,4 +68,81 @@ function getPosition(element) {
     return { x: xPosition, y: yPosition };
 }
 
+function updateVideoContainer(xPosition, yPosition, zoomLayer, delay) {
+    
+    zoomLayer.style.left = xPosition + 'px';
+    zoomLayer.style.top = yPosition + 'px';
+    setTimeout(function(){    
+        setVisibleElement("zoomlayer1");
+    }, delay);
+    
+}
 
+function setVisibleElement(visibleElement){
+   
+   if (visibleElement === "frontbacklayer") {
+       frontBackLayer.style.visibility = "visible";
+       zoomLayer1.style.visibility = "hidden";
+       zoomLayer2.style.visibility = "hidden";
+       bannerbox.style.visibility = "hidden";
+
+   } else if (visibleElement === "zoomlayer1") {
+       zoomLayer1.style.visibility = "visible";
+       frontBackLayer.style.visibility = "hidden";
+       zoomLayer2.style.visibility = "hidden";
+       bannerbox.style.visibility = "hidden";
+
+   } else if (visibleElement === "zoomlayer2") {
+       zoomLayer2.style.visibility = "visible";
+       frontBackLayer.style.visibility = "hidden";
+       zoomLayer1.style.visibility = "hidden";
+       bannerbox.style.visibility = "hidden";
+
+   } else if (visibleElement === "bannerbox") {
+       bannerbox.style.visibility = "visible";
+       frontBackLayer.style.visibility = "hidden";
+       zoomLayer1.style.visibility = "hidden";
+       zoomLayer2.style.visibility = "hidden";
+
+   }
+}
+
+var dragtool = function(){
+                return {
+                    move : function(divid,xpos,ypos){
+                        divid.style.left = xpos + 'px';
+                        divid.style.top = ypos + 'px';
+                    },
+                    startMoving : function(divid, videoContainer, evt){
+                        
+                        var eWi = parseInt(divid.offsetWidth),
+                            eHe = parseInt(divid.offsetHeight),
+
+                            // TODO: enhance capturing of current position
+                            // eLo = parseInt(divid.offsetLeft),
+                            // eTo = parseInt(divid.offsetTop);
+                    
+
+                        evt = evt || window.event;
+                        document.getElementById(videoContainer).style.cursor='move';
+
+                        document.getElementById(videoContainer).onmousemove = function(evt){
+                            evt = evt || window.event;                       
+
+                            var parentPosition = getPosition(evt.currentTarget);
+                            var xPosition = evt.clientX - parentPosition.x - (eWi / 2);
+                            var yPosition = evt.clientY - parentPosition.y - (eHe / 2);
+                            
+                            // TODO: Implement dragging boundaries for FireFox
+
+                            dragtool.move(divid,xPosition,yPosition);
+                        };
+                    },
+                    stopMoving : function(videoContainer){
+		        document.getElementById(videoContainer).style.cursor='default';
+                        document.getElementById(videoContainer).onmousemove = function(){};
+                    }
+                };
+            }();
+            
+            

@@ -27,7 +27,7 @@
 var SynchroniseVideos = function(){
     
     var videos = {
-        a: Popcorn("#videonormal"),
+        a: Popcorn("#frontBackLayer"),
         b: Popcorn("#video1"),
         c: Popcorn("#video2"),
         d: Popcorn("#video3"),
@@ -69,7 +69,7 @@ var SynchroniseVideos = function(){
                 videos.b.emit("timeupdate");
                 videos.c.emit("timeupdate");
                 videos.d.emit("timeupdate");
-                videos.e.emit("timeupdate");                      
+                videos.e.emit("timeupdate"); 
 
                 // update scrubber
                 scrub.val(this.currentTime());
@@ -120,13 +120,13 @@ var SynchroniseVideos = function(){
         videos.d.currentTime(
           videos.a.currentTime()
         );
-      }
-
+      }     
       if (videos.e.media.readyState === 4) {
         videos.e.currentTime(
           videos.a.currentTime()
         );
       }
+      
       requestAnimationFrame(syncVideos);
     }
 };

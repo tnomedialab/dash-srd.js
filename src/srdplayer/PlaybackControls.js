@@ -26,7 +26,6 @@
 
 function openVideo(){
     
-    bannerbox.style.visibility = 'hidden';
     var mpdURL = document.getElementById('mpdURL').value; 
     MPDManager(mpdURL);
     
@@ -34,15 +33,15 @@ function openVideo(){
 
 function playPause() { 
 
-    if (videonormal.paused) {
-        videonormal.play();
+    if (frontBackLayer.paused) {
+        frontBackLayer.play();
         video1.play();
         video2.play();
         video3.play();
         video4.play();
 
     } else { 
-        videonormal.pause();
+        frontBackLayer.pause();
         video1.pause();
         video2.pause();
         video3.pause();
@@ -51,7 +50,7 @@ function playPause() {
 }
 
 function makeBig() { 
-    videonormal.width = 560;
+    frontBackLayer.width = 560;
     videoContainer.width = 560;
     videoContainer.height = 315;
     video1.width = 560; 
@@ -61,7 +60,7 @@ function makeBig() {
 } 
 
 function makeSmall() { 
-    videonormal.width = 320;
+    frontBackLayer.width = 320;
     videoContainer.width = 320;
     videoContainer.height = 180;
     video1.width = 320;
@@ -71,27 +70,12 @@ function makeSmall() {
 } 
 
 function makeNormal() { 
-    videonormal.width = 420;
+    frontBackLayer.width = 420;
     videoContainer.width = 420;
     videoContainer.height = 236;
     video1.width = 420;
     video2.width = 420;
     video3.width = 420;
     video4.width = 420;
-} 
- 
-function swapVideos(){
-
-   if (videonormal.style.visibility == 'visible' && tiletable.style.visibility == 'hidden'){
-       videonormal.style.visibility = 'hidden';
-       tiletable.style.visibility = 'visible';
-       return;
-   } 
-
-   if (videonormal.style.visibility == 'hidden' && tiletable.style.visibility == 'visible'){
-       videonormal.style.visibility = 'visible';
-       tiletable.style.visibility = 'hidden';
-       return;
-   }
 }
 
