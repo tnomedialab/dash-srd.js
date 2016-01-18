@@ -25,7 +25,9 @@
  */
 
 // Global variables
-var bannerbox,
+var SRDPlayer,
+    videoContainer,
+    bannerbox,
     frameRate,
     frontBackLayer,
     zoomLayer1,
@@ -49,9 +51,17 @@ var bannerbox,
     inMPD,
     currentZoomLevel,
     maxZoomLevel,
-    zoomLayer1Status;
+    zoomLayer1Status,
+    fullScreenFlag,
+    timeUpdateIntervals,
+    contentAspectRatio,
+    contentWidth,
+    contentHeight,
+    screenAspectRatio;
     
 $(document).ready(function() {
+    SRDPlayer = document.getElementById("SRDPlayer");
+    videoContainer = document.getElementById("videoContainer");
     bannerbox = document.getElementById("bannerbox");
     frontBackLayer = document.getElementById("frontBackLayer");
     zoomLayer1 = document.getElementById("zoomLayer1");
@@ -66,14 +76,14 @@ $(document).ready(function() {
     video8 = document.getElementById("video8");
     playbackControls = document.getElementById("playbackControls");
 
-    zoomLayer1VideoElements = ['video1', 'video2', 'video3', 'video4'];
-    zoomLayer2VideoElements = ['video5', 'video6', 'video7', 'video8'];  
+    zoomLayer1VideoElements = [video1, video2, video3, video4];
+    zoomLayer2VideoElements = [video5, video6, video7, video8];  
     zoomLayer1PlayerObjects = [];
     zoomLayer2PlayerObjects = [];
     
     frontBackLayer.style.visibility = 'visible';
     zoomLayer1.style.visibility = 'hidden';
-    zoomLayer2.style.visibility = 'hidden'; 
+    zoomLayer2.style.visibility = 'hidden';    
     
     video1.muted = true;
     video2.muted = true;
@@ -85,6 +95,9 @@ $(document).ready(function() {
     video8.muted = true;
     getClickPositionEnabled = false;
     zoomLayer1Status = null;
+    fullScreenFlag = false;
+    timeUpdateIntervals = {Firefox: 250, Chrome:250, Safari:250, Opera: 250, IE:250};
+    screenAspectRatio = screen.width / screen.height;
     
     SynchroniseVideos();
 });

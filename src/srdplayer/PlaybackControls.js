@@ -27,6 +27,8 @@
 function openVideo(){
     
     var mpdURL = document.getElementById('mpdURL').value; 
+    bannerbox.style.backgroundImage = "none";
+    bannerbox.style.backgroun = "black";
     MPDManager(mpdURL);
     
 }
@@ -49,33 +51,165 @@ function playPause() {
     }
 }
 
-function makeBig() { 
-    frontBackLayer.width = 560;
-    videoContainer.width = 560;
-    videoContainer.height = 315;
-    video1.width = 560; 
-    video2.width = 560; 
-    video3.width = 560; 
-    video4.width = 560; 
+function switchSound() { 
+    
+    if (frontBackLayer.muted === false){
+        frontBackLayer.muted = true;
+    } else if (frontBackLayer.muted === true){
+        frontBackLayer.muted = false;
+    }
 } 
 
-function makeSmall() { 
-    frontBackLayer.width = 320;
-    videoContainer.width = 320;
-    videoContainer.height = 180;
-    video1.width = 320;
-    video2.width = 320;
-    video3.width = 320;
-    video4.width = 320;
-} 
+function switchScreenMode() {
+    
+    var videoHeight,
+        videoWidth,       
+        fullScreenVideoHeight,
+        fullScreenVideoWidth,
+        screenChangeEvents;
 
-function makeNormal() { 
-    frontBackLayer.width = 420;
-    videoContainer.width = 420;
-    videoContainer.height = 236;
-    video1.width = 420;
-    video2.width = 420;
-    video3.width = 420;
-    video4.width = 420;
+    if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {
+        if (videoContainer.requestFullscreen) {
+            videoContainer.requestFullscreen();
+        } else if (videoContainer.msRequestFullscreen) {
+            videoContainer.msRequestFullscreen();
+        } else if (videoContainer.mozRequestFullScreen) {
+            videoContainer.mozRequestFullScreen();
+        } else if (videoContainer.webkitRequestFullscreen) {
+            videoContainer.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+        }
+        
+        fullScreenFlag = true;   
+        
+        if (screenAspectRatio  == contentAspectRatio){
+                
+            fullScreenVideoHeight = screen.height;
+            fullScreenVideoWidth = screen.width;
+            
+        } else if (screenAspectRatio < contentAspectRatio){
+
+            fullScreenVideoHeight = screen.width / contentAspectRatio;
+            fullScreenVideoWidth = screen.width;   
+            
+        } else if (screenAspectRatio > contentAspectRatio) {
+
+            fullScreenVideoHeight = screen.width / contentAspectRatio;
+            fullScreenVideoWidth = screen.width;
+            
+        }
+        
+        setTimeout(function() {
+            $('#zoomLayer1').toggleClass('fullscreen'); 
+            $('#zoomLayer2').toggleClass('fullscreen'); 
+            
+            zoomLayer1.width = fullScreenVideoWidth * 2;
+            zoomLayer1.height = fullScreenVideoHeight * 2;
+            zoomLayer2.width = fullScreenVideoWidth * 2;
+            zoomLayer2.height = fullScreenVideoHeight * 2;
+            
+            $('#playbackControls').toggleClass('fullscreen'); 
+            $('#frontBackLayer').toggleClass('fullscreen');
+            $('#bannerbox').toggleClass('fullscreen');
+            $('#videoContainer').toggleClass('fullscreen');
+
+            adjustVideoSizes(fullScreenVideoHeight, fullScreenVideoWidth);
+        }, 35);
+
+    } else {
+        if (videoContainer.exitFullscreen) {
+            videoContainer.exitFullscreen();
+        } else if (videoContainer.msExitFullscreen) {
+            videoContainer.msExitFullscreen();
+        } else if (videoContainer.mozCancelFullScreen) {
+            videoContainer.mozCancelFullScreen();
+        } else if (videoContainer.webkitExitFullscreen) {
+            videoContainer.webkitExitFullscreen();
+        }
+        
+        exitHandler();
+    } 
+        
+    screenChangeEvents = "webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange";
+
+    setTimeout(function() {
+        
+        $(videoContainer).on(screenChangeEvents, function () {
+            exitHandler();
+            $(videoContainer).off(screenChangeEvents);
+        });
+    }, 100);
+    
+    function exitHandler() {
+        
+        var xPosition,
+            yPosition;
+        
+        if (document.fullscreenElement || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement !== null) {
+                       
+            setTimeout(function() {
+                $('#playbackControls').removeClass('fullscreen'); 
+                $('#frontBackLayer').removeClass('fullscreen');
+                $('#zoomLayer1').removeClass('fullscreen'); 
+                $('#zoomLayer2').removeClass('fullscreen'); 
+                $('video').removeClass('fullscreen');
+                $('#videoContainer').removeClass('fullscreen');
+
+                videoWidth = 640;
+                videoHeight = 360;
+
+                adjustVideoSizes(videoHeight, videoWidth);
+                
+                if (currentZoomLevel == 0){
+                                     
+                    xPosition = (zoomLayer1.offsetLeft / fullScreenVideoWidth) * videoWidth;
+                    yPosition = (zoomLayer1.offsetTop / fullScreenVideoHeight) * videoHeight;
+                   
+                    zoomLayer1.style.left = xPosition + 'px';
+                    zoomLayer1.style.top = yPosition + 'px';
+                    
+                } else if (currentZoomLevel == 1){
+                    
+                    xPosition = (zoomLayer2.offsetLeft / fullScreenVideoWidth) * videoWidth;
+                    yPosition = (zoomLayer2.offsetTop / fullScreenVideoHeight) * videoHeight;
+                   
+                    zoomLayer2.style.left = xPosition + 'px';
+                    zoomLayer2.style.top = yPosition + 'px';
+                }
+
+            }, 35);
+            
+            fullScreenFlag = false;
+            
+        }
+    }
+    
+    function adjustVideoSizes(videoHeight, videoWidth) {
+    
+        video1.height = videoHeight;
+        video1.width = videoWidth;
+
+        video2.height = videoHeight;
+        video2.width = videoWidth;
+
+        video3.height = videoHeight;
+        video3.width = videoWidth;
+
+        video4.height = videoHeight;
+        video4.width = videoWidth;
+        
+        video5.height = videoHeight;
+        video5.width = videoWidth;
+
+        video6.height = videoHeight;
+        video6.width = videoWidth;
+
+        video7.height = videoHeight;
+        video7.width = videoWidth;
+
+        video8.height = videoHeight;
+        video8.width = videoWidth;
+        
+    }
+    
 }
 

@@ -38,28 +38,25 @@ POSSIBILITY OF SUCH DAMAGE.
 <body onLoad="Dash.createAll()"> 
 
 <div id="SRDPlayer">   
-    <div id="videoContainer">
-    
+    <div id="videoContainer">    
     <div id="bannerbox">
-        <img src="srdbanner.png" alt="SRD Player banner"> 
     </div>    
-    
-    <video id="frontBackLayer" width="420" class="dashjs-player"></video>
+    <video id="frontBackLayer" width="640" class="dashjs-player"></video>
     <table id="zoomLayer1" cellspacing="0" cellpadding="0">
       <tr>
         <td>  
-         <video id="video1" width="420" class="dashjs-player"></video>
+         <video id="video1" width="640" class="dashjs-player"></video>
         </td>
         <td>
-         <video id="video2" width="420" class="dashjs-player"></video>
+         <video id="video2" width="640" class="dashjs-player"></video>
         </td>    
       </tr>
       <tr>		
         <td>
-         <video id="video3" width="420" class="dashjs-player"></video>       
+         <video id="video3" width="640" class="dashjs-player"></video>       
         </td>
         <td>
-         <video id="video4" width="420" class="dashjs-player"></video>
+         <video id="video4" width="640" class="dashjs-player"></video>
         </td>		
       </tr>
     </table>
@@ -67,18 +64,18 @@ POSSIBILITY OF SUCH DAMAGE.
     <table id="zoomLayer2" cellspacing="0" cellpadding="0">
       <tr>
         <td>  
-         <video id="video5" width="420" class="dashjs-player"></video>
+         <video id="video5" width="640" class="dashjs-player"></video>
         </td>
         <td>
-         <video id="video6" width="420" class="dashjs-player"></video>
+         <video id="video6" width="640" class="dashjs-player"></video>
         </td>    
       </tr>
       <tr>		
         <td>
-         <video id="video7" width="420" class="dashjs-player"></video>       
+         <video id="video7" width="640" class="dashjs-player"></video>       
         </td>
         <td>
-         <video id="video8" width="420" class="dashjs-player"></video>
+         <video id="video8" width="640" class="dashjs-player"></video>
         </td>		
       </tr>
     </table>
@@ -87,10 +84,9 @@ POSSIBILITY OF SUCH DAMAGE.
     
     <div id="playbackControls"> 
       <button id="playpause" onclick="playPause()">Play/Pause</button> 
-      <button id="makebig" onclick="makeBig()">Big</button>
-      <button id="makesmall" onclick="makeSmall()">Small</button>
-      <button id="makenormal" onclick="makeNormal()">Normal</button>
-      <input id="scrub" type="range" value="0"/>
+      <button id="sound" onclick="switchSound()">Sound</button>
+      <input id="scrub" type="range" value="0"/>     
+      <button id="screenmode" onclick="switchScreenMode()">Fullscreen</button>
     </div> 
     <br>
 
@@ -104,7 +100,7 @@ POSSIBILITY OF SUCH DAMAGE.
 <br>  
 <br>  
 <br>  
-<p style="position: absolute; bottom: 12%; left: 32%; right: 30%; font-family: Arial; font-size: 14px; color: darkgray;">Example url: http://localhost:8000/Documents/Test%20content/Sample%20SRD/output.mpd</p>
+<p style="position: absolute; bottom: 10%; left: 30%; right: 30%; font-family: Arial; font-size: 14px; color: darkgray;">Example url: http://localhost:8000/Documents/Test%20content/Sample%20SRD/output.mpd</p>
     
 
 </body> 

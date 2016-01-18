@@ -68,6 +68,9 @@ tiledVideoAttacher.prototype = {
     var audioAdaptationSet =adaptationSets.slice(1, 2);
     
     frameRate = videoAdaptationSet[0].Representation.frameRate;
+    contentWidth = videoAdaptationSet[0].Representation.width;
+    contentHeight = videoAdaptationSet[0].Representation.height;
+    contentAspectRatio = contentWidth / contentHeight;
     
     var frontBackLayerVideoAdaptationSet = {"__cnt": videoAdaptationSet[0].__cnt, 
                                             "#comment": videoAdaptationSet[0]["#comment"], 
@@ -163,7 +166,7 @@ tiledVideoAttacher.prototype = {
     }
      
     for (var i = 0; i < zoomLayer1VideoElements.length; i++) { 
-        var videoElement = zoomLayer1VideoElements[i];
+        var videoElement = "video" + (i + 1);
         var player = launchDashPlayer(videoElement);
         zoomLayer1PlayerObjects.push(player);
     }     
@@ -179,39 +182,44 @@ tiledVideoAttacher.prototype = {
   
     function initiatePlayBack() { 
         
-        var initialTimeOffset = 0.001;
-        var loopPassedTime;
-        var loopEndTime;
-        var loopStartTime = new Date().getMilliseconds();
-  
-        var currentTime = frontBackLayer.currentTime;  
-
-        for (var i = 0; i < zoomLayer1VideoElements.length; i++) {
-
-            var videoElement = zoomLayer1VideoElements[i];
-
-            loopEndTime = new Date().getMilliseconds();
-            loopPassedTime = (loopEndTime - loopStartTime)  / 1000.00000;
-         
-            document.getElementById(videoElement).currentTime = currentTime + initialTimeOffset;
-            document.getElementById(videoElement).play();
-            document.getElementById(videoElement).pause();         
-
-        } 
+        var currentTime1,
+            currentTime2,    
+            initialTimeOffset,
+            playBackTime;    
+          
+        currentTime1 = frontBackLayer.currentTime;
+        initialTimeOffset = 0.001;
         
         setTimeout(
                 (function(){
-                    video1.play();
-                    video2.play();
-                    video3.play();
-                    video4.play();
-                    // playPause();
+                    
+                    currentTime2 = frontBackLayer.currentTime;
+                    
+                    if (currentTime1 < currentTime2){
+                        initialTimeOffset += currentTime2 - currentTime1;
+                    }
+                    
+                    playBackTime = currentTime1 + initialTimeOffset;
+                    
+                    video1.currentTime = playBackTime;
+                    video2.currentTime = playBackTime;
+                    video3.currentTime = playBackTime;
+                    video4.currentTime = playBackTime;
+                    
+                    if (!frontBackLayer.paused){
+                        video1.play();
+                        video2.play();
+                        video3.play();
+                        video4.play();
+                    }
+
                 }
-        ), 800);
-               
+        ), 250);
+             
+        
     }
 
-    updateVideoContainer(xPosition, yPosition, zoomLayer, 1000);
+    updateVideoContainer(xPosition, yPosition, zoomLayer, 500);
      
     if (getClickPositionEnabled === false) {
         
