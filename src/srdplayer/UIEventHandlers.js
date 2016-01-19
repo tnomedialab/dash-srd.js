@@ -62,7 +62,7 @@ function onClickEvent(e) {
     } else if (currentZoomLevel === 0) {
         zoomLayer1.removeAttribute('onmousedown');
         zoomLayer1.removeAttribute('onmouseup');
-        setVisibleElement("frontbacklayer");
+        setVisibleElement("fullbacklayer");
         currentZoomLevel = undefined;
     }
 }
@@ -102,27 +102,27 @@ function updateVideoContainer(xPosition, yPosition, zoomLayer, delay) {
 
 function setVisibleElement(visibleElement){
    
-   if (visibleElement === "frontbacklayer") {
-       frontBackLayer.style.visibility = "visible";
+   if (visibleElement === "fullbacklayer") {
+       fullBackLayer.style.visibility = "visible";
        zoomLayer1.style.visibility = "hidden";
        zoomLayer2.style.visibility = "hidden";
        bannerbox.style.visibility = "hidden";
 
    } else if (visibleElement === "zoomlayer1") {
        zoomLayer1.style.visibility = "visible";
-       frontBackLayer.style.visibility = "hidden";
+       fullBackLayer.style.visibility = "hidden";
        zoomLayer2.style.visibility = "hidden";
        bannerbox.style.visibility = "hidden";
 
    } else if (visibleElement === "zoomlayer2") {
        zoomLayer2.style.visibility = "visible";
-       frontBackLayer.style.visibility = "hidden";
+       fullBackLayer.style.visibility = "hidden";
        zoomLayer1.style.visibility = "hidden";
        bannerbox.style.visibility = "hidden";
 
    } else if (visibleElement === "bannerbox") {
        bannerbox.style.visibility = "visible";
-       frontBackLayer.style.visibility = "hidden";
+       fullBackLayer.style.visibility = "hidden";
        zoomLayer1.style.visibility = "hidden";
        zoomLayer2.style.visibility = "hidden";
 

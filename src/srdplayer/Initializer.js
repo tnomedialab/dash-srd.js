@@ -29,7 +29,7 @@ var SRDPlayer,
     videoContainer,
     bannerbox,
     frameRate,
-    frontBackLayer,
+    fullBackLayer,
     zoomLayer1,
     zoomLayer2,
     video1,
@@ -45,7 +45,7 @@ var SRDPlayer,
     visibleElement,
     zoomLayer1PlayerObjects,
     zoomLayer2PlayerObjects,
-    playbackControls,
+    videoController,
     getClickPositionEnabled,
     mpdURL,
     inMPD,
@@ -63,7 +63,7 @@ $(document).ready(function() {
     SRDPlayer = document.getElementById("SRDPlayer");
     videoContainer = document.getElementById("videoContainer");
     bannerbox = document.getElementById("bannerbox");
-    frontBackLayer = document.getElementById("frontBackLayer");
+    fullBackLayer = document.getElementById("fullBackLayer");
     zoomLayer1 = document.getElementById("zoomLayer1");
     zoomLayer2 = document.getElementById("zoomLayer2");
     video1 = document.getElementById("video1");
@@ -74,14 +74,14 @@ $(document).ready(function() {
     video6 = document.getElementById("video6");
     video7 = document.getElementById("video7");
     video8 = document.getElementById("video8");
-    playbackControls = document.getElementById("playbackControls");
+    videoController = document.getElementById("videoController");
 
     zoomLayer1VideoElements = [video1, video2, video3, video4];
     zoomLayer2VideoElements = [video5, video6, video7, video8];  
     zoomLayer1PlayerObjects = [];
     zoomLayer2PlayerObjects = [];
     
-    frontBackLayer.style.visibility = 'visible';
+    fullBackLayer.style.visibility = 'visible';
     zoomLayer1.style.visibility = 'hidden';
     zoomLayer2.style.visibility = 'hidden';    
     
@@ -96,7 +96,7 @@ $(document).ready(function() {
     getClickPositionEnabled = false;
     zoomLayer1Status = null;
     fullScreenFlag = false;
-    timeUpdateIntervals = {Firefox: 250, Chrome:250, Safari:250, Opera: 250, IE:250};
+    timeUpdateIntervals = {Chrome:250, Safari:250, Opera: 250, IE:250};
     screenAspectRatio = screen.width / screen.height;
     
     SynchroniseVideos();

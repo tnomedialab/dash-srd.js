@@ -27,13 +27,13 @@
 var SynchroniseVideos = function(){
     
     var videos = {
-        a: Popcorn("#frontBackLayer"),
+        a: Popcorn("#fullBackLayer"),
         b: Popcorn("#video1"),
         c: Popcorn("#video2"),
         d: Popcorn("#video3"),
         e: Popcorn("#video4")
       },
-      scrub = $("#scrub"),
+      seekbar = $("#seekbar"),
       loadCount = 0,
       events = "play pause timeupdate seeking".split(/\s+/g);
       
@@ -46,7 +46,7 @@ var SynchroniseVideos = function(){
         this.emit("syncVideos");
 
         // set the max value of the "scrubber"
-        scrub.attr("max", this.duration());
+        seekbar.attr("max", this.duration());
 
         // Listen for the custom sync event...    
       }).on("syncVideos", function() {
@@ -72,7 +72,7 @@ var SynchroniseVideos = function(){
                 videos.e.emit("timeupdate"); 
 
                 // update scrubber
-                scrub.val(this.currentTime());
+                seekbar.val(this.currentTime());
 
                 return;
               }
@@ -96,7 +96,7 @@ var SynchroniseVideos = function(){
       });
     });
 
-    scrub.bind("change", function() {
+    seekbar.bind("change", function() {
       var val = this.value;
       videos.a.currentTime(val);
       videos.b.currentTime(val);

@@ -26,13 +26,26 @@ POSSIBILITY OF SUCH DAMAGE.
 -->
 
 <html> 
+    
+<head>
+    <meta charset="utf-8" name="description" content="" />
+    <title>SRD Player</title>
+ 
+    <!--CSS-->
+    <link rel="stylesheet" type="text/css" href="srdplayerstyle.css">
+    <link rel="stylesheet" type="text/css" href="controlbar.css">
    
-<script src="http://localhost:8000/Projects/dash.js/dist/dash.all.js"></script>
-<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="http://cdn.popcornjs.org/code/dist/popcorn.min.js"></script>
-<script src = "../build/tiledstreaming4dash.min.js"></script>
+    <!--3rd Party JavaScript libs-->
+    <script src="http://localhost:8000/Projects/dash.js/dist/dash.all.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="http://cdn.popcornjs.org/code/dist/popcorn.min.js"></script>
 
-<link rel="stylesheet" type="text/css" href="srdplayerstyle.css">
+    <!--SRD Player JavaScript -->
+    <script src = "../build/tiledstreaming4dash.min.js"></script>
+    
+</head>
+
+
 
 
 <body onLoad="Dash.createAll()"> 
@@ -41,7 +54,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <div id="videoContainer">    
     <div id="bannerbox">
     </div>    
-    <video id="frontBackLayer" width="640" class="dashjs-player"></video>
+    <video id="fullBackLayer" width="640" class="dashjs-player"></video>
     <table id="zoomLayer1" cellspacing="0" cellpadding="0">
       <tr>
         <td>  
@@ -82,11 +95,32 @@ POSSIBILITY OF SUCH DAMAGE.
 
     </div>
     
-    <div id="playbackControls"> 
-      <button id="playpause" onclick="playPause()">Play/Pause</button> 
-      <button id="sound" onclick="switchSound()">Sound</button>
-      <input id="scrub" type="range" value="0"/>     
-      <button id="screenmode" onclick="switchScreenMode()">Fullscreen</button>
+    <div id="videoController" class="video-controller unselectable"> 
+        
+        
+        <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause" onclick="playPause()">
+            <span id="iconPlayPause" class="icon-play"></span>
+        </div>
+        <span id="videoTime" class="time-display">00:00:00</span>
+
+        <div id="fullscreenBtn" class="btn-fullscreen" title="Fullscreen" onclick="switchScreenMode()">
+            <span id="icon-fullscreen" class="icon-fullscreen-enter"></span>
+        </div>
+        <input type="range" id="volumebar" class="volumebar" value="1" min="0" max="1" step="0.01" />
+
+        <div id="muteBtn" class="btn-mute" title="Mute" onclick="muteSound()">
+            <span id="iconMute" class="icon-mute-off"></span>
+        </div>
+        
+        <!-- <div id="captionBtn" class="btn-caption" title="Closed Caption">
+            <span class="icon-caption"></span>
+        </div> commented out because captions are not supported (yet) -->
+
+        <span id="videoDuration" class="duration-display">00:00:00</span>
+
+        <div class="seekContainer">
+            <input type="range" id="seekbar" value="0" class="seekbar" min="0" step="0.01"/>
+        </div>
     </div> 
     <br>
 

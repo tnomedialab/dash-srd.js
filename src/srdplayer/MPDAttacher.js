@@ -40,10 +40,10 @@ normalVideoAttacher.prototype = {
         videoContainer.removeEventListener("dblclick", getClickPosition);
     }     
 
-    var player = launchDashPlayer("frontBackLayer");
+    var player = launchDashPlayer("fullBackLayer");
     player.attachSource(data);
 
-    $.when(frontBackLayer.readyState === 4).then((function() {playPause();
+    $.when(fullBackLayer.readyState === 4).then((function() {playPause();
     }));
 
   }
@@ -52,7 +52,7 @@ normalVideoAttacher.prototype = {
 
 var tiledVideoAttacher = function() {
     
-  ServiceBus.subscribe("SRD-MPD", this.frontBackLayerAttacher, "frontBackLayerAttacher");
+  ServiceBus.subscribe("SRD-MPD", this.fullBackLayerAttacher, "fullBackLayerAttacher");
   ServiceBus.subscribe("Zoom-level1", this.zoomLayer1Attacher, "zoomLayer1Attacher");
   ServiceBus.subscribe("Zoom-level2", this.zoomLayer2Attacher, "zoomLayer2Attacher");
 
@@ -60,7 +60,7 @@ var tiledVideoAttacher = function() {
 
 tiledVideoAttacher.prototype = {
     
-  frontBackLayerAttacher: function (data) {
+  fullBackLayerAttacher: function (data) {
     
     inMPD = data[1]; 
     var adaptationSets = inMPD.Period.AdaptationSet;
@@ -72,7 +72,7 @@ tiledVideoAttacher.prototype = {
     contentHeight = videoAdaptationSet[0].Representation.height;
     contentAspectRatio = contentWidth / contentHeight;
     
-    var frontBackLayerVideoAdaptationSet = {"__cnt": videoAdaptationSet[0].__cnt, 
+    var fullBackLayerVideoAdaptationSet = {"__cnt": videoAdaptationSet[0].__cnt, 
                                             "#comment": videoAdaptationSet[0]["#comment"], 
                                             "#comment_asArray": videoAdaptationSet[0]["#comment_asArray"], 
                                             SegmentTemplate: videoAdaptationSet[0].SegmentTemplate[0],
@@ -92,7 +92,7 @@ tiledVideoAttacher.prototype = {
     
     var videoAndAudioAdaptationSet = [videoAdaptationSet[0], audioAdaptationSet[0]];
     
-    var frontBackLayerMPD = {"__cnt": inMPD.__cnt, 
+    var fullBackLayerMPD = {"__cnt": inMPD.__cnt, 
                             "#comment": inMPD["#comment"], 
                             "#comment_asArray": inMPD["#comment_asArray"], 
                             BaseURL:inMPD.BaseURL, 
@@ -107,11 +107,11 @@ tiledVideoAttacher.prototype = {
                             __text: inMPD.__text
                             };     
 
-    var player = launchDashPlayer("frontBackLayer");
-    var source = [mpdURL, frontBackLayerMPD];
+    var player = launchDashPlayer("fullBackLayer");
+    var source = [mpdURL, fullBackLayerMPD];
     player.attachSource(source);
     
-    $.when(frontBackLayer.readyState === 4).then((function() {playPause();
+    $.when(fullBackLayer.readyState === 4).then((function() {playPause();
     }));
     
     if (getClickPositionEnabled === false) {
@@ -178,7 +178,7 @@ tiledVideoAttacher.prototype = {
     }  
 
       
-    frontBackLayer.addEventListener("timeupdate", initiatePlayBack());  
+    fullBackLayer.addEventListener("timeupdate", initiatePlayBack());  
   
     function initiatePlayBack() { 
         
@@ -187,13 +187,13 @@ tiledVideoAttacher.prototype = {
             initialTimeOffset,
             playBackTime;    
           
-        currentTime1 = frontBackLayer.currentTime;
+        currentTime1 = fullBackLayer.currentTime;
         initialTimeOffset = 0.001;
         
         setTimeout(
                 (function(){
                     
-                    currentTime2 = frontBackLayer.currentTime;
+                    currentTime2 = fullBackLayer.currentTime;
                     
                     if (currentTime1 < currentTime2){
                         initialTimeOffset += currentTime2 - currentTime1;
@@ -206,7 +206,7 @@ tiledVideoAttacher.prototype = {
                     video3.currentTime = playBackTime;
                     video4.currentTime = playBackTime;
                     
-                    if (!frontBackLayer.paused){
+                    if (!fullBackLayer.paused){
                         video1.play();
                         video2.play();
                         video3.play();
