@@ -57,7 +57,10 @@ var SRDPlayer,
     contentAspectRatio,
     contentWidth,
     contentHeight,
-    screenAspectRatio;
+    screenAspectRatio,
+    lastVolumeValue,
+    masterQuality,
+    videoControllerClone;
     
 $(document).ready(function() {
     SRDPlayer = document.getElementById("SRDPlayer");
@@ -100,4 +103,10 @@ $(document).ready(function() {
     screenAspectRatio = screen.width / screen.height;
     
     SynchroniseVideos();
+    
+    $("#volumebar").bind("change", function() {
+      var val = this.value;
+      fullBackLayer.volume = val;
+    });
+    
 });

@@ -25,12 +25,19 @@
  */
 
 function openVideo(){
+
+    if(!$("#iconPlayPause").hasClass("icon-play") || !$("#iconPlayPause").hasClass("icon-pause")) {
+        $("#iconPlayPause").toggleClass("icon-play"); 
+    }
     
-    var mpdURL = document.getElementById('mpdURL').value; 
-    bannerbox.style.backgroundImage = "none";
-    bannerbox.style.background = "black";
-    MPDManager(mpdURL);
+    var mpdURL = document.getElementById('mpdURL').value;
     
+    if (mpdURL){   
+        bannerbox.style.backgroundImage = "none";
+        bannerbox.style.background = "black";
+        MPDManager(mpdURL);
+    }
+
 }
 
 function playPause() { 
@@ -58,17 +65,19 @@ function playPause() {
 function muteSound() { 
     
     if (fullBackLayer.muted === false){
+        lastVolumeValue = fullBackLayer.volume;
         fullBackLayer.muted = true;
         $("#iconMute").removeClass("icon-mute-off");
         $("#iconMute").toggleClass("icon-mute-on");
-        
-        // TODO: Elaborate on this
-        //$("#volumebar").attr("value", 0);
+        $("#volumebar").val(0.0);
         
     } else if (fullBackLayer.muted === true){
         fullBackLayer.muted = false;
+        fullBackLayer.volume = lastVolumeValue;
         $("#iconMute").removeClass("icon-mute-on");
         $("#iconMute").toggleClass("icon-mute-off");
+        $("#volumebar").val(lastVolumeValue);
+        
     }
 } 
 
@@ -88,7 +97,7 @@ function switchScreenMode() {
         } else if (videoContainer.mozRequestFullScreen) {
             videoContainer.mozRequestFullScreen();
         } else if (videoContainer.webkitRequestFullscreen) {
-            videoContainer.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+            videoContainer.webkitRequestFullscreen(videoContainer.ALLOW_KEYBOARD_INPUT);
         }
         
         fullScreenFlag = true;   
@@ -124,19 +133,22 @@ function switchScreenMode() {
             $('#fullBackLayer').toggleClass('fullscreen');
             $('#bannerbox').toggleClass('fullscreen');
             $('#videoContainer').toggleClass('fullscreen');
+            videoControllerClone = videoController.cloneNode(true);
+            document.getElementById('videoContainer').appendChild(videoControllerClone);
+            $(videoControllerClone).toggleClass('video-controller-fullscreen');
 
             adjustVideoSizes(fullScreenVideoHeight, fullScreenVideoWidth);
         }, 40);
 
     } else {
-        if (videoContainer.exitFullscreen) {
-            videoContainer.exitFullscreen();
-        } else if (videoContainer.msExitFullscreen) {
-            videoContainer.msExitFullscreen();
-        } else if (videoContainer.mozCancelFullScreen) {
-            videoContainer.mozCancelFullScreen();
-        } else if (videoContainer.webkitExitFullscreen) {
-            videoContainer.webkitExitFullscreen();
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
         }
         
         exitHandler();
@@ -160,14 +172,14 @@ function switchScreenMode() {
         if (document.fullscreenElement || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement !== null) {
                        
             setTimeout(function() { 
-                $("#icon-fullscreen").removeClass("icon-fullscreen-exit");
-                $("#icon-fullscreen").toggleClass("icon-fullscreen-enter");
                 $('#fullBackLayer').removeClass('fullscreen');
                 $('#zoomLayer1').removeClass('fullscreen'); 
                 $('#zoomLayer2').removeClass('fullscreen'); 
                 $('video').removeClass('fullscreen');
                 $('#videoContainer').removeClass('fullscreen');
-
+                document.getElementById('videoContainer').removeChild(videoControllerClone);
+                $("#icon-fullscreen").removeClass("icon-fullscreen-exit");
+                $("#icon-fullscreen").toggleClass("icon-fullscreen-enter");
 
                 videoWidth = 640;
                 videoHeight = 360;

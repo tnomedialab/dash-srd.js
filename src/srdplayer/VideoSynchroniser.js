@@ -46,7 +46,15 @@ var SynchroniseVideos = function(){
         this.emit("syncVideos");
 
         // set the max value of the "scrubber"
-        seekbar.attr("max", this.duration());
+        seekbar.attr("max", this.duration());   
+        
+        // set the video duration
+        document.getElementById("videoDuration").innerHTML = secondsToTimeString(this.duration());
+        
+        // set the videotimer       
+        setInterval(function(){
+            document.getElementById("videoTime").innerHTML = secondsToTimeString(fullBackLayer.currentTime);
+        }, 500);
 
         // Listen for the custom sync event...    
       }).on("syncVideos", function() {

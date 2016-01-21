@@ -19,13 +19,15 @@ module.exports = function(grunt) {
             'src/utils/CrossOriginRequest.js',
             'src/utils/xml2json.js',
             'src/utils/Matchers.js',
+            'src/utils/DateTime.js',
             'src/srdplayer/DashLauncher.js',
             'src/srdplayer/MPDRetriever.js',
             'src/srdplayer/MPDParser.js',
             'src/srdplayer/MPDAttacher.js',
             'src/srdplayer/MPDManager.js',
             'src/srdplayer/PlaybackControls.js',
-            'src/srdplayer/UIEventHandlers.js'],
+            'src/srdplayer/UIEventHandlers.js',
+            'src/srdplayer/PlayerEventHandlers.js'],
         dest: 'build/<%= pkg.name %>.min.js'
       }
     }
