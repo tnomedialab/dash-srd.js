@@ -38,6 +38,7 @@ function openVideo(){
         MPDManager(mpdURL);
     }
 
+    console.log("Here : " + browserType); 
 }
 
 function playPause() { 

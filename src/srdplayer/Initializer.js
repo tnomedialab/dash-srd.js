@@ -53,6 +53,7 @@ var SRDPlayer,
     maxZoomLevel,
     zoomLayer1Status,
     fullScreenFlag,
+    browserType,
     timeUpdateIntervals,
     contentAspectRatio,
     contentWidth,
@@ -101,6 +102,7 @@ $(document).ready(function() {
     fullScreenFlag = false;
     timeUpdateIntervals = {Chrome:250, Safari:250, Opera: 250, IE:250};
     screenAspectRatio = screen.width / screen.height;
+    browserType = detectBrowser();
     
     SynchroniseVideos();
     

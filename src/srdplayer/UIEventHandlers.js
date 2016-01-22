@@ -63,7 +63,6 @@ function onClickEvent(e) {
         resetPlayers(zoomLayer1PlayerObjects);
         
         updateVideoContainer(xPosition, yPosition, fullBackLayer, null, 0.5);
-        setVisibleElement("fullbacklayer");
         currentZoomLevel = undefined;
        
     }
@@ -108,6 +107,7 @@ function updateVideoContainer(xPosition, yPosition, viewLayer, delay, resizeFact
         } else if (resizeFactor === 0.5) {
             fullBackLayer.style.left = 0 + 'px';
             fullBackLayer.style.top = 0 + 'px';
+            setVisibleElement("fullbacklayer");
         }
         
     } else if (viewLayer == zoomLayer1) {
