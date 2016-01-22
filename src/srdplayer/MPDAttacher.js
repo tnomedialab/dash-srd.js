@@ -117,7 +117,7 @@ tiledVideoAttacher.prototype = {
     var tileMPDs = [];
     var xPosition = data[0];
     var yPosition = data[1]; 
-    var zoomLayer = data[2];
+    var viewLayer = data[2];
       
     for (var i = 2; i < adaptationSets.length; i++) {
         
@@ -148,6 +148,8 @@ tiledVideoAttacher.prototype = {
         
     }
      
+    zoomLayer1PlayerObjects = [];
+    
     for (var i = 0; i < zoomLayer1VideoElements.length; i++) { 
         var videoElement = "video" + (i + 1);
         var player = launchDashPlayer(videoElement);        
@@ -170,9 +172,9 @@ tiledVideoAttacher.prototype = {
         }
     }  
     
+    updateViewLayerOnReadyState(zoomLayer1VideoElements, xPosition, yPosition, viewLayer);
       
     fullBackLayer.addEventListener("timeupdate", initiatePlayBack(zoomLayer1VideoElements));  
-    updateVideoContainer(xPosition, yPosition, zoomLayer, 500);
      
     if (getClickPositionEnabled === false) {
         
@@ -181,9 +183,18 @@ tiledVideoAttacher.prototype = {
         
     }
     
-    setInterval(function(){
-        zoomLayer1PlayerObjects[0].eventBus.addEventListener(MediaPlayer.events.METRIC_CHANGED, emitBitrateChange(data, zoomLayer1PlayerObjects));
-    }, 500);
+    zoomLayer1PlayerObjects[0].eventBus.addEventListener(MediaPlayer.events.METRIC_CHANGED, function(data) {
+        
+        var called = false;
+        
+        if (typeof data !== undefined) {
+            emitBitrateChange.bind(this, called, zoomLayer1PlayerObjects);
+        }  
+        
+        if (called) {
+            console.log("I've been called");
+        }
+    });
     
   },
   

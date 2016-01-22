@@ -61,23 +61,44 @@ function initiatePlayBack(videoList) {
     ), 250);
 }
 
-function emitBitrateChange(data, playerList) {
-    
-    console.log("HERE : " + JSON.stringify(data, null, 4));
-    
-    // TODO: implement determination of quality change and fix eventlistener removal
+function emitBitrateChange(called, playerList) {
 
+    called = true;
     for (var i = 0; i < playerList.length; i++) { 
         var player = playerList[i];
 
-        if (i === 0) {
-            masterQuality = player.getQualityFor("video");
-            player.eventBus.removeEventListener(MediaPlayer.events.METRIC_CHANGED, this);
-            
+
+        if (i == 0) {
+            masterQuality = player.getQualityFor("video")
+
         } else if (i > 0){
             player.setQualityFor("video", masterQuality);
         }
+    }     
+    
+    return called;
+
+}
+
+function resetPlayers(playerList) {
+
+    for (var i = 0; i < playerList.length; i++) { 
+        
+        var player = playerList[i];
+        player.reset();
     }
 }
 
+function updateViewLayerOnReadyState(videoElementsList, xPosition, yPosition, viewLayer) {
 
+    for (var i = 0; i < videoElementsList.length; i++) {
+        
+        if (!videoElementsList[i].ReadyState === 4) {
+            i -= 1;
+        }
+        
+        if (i === 3){
+           updateVideoContainer(xPosition, yPosition, viewLayer, 800, null); 
+        }
+    }
+}

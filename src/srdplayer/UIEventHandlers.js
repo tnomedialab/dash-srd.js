@@ -29,7 +29,7 @@ function onClickEvent(e) {
     var parentPosition,
         xPosition,
         yPosition,
-        zoomLayer;    
+        viewLayer;    
     
     if (fullScreenFlag == false){
         parentPosition = getPosition(e.currentTarget);
@@ -43,27 +43,29 @@ function onClickEvent(e) {
     
     // TODO: elaborate on this to suport more zoomlevels   
     if (typeof currentZoomLevel === "undefined") {
-        zoomLayer = zoomLayer1;
 
+        viewLayer = zoomLayer1;
         currentZoomLevel = 0;
-        if (zoomLayer1Status === null){
 
-            ServiceBus.publish("Zoom-level1", [xPosition, yPosition, zoomLayer]);
-            zoomLayer1Status = "attached";
+        updateVideoContainer(xPosition, yPosition, fullBackLayer, null, 2);
 
-            zoomLayer1.setAttribute('onmousedown', 'dragtool.startMoving(this, videoContainer, event);');
-            zoomLayer1.setAttribute('onmouseup', 'dragtool.stopMoving(videoContainer);');
+        ServiceBus.publish("Zoom-level1", [xPosition, yPosition, viewLayer]);
+        zoomLayer1Status = "attached";
 
-        } else {
-            updateVideoContainer(xPosition, yPosition, zoomLayer1, 1);
-        }
+        zoomLayer1.setAttribute('onmousedown', 'dragtool.startMoving(this, videoContainer, event);');
+        zoomLayer1.setAttribute('onmouseup', 'dragtool.stopMoving(videoContainer);');
         
         
     } else if (currentZoomLevel === 0) {
         zoomLayer1.removeAttribute('onmousedown');
         zoomLayer1.removeAttribute('onmouseup');
+        
+        resetPlayers(zoomLayer1PlayerObjects);
+        
+        updateVideoContainer(xPosition, yPosition, fullBackLayer, null, 0.5);
         setVisibleElement("fullbacklayer");
         currentZoomLevel = undefined;
+       
     }
 }
  
@@ -90,13 +92,43 @@ function getPosition(element) {
     return { x: xPosition, y: yPosition };
 }
 
-function updateVideoContainer(xPosition, yPosition, zoomLayer, delay) {
+function updateVideoContainer(xPosition, yPosition, viewLayer, delay, resizeFactor) {
     
-    zoomLayer.style.left = xPosition + 'px';
-    zoomLayer.style.top = yPosition + 'px';
-    setTimeout(function(){    
-        setVisibleElement("zoomlayer1");
-    }, delay);
+    if (viewLayer == fullBackLayer){
+
+        var resizedHeight = parseInt(fullBackLayer.offsetHeight, 10) * resizeFactor;
+        var resizedWidth = parseInt(fullBackLayer.offsetWidth, 10) * resizeFactor;
+
+        fullBackLayer.style.height = resizedHeight + 'px';
+        fullBackLayer.style.width = resizedWidth + 'px';
+
+        if (resizeFactor === 2) {
+            fullBackLayer.style.left = xPosition + 'px';
+            fullBackLayer.style.top = yPosition + 'px';
+        } else if (resizeFactor === 0.5) {
+            fullBackLayer.style.left = 0 + 'px';
+            fullBackLayer.style.top = 0 + 'px';
+        }
+        
+    } else if (viewLayer == zoomLayer1) {
+        
+        zoomLayer1.style.left = xPosition + 'px';
+        zoomLayer1.style.top = yPosition + 'px';
+
+        setTimeout(function(){    
+            setVisibleElement("zoomlayer1");
+            
+        }, delay); 
+        
+    } else if (viewLayer == zoomLayer2) {
+        
+        zoomLayer2.style.left = xPosition + 'px';
+        zoomLayer2.style.top = yPosition + 'px';
+
+        setTimeout(function(){    
+            setVisibleElement("zoomlayer2");
+        }, delay);        
+    }
     
 }
 
