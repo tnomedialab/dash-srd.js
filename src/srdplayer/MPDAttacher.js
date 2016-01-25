@@ -172,9 +172,8 @@ tiledVideoAttacher.prototype = {
         }
     }  
     
+    fullBackLayer.addEventListener("timeupdate", initiatePlayBack(fullBackLayer, zoomLayer1VideoElements, browserType, frameRate));  
     updateViewLayerOnReadyState(zoomLayer1VideoElements, xPosition, yPosition, viewLayer);
-      
-    fullBackLayer.addEventListener("timeupdate", initiatePlayBack(zoomLayer1VideoElements));  
      
     if (getClickPositionEnabled === false) {
         
@@ -185,15 +184,10 @@ tiledVideoAttacher.prototype = {
     
     zoomLayer1PlayerObjects[0].eventBus.addEventListener(MediaPlayer.events.METRIC_CHANGED, function(data) {
         
-        var called = false;
-        
         if (typeof data !== undefined) {
-            emitBitrateChange.bind(this, called, zoomLayer1PlayerObjects);
+            emitBitrateChange.bind(zoomLayer1PlayerObjects);
         }  
         
-        if (called) {
-            console.log("I've been called");
-        }
     });
     
   },

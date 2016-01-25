@@ -54,7 +54,7 @@ var SynchroniseVideos = function(){
         // set the videotimer       
         setInterval(function(){
             document.getElementById("videoTime").innerHTML = secondsToTimeString(fullBackLayer.currentTime);
-        }, 500);
+        }, 250);
 
         // Listen for the custom sync event...    
       }).on("syncVideos", function() {

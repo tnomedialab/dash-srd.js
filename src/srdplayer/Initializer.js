@@ -56,12 +56,16 @@ var SRDPlayer,
     browserType,
     timeUpdateIntervals,
     contentAspectRatio,
+    initialWidth,
+    initialHeight,
     contentWidth,
     contentHeight,
     screenAspectRatio,
     lastVolumeValue,
     masterQuality,
-    videoControllerClone;
+    videoControllerClone,
+    fullScreenVideoHeight,
+    fullScreenVideoWidth;
     
 $(document).ready(function() {
     SRDPlayer = document.getElementById("SRDPlayer");
@@ -100,10 +104,12 @@ $(document).ready(function() {
     getClickPositionEnabled = false;
     zoomLayer1Status = null;
     fullScreenFlag = false;
-    timeUpdateIntervals = {Chrome:250, Safari:250, Opera: 250, IE:250};
+    timeUpdateIntervals = {Chrome:250, Safari:250, Opera: 250, IE:250, Edge:250, Other:250};
     screenAspectRatio = screen.width / screen.height;
+    initialWidth = parseInt(fullBackLayer.offsetWidth, 10);
+    initialHeight = parseInt(fullBackLayer.offsetHeight, 10);
     browserType = detectBrowser();
-    
+   
     SynchroniseVideos();
     
     $("#volumebar").bind("change", function() {

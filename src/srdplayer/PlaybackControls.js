@@ -37,8 +37,6 @@ function openVideo(){
         bannerbox.style.background = "black";
         MPDManager(mpdURL);
     }
-
-    console.log("Here : " + browserType); 
 }
 
 function playPause() { 
@@ -86,8 +84,6 @@ function switchScreenMode() {
     
     var videoHeight,
         videoWidth,       
-        fullScreenVideoHeight,
-        fullScreenVideoWidth,
         screenChangeEvents;
 
     if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {
@@ -102,44 +98,28 @@ function switchScreenMode() {
         }
         
         fullScreenFlag = true;   
-        
-        if (screenAspectRatio  == contentAspectRatio){
-                
-            fullScreenVideoHeight = screen.height;
-            fullScreenVideoWidth = screen.width;
-            
-        } else if (screenAspectRatio < contentAspectRatio){
+        var dimensions = new fullScreenDimensions();
+        fullScreenVideoHeight = dimensions[0];
+        fullScreenVideoWidth = dimensions[1];
 
-            fullScreenVideoHeight = screen.width / contentAspectRatio;
-            fullScreenVideoWidth = screen.width;   
-            
-        } else if (screenAspectRatio > contentAspectRatio) {
+        $("#icon-fullscreen").removeClass("icon-fullscreen-enter");
+        $("#icon-fullscreen").toggleClass("icon-fullscreen-exit");
+        $('#zoomLayer1').toggleClass('fullscreen'); 
+        $('#zoomLayer2').toggleClass('fullscreen'); 
 
-            fullScreenVideoHeight = screen.width / contentAspectRatio;
-            fullScreenVideoWidth = screen.width;
-            
-        }
-        
-        setTimeout(function() {
-            $("#icon-fullscreen").removeClass("icon-fullscreen-enter");
-            $("#icon-fullscreen").toggleClass("icon-fullscreen-exit");
-            $('#zoomLayer1').toggleClass('fullscreen'); 
-            $('#zoomLayer2').toggleClass('fullscreen'); 
-            
-            zoomLayer1.width = fullScreenVideoWidth * 2;
-            zoomLayer1.height = fullScreenVideoHeight * 2;
-            zoomLayer2.width = fullScreenVideoWidth * 2;
-            zoomLayer2.height = fullScreenVideoHeight * 2;
-            
-            $('#fullBackLayer').toggleClass('fullscreen');
-            $('#bannerbox').toggleClass('fullscreen');
-            $('#videoContainer').toggleClass('fullscreen');
-            videoControllerClone = videoController.cloneNode(true);
-            document.getElementById('videoContainer').appendChild(videoControllerClone);
-            $(videoControllerClone).toggleClass('video-controller-fullscreen');
+        zoomLayer1.width = fullScreenVideoWidth * 2;
+        zoomLayer1.height = fullScreenVideoHeight * 2;
+        zoomLayer2.width = fullScreenVideoWidth * 2;
+        zoomLayer2.height = fullScreenVideoHeight * 2;
 
-            adjustVideoSizes(fullScreenVideoHeight, fullScreenVideoWidth);
-        }, 40);
+        $('#fullBackLayer').toggleClass('fullscreen');
+        $('#bannerbox').toggleClass('fullscreen');
+        $('#videoContainer').toggleClass('fullscreen');
+        videoControllerClone = videoController.cloneNode(true);
+        document.getElementById('videoContainer').appendChild(videoControllerClone);
+        $(videoControllerClone).toggleClass('video-controller-fullscreen');
+
+        adjustVideoSizes(fullScreenVideoHeight, fullScreenVideoWidth);
 
     } else {
         if (document.exitFullscreen) {
@@ -172,39 +152,36 @@ function switchScreenMode() {
         
         if (document.fullscreenElement || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement !== null) {
                        
-            setTimeout(function() { 
-                $('#fullBackLayer').removeClass('fullscreen');
-                $('#zoomLayer1').removeClass('fullscreen'); 
-                $('#zoomLayer2').removeClass('fullscreen'); 
-                $('video').removeClass('fullscreen');
-                $('#videoContainer').removeClass('fullscreen');
-                document.getElementById('videoContainer').removeChild(videoControllerClone);
-                $("#icon-fullscreen").removeClass("icon-fullscreen-exit");
-                $("#icon-fullscreen").toggleClass("icon-fullscreen-enter");
+            $('#fullBackLayer').removeClass('fullscreen');
+            $('#zoomLayer1').removeClass('fullscreen'); 
+            $('#zoomLayer2').removeClass('fullscreen'); 
+            $('video').removeClass('fullscreen');
+            $('#videoContainer').removeClass('fullscreen');
+            document.getElementById('videoContainer').removeChild(videoControllerClone);
+            $("#icon-fullscreen").removeClass("icon-fullscreen-exit");
+            $("#icon-fullscreen").toggleClass("icon-fullscreen-enter");
 
-                videoWidth = 640;
-                videoHeight = 360;
+            videoWidth = initialWidth;
+            videoHeight = initialHeight;
 
-                adjustVideoSizes(videoHeight, videoWidth);
-                
-                if (currentZoomLevel == 0){
-                                     
-                    xPosition = (zoomLayer1.offsetLeft / fullScreenVideoWidth) * videoWidth;
-                    yPosition = (zoomLayer1.offsetTop / fullScreenVideoHeight) * videoHeight;
-                   
-                    zoomLayer1.style.left = xPosition + 'px';
-                    zoomLayer1.style.top = yPosition + 'px';
-                    
-                } else if (currentZoomLevel == 1){
-                    
-                    xPosition = (zoomLayer2.offsetLeft / fullScreenVideoWidth) * videoWidth;
-                    yPosition = (zoomLayer2.offsetTop / fullScreenVideoHeight) * videoHeight;
-                   
-                    zoomLayer2.style.left = xPosition + 'px';
-                    zoomLayer2.style.top = yPosition + 'px';
-                }
+            adjustVideoSizes(videoHeight, videoWidth);
 
-            }, 40);
+            if (currentZoomLevel == 0){
+
+                xPosition = (zoomLayer1.offsetLeft / fullScreenVideoWidth) * videoWidth;
+                yPosition = (zoomLayer1.offsetTop / fullScreenVideoHeight) * videoHeight;
+
+                zoomLayer1.style.left = xPosition + 'px';
+                zoomLayer1.style.top = yPosition + 'px';
+
+            } else if (currentZoomLevel == 1){
+
+                xPosition = (zoomLayer2.offsetLeft / fullScreenVideoWidth) * videoWidth;
+                yPosition = (zoomLayer2.offsetTop / fullScreenVideoHeight) * videoHeight;
+
+                zoomLayer2.style.left = xPosition + 'px';
+                zoomLayer2.style.top = yPosition + 'px';
+            }
             
             fullScreenFlag = false;
             

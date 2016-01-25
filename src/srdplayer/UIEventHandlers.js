@@ -94,13 +94,19 @@ function getPosition(element) {
 function updateVideoContainer(xPosition, yPosition, viewLayer, delay, resizeFactor) {
     
     if (viewLayer == fullBackLayer){
+        
+        if (fullScreenFlag == true) {
+            $('#fullBackLayer').toggleClass('fullscreen');
+        } else if (fullScreenFlag == false){
+            
+            var resizedHeight = parseInt(fullBackLayer.offsetHeight, 10) * resizeFactor;
+            var resizedWidth = parseInt(fullBackLayer.offsetWidth, 10) * resizeFactor; 
+            
+            fullBackLayer.style.height = resizedHeight + 'px';
+            fullBackLayer.style.width = resizedWidth + 'px';
 
-        var resizedHeight = parseInt(fullBackLayer.offsetHeight, 10) * resizeFactor;
-        var resizedWidth = parseInt(fullBackLayer.offsetWidth, 10) * resizeFactor;
-
-        fullBackLayer.style.height = resizedHeight + 'px';
-        fullBackLayer.style.width = resizedWidth + 'px';
-
+        }
+        
         if (resizeFactor === 2) {
             fullBackLayer.style.left = xPosition + 'px';
             fullBackLayer.style.top = yPosition + 'px';
@@ -208,5 +214,27 @@ var dragtool = function(){
                     }
                 };
             }();
+ 
+var fullScreenDimensions = function () {
+   
+    if (screenAspectRatio  == contentAspectRatio){
+
+        fullScreenVideoHeight = screen.height;
+        fullScreenVideoWidth = screen.width;
+
+    } else if (screenAspectRatio < contentAspectRatio){
+
+        fullScreenVideoHeight = screen.width / contentAspectRatio;
+        fullScreenVideoWidth = screen.width;   
+
+    } else if (screenAspectRatio > contentAspectRatio) {
+
+        fullScreenVideoHeight = screen.width / contentAspectRatio;
+        fullScreenVideoWidth = screen.width;
+
+    }
+       
+    return [fullScreenVideoHeight, fullScreenVideoWidth]; 
+};
             
             

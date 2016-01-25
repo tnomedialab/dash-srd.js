@@ -24,12 +24,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-function initiatePlayBack(videoList) { 
+function initiatePlayBack(fullBackLayer, videoList, browserType, frameRate) { 
 
-    var currentTime1,
+    var attachDelay,
+        currentTime1,
         currentTime2,    
         initialTimeOffset,
         playBackTime;    
+
+    attachDelay = estimateTimeUpdateFrequency(browserType, attachDelay, frameRate);
 
     currentTime1 = fullBackLayer.currentTime;
     initialTimeOffset = 0.001;
@@ -58,25 +61,33 @@ function initiatePlayBack(videoList) {
                 }
 
             }
-    ), 250);
+    ), attachDelay);
 }
 
-function emitBitrateChange(called, playerList) {
+function estimateTimeUpdateFrequency(browserType, attachDelay, frameRate) {
+    
+    if (browserType === "FireFox") {
+        attachDelay = 1000 / frameRate;
+    } else {
+        attachDelay = timeUpdateIntervals[browserType];
+    }
+    
+    return attachDelay;
+}
 
-    called = true;
+function emitBitrateChange(playerList) {
+
     for (var i = 0; i < playerList.length; i++) { 
         var player = playerList[i];
 
 
         if (i == 0) {
-            masterQuality = player.getQualityFor("video")
+            masterQuality = player.getQualityFor("video");
 
         } else if (i > 0){
             player.setQualityFor("video", masterQuality);
         }
     }     
-    
-    return called;
 
 }
 
