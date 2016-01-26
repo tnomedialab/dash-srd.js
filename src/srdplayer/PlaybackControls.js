@@ -97,14 +97,19 @@ function switchScreenMode() {
         screenChangeEvents;
 
     if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {
+        
+        if (browserType === "Chrome" || "FireFox"){
+
+        }   
+        
         if (videoContainer.requestFullscreen) {
-            videoContainer.requestFullscreen();
+           videoContainer.requestFullscreen();
         } else if (videoContainer.msRequestFullscreen) {
             videoContainer.msRequestFullscreen();
         } else if (videoContainer.mozRequestFullScreen) {
             videoContainer.mozRequestFullScreen();
-        } else if (videoContainer.webkitRequestFullscreen) {
-            videoContainer.webkitRequestFullscreen(videoContainer.ALLOW_KEYBOARD_INPUT);
+        } else if (videoContainer.webkitRequestFullscreen) {       
+            videoContainer.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
         }
         
         fullScreenFlag = true;   
@@ -147,15 +152,25 @@ function switchScreenMode() {
         exitHandler();
     } 
         
-    screenChangeEvents = "webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange";
+    screenChangeEvents = "webkitfullscreenchange fullscreenchange MSFullscreenChange";
 
-    setTimeout(function() {
-        
-        $(videoContainer).on(screenChangeEvents, function () {
-            exitHandler();
-            $(videoContainer).off(screenChangeEvents);
-        });
-    }, 100);
+    if (browserType === "FireFox") {
+        setTimeout(function() {
+
+            $(document).on("mozfullscreenchange", function () {
+                exitHandler();
+                $(document).off("mozfullscreenchange");
+            });
+        }, 100);
+    } else {
+        setTimeout(function() {
+
+            $(videoContainer).on(screenChangeEvents, function () {
+                exitHandler();
+                $(videoContainer).off(screenChangeEvents);
+            });
+        }, 100);
+    }
     
     function exitHandler() {
         

@@ -92,10 +92,16 @@ tiledVideoAttacher.prototype = {
     var player = launchDashPlayer("fullBackLayer");
     var source = [mpdURL, fullBackLayerMPD];
     player.attachSource(source);
-    
-    $.when(fullBackLayer.readyState === 4).then((function() {
+   
+    $("#fullBackLayer").on("canplay", function(){
         playPause();
-    }));
+        SynchroniseVideos();
+    
+        $("#volumebar").bind("change", function() {
+          var val = this.value;
+          fullBackLayer.volume = val;
+        });
+    });
     
     if (getClickPositionEnabled === false) {
         
@@ -161,14 +167,10 @@ tiledVideoAttacher.prototype = {
         var source = [mpdURL, tileMPDs[i]];  
         player.attachSource(source);
         
-        if (i == 0) {
-            
-            masterQuality = player.getQualityFor("video");
-            
-        } else if (i > 0) {
+        if (i > 0) {
             
             player.setAutoSwitchQuality(false);
-            player.setQualityFor("video", masterQuality);
+            player.setQualityFor("video", 0);
         }
     }  
     

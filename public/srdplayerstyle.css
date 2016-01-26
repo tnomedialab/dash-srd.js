@@ -110,7 +110,9 @@ video.fullscreen {
     width: 100%;
 }
 
-button, input:focus {outline:0;}
+button:focus, input:focus {
+    outline:0;
+}
 
 #fullBackLayer {
     position:absolute; 

@@ -80,7 +80,7 @@ var SynchroniseVideos = function(){
                 videos.e.emit("timeupdate"); 
 
                 // update scrubber
-                seekbar.val(this.currentTime());
+                seekbar.val(fullBackLayer.currentTime);
 
                 return;
               }

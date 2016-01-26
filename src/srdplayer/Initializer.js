@@ -109,12 +109,5 @@ $(document).ready(function() {
     initialWidth = parseInt(fullBackLayer.offsetWidth, 10);
     initialHeight = parseInt(fullBackLayer.offsetHeight, 10);
     browserType = detectBrowser();
-   
-    SynchroniseVideos();
-    
-    $("#volumebar").bind("change", function() {
-      var val = this.value;
-      fullBackLayer.volume = val;
-    });
     
 });

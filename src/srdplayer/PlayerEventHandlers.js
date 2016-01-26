@@ -34,7 +34,10 @@ function initiatePlayBack(fullBackLayer, videoList, browserType, frameRate) {
 
     attachDelay = estimateTimeUpdateFrequency(browserType, attachDelay, frameRate);
 
-    currentTime1 = fullBackLayer.currentTime;
+    setTimeout(function() {
+        currentTime1 = fullBackLayer.currentTime;
+    }, 10);
+    
     initialTimeOffset = 0.001;
 
     setTimeout(
@@ -83,9 +86,6 @@ function emitBitrateChange(playerList) {
 
         if (i == 0) {
             masterQuality = player.getQualityFor("video");
-            
-            var qualityList = player.getBitrateInfoListFor("video");
-            console.log("HERE :" + JSON.stringify(qualityList, null, 4));
 
         } else if (i > 0){
             player.setQualityFor("video", masterQuality);
