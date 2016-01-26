@@ -83,6 +83,9 @@ function emitBitrateChange(playerList) {
 
         if (i == 0) {
             masterQuality = player.getQualityFor("video");
+            
+            var qualityList = player.getBitrateInfoListFor("video");
+            console.log("HERE :" + JSON.stringify(qualityList, null, 4));
 
         } else if (i > 0){
             player.setQualityFor("video", masterQuality);

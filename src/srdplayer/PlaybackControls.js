@@ -32,7 +32,17 @@ function openVideo(){
     
     var mpdURL = document.getElementById('mpdURL').value;
     
-    if (mpdURL){   
+    function validURL(str) {
+      var pattern = new RegExp(/(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/);
+      if(!pattern.test(str)) {
+        window.alert("Please enter a valid URL.");
+        return false;
+      } else {
+        return true;
+      }
+    }
+    
+    if (validURL(mpdURL) == true){   
         bannerbox.style.backgroundImage = "none";
         bannerbox.style.background = "black";
         MPDManager(mpdURL);
@@ -112,6 +122,8 @@ function switchScreenMode() {
         zoomLayer2.width = fullScreenVideoWidth * 2;
         zoomLayer2.height = fullScreenVideoHeight * 2;
 
+        $('#fullBackLayer').width('');
+        $('#fullBackLayer').height('');
         $('#fullBackLayer').toggleClass('fullscreen');
         $('#bannerbox').toggleClass('fullscreen');
         $('#videoContainer').toggleClass('fullscreen');
@@ -151,7 +163,7 @@ function switchScreenMode() {
             yPosition;
         
         if (document.fullscreenElement || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement !== null) {
-                       
+            
             $('#fullBackLayer').removeClass('fullscreen');
             $('#zoomLayer1').removeClass('fullscreen'); 
             $('#zoomLayer2').removeClass('fullscreen'); 

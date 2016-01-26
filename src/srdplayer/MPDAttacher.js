@@ -184,6 +184,9 @@ tiledVideoAttacher.prototype = {
     
     zoomLayer1PlayerObjects[0].eventBus.addEventListener(MediaPlayer.events.METRIC_CHANGED, function(data) {
         
+        // console.log(JSON.stringify(data, null, 4));
+
+        
         if (typeof data !== undefined) {
             emitBitrateChange.bind(zoomLayer1PlayerObjects);
         }  
@@ -191,6 +194,8 @@ tiledVideoAttacher.prototype = {
     });
     
   },
+  
+  
   
   zoomLayer2Attacher: function (data) {
     var xPosition = data[0];
