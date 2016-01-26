@@ -167,16 +167,20 @@ tiledVideoAttacher.prototype = {
         var source = [mpdURL, tileMPDs[i]];  
         player.attachSource(source);
         
-        if (i > 0) {
-            
+        if (i === 0) {
+                
+            masterQuality = player.getQualityFor("video");
+        
+        } if (i > 0) {            
             player.setAutoSwitchQuality(false);
-            player.setQualityFor("video", 0);
+            player.setQualityFor("video", masterQuality);
+            
         }
     }  
     
     fullBackLayer.addEventListener("timeupdate", initiatePlayBack(fullBackLayer, zoomLayer1VideoElements, browserType, frameRate));  
-    updateViewLayerOnReadyState(zoomLayer1VideoElements, xPosition, yPosition, viewLayer);
-     
+    updateViewLayerOnReadyState(zoomLayer1VideoElements, xPosition, yPosition, viewLayer); 
+    
     if (getClickPositionEnabled === false) {
         
         videoContainer.addEventListener("dblclick", onClickEvent, false);
@@ -184,16 +188,7 @@ tiledVideoAttacher.prototype = {
         
     }
     
-    zoomLayer1PlayerObjects[0].eventBus.addEventListener(MediaPlayer.events.METRIC_CHANGED, function(data) {
-        
-        // console.log(JSON.stringify(data, null, 4));
-
-        
-        if (typeof data !== undefined) {
-            emitBitrateChange.bind(zoomLayer1PlayerObjects);
-        }  
-        
-    });
+    emitBitrateChanges(zoomLayer1PlayerObjects, masterQuality);
     
   },
   

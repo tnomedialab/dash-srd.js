@@ -78,19 +78,26 @@ function estimateTimeUpdateFrequency(browserType, attachDelay, frameRate) {
     return attachDelay;
 }
 
-function emitBitrateChange(playerList) {
+function emitBitrateChanges(playerList, masterQuality) {
 
-    for (var i = 0; i < playerList.length; i++) { 
-        var player = playerList[i];
+    playerList[0].eventBus.addEventListener(MediaPlayer.events.METRIC_CHANGED, function() {
+        
+        var currentQuality = playerList[0].getQualityFor("video");
+        
+        if (masterQuality != currentQuality) {
+            masterQuality = currentQuality;
+            
+            for (var i = 1; i < playerList.length; i++) { 
+                var player = playerList[i];         
 
+                if (i > 0){
+                    player.setQualityFor("video", masterQuality);
+                }
+            }  
 
-        if (i == 0) {
-            masterQuality = player.getQualityFor("video");
-
-        } else if (i > 0){
-            player.setQualityFor("video", masterQuality);
         }
-    }     
+        
+    });   
 
 }
 
