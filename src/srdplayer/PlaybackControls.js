@@ -30,6 +30,8 @@ function openVideo(){
         $("#iconPlayPause").toggleClass("icon-play"); 
     }
     
+    masterQuality = undefined;
+    
     var mpdURL = document.getElementById('mpdURL').value;
     
     function validURL(str) {
@@ -98,43 +100,47 @@ function switchScreenMode() {
 
     if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {
         
-        if (browserType === "Chrome" || "FireFox"){
-
-        }   
-        
-        if (videoContainer.requestFullscreen) {
-           videoContainer.requestFullscreen();
-        } else if (videoContainer.msRequestFullscreen) {
-            videoContainer.msRequestFullscreen();
-        } else if (videoContainer.mozRequestFullScreen) {
-            videoContainer.mozRequestFullScreen();
-        } else if (videoContainer.webkitRequestFullscreen) {       
-            videoContainer.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-        }
-        
         fullScreenFlag = true;   
         var dimensions = new fullScreenDimensions();
         fullScreenVideoHeight = dimensions[0];
-        fullScreenVideoWidth = dimensions[1];
+        fullScreenVideoWidth = dimensions[1]; 
+        
+        if (browserType === "Chrome" || "FireFox"){
+
+            // TODO : fix fullscreen mode when browser is not maximized
+        }
+        
+        if (videoContainer.requestFullscreen) {
+           videoContainer.requestFullscreen();
+           
+        } else if (videoContainer.msRequestFullscreen) {
+            videoContainer.msRequestFullscreen();
+            
+        } else if (videoContainer.mozRequestFullScreen) {
+            videoContainer.mozRequestFullScreen();
+            
+        } else if (videoContainer.webkitRequestFullscreen) {       
+            videoContainer.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+
+        }
 
         $("#icon-fullscreen").removeClass("icon-fullscreen-enter");
         $("#icon-fullscreen").toggleClass("icon-fullscreen-exit");
-        $('#zoomLayer1').toggleClass('fullscreen'); 
-        $('#zoomLayer2').toggleClass('fullscreen'); 
 
+        $('#zoomLayer1').toggleClass('fullscreen'); 
+        $('#zoomLayer2').toggleClass('fullscreen');
+
+        fullBackLayer.style.width = "";
+        fullBackLayer.style.height = "";  
         zoomLayer1.width = fullScreenVideoWidth * 2;
         zoomLayer1.height = fullScreenVideoHeight * 2;
         zoomLayer2.width = fullScreenVideoWidth * 2;
         zoomLayer2.height = fullScreenVideoHeight * 2;
 
-        $('#fullBackLayer').width('');
-        $('#fullBackLayer').height('');
         $('#fullBackLayer').toggleClass('fullscreen');
-        $('#bannerbox').toggleClass('fullscreen');
         $('#videoContainer').toggleClass('fullscreen');
-        videoControllerClone = videoController.cloneNode(true);
-        document.getElementById('videoContainer').appendChild(videoControllerClone);
-        $(videoControllerClone).toggleClass('video-controller-fullscreen');
+        $('#bannerbox').toggleClass('bannerbox-fullscreen'); 
+        $("#videoController").toggleClass('video-controller-fullscreen');
 
         adjustVideoSizes(fullScreenVideoHeight, fullScreenVideoWidth);
 
@@ -157,7 +163,7 @@ function switchScreenMode() {
     if (browserType === "FireFox") {
         setTimeout(function() {
 
-            $(document).on("mozfullscreenchange", function () {
+            $(document).one("mozfullscreenchange", function () {
                 exitHandler();
                 $(document).off("mozfullscreenchange");
             });
@@ -165,9 +171,8 @@ function switchScreenMode() {
     } else {
         setTimeout(function() {
 
-            $(videoContainer).on(screenChangeEvents, function () {
+            $(videoContainer).one(screenChangeEvents, function () {
                 exitHandler();
-                $(videoContainer).off(screenChangeEvents);
             });
         }, 100);
     }
@@ -177,29 +182,46 @@ function switchScreenMode() {
         var xPosition,
             yPosition;
         
-        if (document.fullscreenElement || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement !== null) {
+        if (document.fullscreenElement || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement !== null) {       
+            
+            fullBackLayer.style.width = "";
+            fullBackLayer.style.height = "";             
+
+            zoomLayer1.removeAttribute('width');
+            zoomLayer1.removeAttribute('height');
+            zoomLayer2.removeAttribute('width');
+            zoomLayer2.removeAttribute('height');
             
             $('#fullBackLayer').removeClass('fullscreen');
             $('#zoomLayer1').removeClass('fullscreen'); 
             $('#zoomLayer2').removeClass('fullscreen'); 
             $('video').removeClass('fullscreen');
-            $('#videoContainer').removeClass('fullscreen');
-            document.getElementById('videoContainer').removeChild(videoControllerClone);
+            
+            $('#videoContainer').removeClass('fullscreen');           
+            $('#videoController').removeClass('video-controller-fullscreen');
             $("#icon-fullscreen").removeClass("icon-fullscreen-exit");
             $("#icon-fullscreen").toggleClass("icon-fullscreen-enter");
 
             videoWidth = initialWidth;
             videoHeight = initialHeight;
-
             adjustVideoSizes(videoHeight, videoWidth);
+            
+            $('#zoomLayer1').width((initialWidth * 2) + "px"); 
+            $('#zoomLayer1').height((initialHeight * 2) + "px"); 
+            $('#zoomLayer2').width((initialWidth * 2) + "px"); 
+            $('#zoomLayer2').height((initialHeight * 2) + "px"); 
 
-            if (currentZoomLevel == 0){
+            if (currentZoomLevel == undefined) {
+                fullScreenZoomedTo = undefined;
+                
+            } else if (currentZoomLevel == 0){
 
                 xPosition = (zoomLayer1.offsetLeft / fullScreenVideoWidth) * videoWidth;
                 yPosition = (zoomLayer1.offsetTop / fullScreenVideoHeight) * videoHeight;
 
                 zoomLayer1.style.left = xPosition + 'px';
                 zoomLayer1.style.top = yPosition + 'px';
+                fullScreenZoomedTo = 0;           
 
             } else if (currentZoomLevel == 1){
 
@@ -208,9 +230,11 @@ function switchScreenMode() {
 
                 zoomLayer2.style.left = xPosition + 'px';
                 zoomLayer2.style.top = yPosition + 'px';
+                fullScreenZoomedTo = 1;
+                
             }
             
-            fullScreenFlag = false;
+            fullScreenFlag = false;           
             
         }
     }

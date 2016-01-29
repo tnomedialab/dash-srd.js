@@ -63,11 +63,21 @@ tiledVideoAttacher.prototype = {
     
   fullBackLayerAttacher: function (data) {
     
+    var fullBackLayerAdaptationSet;
     inMPD = data[1]; 
     var adaptationSets = inMPD.Period.AdaptationSet;
     var videoAdaptationSet = adaptationSets.slice(0, 1);
-    var audioAdaptationSet =adaptationSets.slice(1, 2);
-    var videoAndAudioAdaptationSet = [videoAdaptationSet[0], audioAdaptationSet[0]];
+    var secondAdaptationSet = adaptationSets.slice(1, 2);
+    
+    console.log(JSON.stringify(secondAdaptationSet, null, 4));
+    
+    if (secondAdaptationSet[0].mimeType == "audio/mp4") {
+        fullBackLayerAdaptationSet = [videoAdaptationSet[0], secondAdaptationSet[0]];
+        contentHasAudio = true;
+    } else {
+        fullBackLayerAdaptationSet = videoAdaptationSet;
+        contentHasAudio = false;
+    }
     
     frameRate = videoAdaptationSet[0].Representation.frameRate;
     contentWidth = videoAdaptationSet[0].Representation.width;
@@ -79,8 +89,8 @@ tiledVideoAttacher.prototype = {
                             "#comment_asArray": inMPD["#comment_asArray"], 
                             BaseURL:inMPD.BaseURL, 
                             BaseURL_asArray: inMPD.BaseURL_asArray, 
-                            Period: {"__cnt": inMPD.Period.__cnt, AdaptationSet: videoAndAudioAdaptationSet, AdaptationSet_asArray: videoAndAudioAdaptationSet, __children: videoAndAudioAdaptationSet}, 
-                            Period_asArray: [{AdaptationSet: videoAndAudioAdaptationSet, AdaptationSet_asArray: videoAndAudioAdaptationSet, __children: videoAndAudioAdaptationSet}],
+                            Period: {"__cnt": inMPD.Period.__cnt, AdaptationSet: fullBackLayerAdaptationSet, AdaptationSet_asArray: fullBackLayerAdaptationSet, __children: fullBackLayerAdaptationSet}, 
+                            Period_asArray: [{AdaptationSet: fullBackLayerAdaptationSet, AdaptationSet_asArray: fullBackLayerAdaptationSet, __children: fullBackLayerAdaptationSet}],
                             xmlns: inMPD.xmlns,
                             mediaPresentationDuration: inMPD.mediaPresentationDuration,
                             minBufferTime: inMPD.minBufferTime,
@@ -92,17 +102,30 @@ tiledVideoAttacher.prototype = {
     var player = launchDashPlayer("fullBackLayer");
     var source = [mpdURL, fullBackLayerMPD];
     player.attachSource(source);
-   
-    $("#fullBackLayer").on("canplay", function(){
+
+    $("#fullBackLayer").one("canplay", function(){
         playPause();
+
+         // Set the video duration
+        duration = fullBackLayer.duration;
+        document.getElementById("videoDuration").innerHTML = secondsToTimeString(duration);
+
+        // Set the videotimer    
+        var timerInterval = duration / 4;    
+
+        setInterval(function(){
+            document.getElementById("videoTime").innerHTML = secondsToTimeString(fullBackLayer.currentTime);
+            $("#seekbar").val(fullBackLayer.currentTime);
+        }, timerInterval);
+
         SynchroniseVideos();
-    
+
         $("#volumebar").bind("change", function() {
           var val = this.value;
           fullBackLayer.volume = val;
         });
     });
-    
+  
     if (getClickPositionEnabled === false) {
         
         videoContainer.addEventListener("dblclick", onClickEvent, false);
@@ -124,15 +147,21 @@ tiledVideoAttacher.prototype = {
     var xPosition = data[0];
     var yPosition = data[1]; 
     var viewLayer = data[2];
+    
+    if (contentHasAudio == false) { 
+        var o = 0;
+    } else {
+        var o = 1;
+    }  
       
-    for (var i = 2; i < adaptationSets.length; i++) {
+    for (var i = 1 + o; i < adaptationSets.length; i++) {
         
         var essentialPropertyValueLength = adaptationSets[i].EssentialProperty.value.length;
         var zoomLevel = adaptationSets[i].EssentialProperty.value.slice((essentialPropertyValueLength - 1), essentialPropertyValueLength);
           
         if (zoomLevel == currentZoomLevel){
            
-            var arrayIndex = i - 2;            
+            var arrayIndex = i - (1 + o);            
             tileMPDs[arrayIndex] = {"__cnt": inMPD.__cnt, 
                                     "#comment": inMPD["#comment"], 
                                     "#comment_asArray": inMPD["#comment_asArray"], 
@@ -166,19 +195,9 @@ tiledVideoAttacher.prototype = {
         var player = zoomLayer1PlayerObjects[i];
         var source = [mpdURL, tileMPDs[i]];  
         player.attachSource(source);
-        
-        if (i === 0) {
-                
-            masterQuality = player.getQualityFor("video");
-        
-        } if (i > 0) {            
-            player.setAutoSwitchQuality(false);
-            player.setQualityFor("video", masterQuality);
-            
-        }
     }  
     
-    fullBackLayer.addEventListener("timeupdate", initiatePlayBack(fullBackLayer, zoomLayer1VideoElements, browserType, frameRate));  
+    initiatePlayBack(fullBackLayer, zoomLayer1VideoElements, browserType, frameRate, viewLayer);  
     updateViewLayerOnReadyState(zoomLayer1VideoElements, xPosition, yPosition, viewLayer); 
     
     if (getClickPositionEnabled === false) {
@@ -188,7 +207,9 @@ tiledVideoAttacher.prototype = {
         
     }
     
-    emitBitrateChanges(zoomLayer1PlayerObjects, masterQuality);
+    if (masterQuality) { 
+        emitBitrateChanges(zoomLayer1PlayerObjects, masterQuality);
+    }
     
   },
   

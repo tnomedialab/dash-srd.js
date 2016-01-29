@@ -25,46 +25,62 @@
  */
 
 function initiatePlayBack(fullBackLayer, videoList, browserType, frameRate) { 
-
+   
     var attachDelay,
         currentTime1,
         currentTime2,    
         initialTimeOffset,
         playBackTime;    
 
+    initialTimeOffset = 0.001;
     attachDelay = estimateTimeUpdateFrequency(browserType, attachDelay, frameRate);
 
-    setTimeout(function() {
+    $("#fullBackLayer").one("timeupdate", function() {
+
         currentTime1 = fullBackLayer.currentTime;
-    }, 10);
-    
-    initialTimeOffset = 0.001;
 
-    setTimeout(
-            (function(){
+        setTimeout(
+                (function(){
 
-                currentTime2 = fullBackLayer.currentTime;
+                    currentTime2 = fullBackLayer.currentTime;
 
-                if (currentTime1 < currentTime2){
-                    initialTimeOffset += currentTime2 - currentTime1;
-                }
-
-                playBackTime = currentTime1 + initialTimeOffset;
-
-                for (var i = 0; i < videoList.length; i++) {
-                    var video = videoList[i];
-                    video.currentTime = playBackTime;
-                }
-
-                if (!fullBackLayer.paused){                    
-                    for (var i = 0; i < videoList.length; i++) {
-                        var video = videoList[i];
-                        video.play();
+                    if (currentTime1 < currentTime2){
+                        initialTimeOffset += (currentTime2 - currentTime1);
                     }
-                }
 
-            }
-    ), attachDelay);
+                    playBackTime = currentTime1 + initialTimeOffset;
+
+                    for (var i = 0; i < videoList.length; i++) {
+                        var videoTile = videoList[i];
+                        videoTile.currentTime = playBackTime;
+                    }
+
+                    if (!fullBackLayer.paused){                    
+                        for (var i = 0; i < videoList.length; i++) {
+                            var videoTile = videoList[i];
+                            videoTile.play();
+                        }
+                    }
+
+                }
+        ), attachDelay);
+
+    for (var i = 0; i < zoomLayer1PlayerObjects.length; i++) { 
+        var player = zoomLayer1PlayerObjects[i];
+        
+        if (i === 0) {
+            
+            if (player.getBitrateInfoListFor("video").length > 1){
+                masterQuality = player.getQualityFor("video"); 
+            }  
+        
+        } if (i > 0 && masterQuality) {            
+            player.setAutoSwitchQuality(false);
+            player.setQualityFor("video", masterQuality);
+            
+    }}
+    });
+
 }
 
 function estimateTimeUpdateFrequency(browserType, attachDelay, frameRate) {
@@ -119,7 +135,7 @@ function updateViewLayerOnReadyState(videoElementsList, xPosition, yPosition, vi
         }
         
         if (i === 3){
-           updateVideoContainer(xPosition, yPosition, viewLayer, 800, null); 
+           updateVideoContainer(xPosition, yPosition, viewLayer, 750, null); 
         }
     }
 }

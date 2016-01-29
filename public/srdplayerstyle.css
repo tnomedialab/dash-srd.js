@@ -42,9 +42,11 @@ th, tr {
     outline: none;
 }
 
-td, video {
+td, video {   
     padding: 0;
     vertical-align: top;
+    border-collapse: collapse;
+    border:none;
     outline: none;
 }
 
@@ -62,6 +64,9 @@ video.fullscreen {
     left: 0;
     right: 0;
     margin: auto;
+    border-collapse: collapse;
+    border:none;
+    outline: none;
 }
 
 #videoContainer {
@@ -116,6 +121,8 @@ button:focus, input:focus {
 
 #fullBackLayer {
     position:absolute; 
+    width:640px;
+    height:360px;
     top:0; 
     left: 0;
 }
@@ -126,8 +133,11 @@ button:focus, input:focus {
     background-color: black;
 }
 
-#zoomLayer1, #zoomLayer2 {
+#zoomLayer1, #zoomLayer2 { 
+    padding: 0;
+    margin: 0;    
     border-collapse: collapse;
+    border: none;
     position:absolute; 
     top:0; 
     left: 0;
@@ -136,6 +146,7 @@ button:focus, input:focus {
 
 #zoomLayer1.fullscreen, #zoomLayer2.fullscreen { 
     border-collapse: collapse;
+    border: none;
     background-color: black;
 }
 
