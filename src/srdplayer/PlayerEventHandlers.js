@@ -135,7 +135,7 @@ function updateViewLayerOnReadyState(videoElementsList, xPosition, yPosition, vi
         }
         
         if (i === 3){
-           updateVideoContainer(xPosition, yPosition, viewLayer, 750, null); 
+           updateVideoContainer(xPosition, yPosition, viewLayer, 1000, null); 
         }
     }
 }

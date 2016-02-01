@@ -57,18 +57,29 @@ var SRDPlayer,
     browserType,
     duration,
     timeUpdateIntervals,
-    contentAspectRatio,
     initialWidth,
     initialHeight,
-    contentWidth,
-    contentHeight,
+    initialAspectRatio,
+    fullBackLayerContentWidth,
+    fullBackLayerContentHeight,
+    fullBackLayerContentAspectRatio,   
+    zoomLayer1ContentWidth,
+    zoomLayer1ContentHeight,
+    zoomLayer1ContentAspectRatio,
+    zoomLayer2ContentWidth,
+    zoomLayer2ContentHeight,
+    zoomLayer2ContentAspectRatio,        
     screenAspectRatio,
     contentHasAudio,
+    contentAspectRatio,
     lastVolumeValue,
     masterQuality,
     videoControllerClone,
-    fullScreenVideoHeight,
-    fullScreenVideoWidth;
+    viewState,
+    zoomLayer1VideoHeight,
+    zoomLayer1VideoWidth,
+    zoomLayer2VideoHeight,
+    zoomLayer2VideoWidth;
     
 $(document).ready(function() {
     SRDPlayer = document.getElementById("SRDPlayer");
@@ -111,6 +122,7 @@ $(document).ready(function() {
     screenAspectRatio = screen.width / screen.height;
     initialWidth = parseInt(fullBackLayer.offsetWidth, 10);
     initialHeight = parseInt(fullBackLayer.offsetHeight, 10);
+    initialAspectRatio = initialWidth / initialHeight;
     browserType = detectBrowser();
     
 });

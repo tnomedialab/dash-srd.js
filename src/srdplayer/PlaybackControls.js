@@ -35,10 +35,14 @@ function openVideo(){
     var mpdURL = document.getElementById('mpdURL').value;
     
     function validURL(str) {
+        
       var pattern = new RegExp(/(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/);
+      
       if(!pattern.test(str)) {
+          
         window.alert("Please enter a valid URL.");
         return false;
+        
       } else {
         return true;
       }
@@ -100,15 +104,11 @@ function switchScreenMode() {
 
     if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {
         
-        fullScreenFlag = true;   
-        var dimensions = new fullScreenDimensions();
-        fullScreenVideoHeight = dimensions[0];
-        fullScreenVideoWidth = dimensions[1]; 
-        
-        if (browserType === "Chrome" || "FireFox"){
-
-            // TODO : fix fullscreen mode when browser is not maximized
-        }
+        fullScreenFlag = true;       
+        zoomLayer1VideoHeight = computeVideoDimensions(zoomLayer1ContentAspectRatio, "fullscreen")[0];
+        zoomLayer1VideoWidth = computeVideoDimensions(zoomLayer1ContentAspectRatio, "fullscreen")[1];
+        zoomLayer2VideoHeight = computeVideoDimensions(zoomLayer2ContentAspectRatio, "fullscreen")[0];
+        zoomLayer2VideoWidth = computeVideoDimensions(zoomLayer2ContentAspectRatio, "fullscreen")[1];      
         
         if (videoContainer.requestFullscreen) {
            videoContainer.requestFullscreen();
@@ -130,19 +130,23 @@ function switchScreenMode() {
         $('#zoomLayer1').toggleClass('fullscreen'); 
         $('#zoomLayer2').toggleClass('fullscreen');
 
+        SRDPlayer.style.height = "";
+        videoContainer.style.height = "";
+        bannerbox.style.height = "";
         fullBackLayer.style.width = "";
         fullBackLayer.style.height = "";  
-        zoomLayer1.width = fullScreenVideoWidth * 2;
-        zoomLayer1.height = fullScreenVideoHeight * 2;
-        zoomLayer2.width = fullScreenVideoWidth * 2;
-        zoomLayer2.height = fullScreenVideoHeight * 2;
+        
+        zoomLayer1.width = zoomLayer1VideoHeight * 2;
+        zoomLayer1.height = zoomLayer1VideoWidth * 2;         
+        zoomLayer2.width = zoomLayer2VideoHeight * 2;
+        zoomLayer2.height = zoomLayer2VideoWidth * 2;
 
         $('#fullBackLayer').toggleClass('fullscreen');
         $('#videoContainer').toggleClass('fullscreen');
         $('#bannerbox').toggleClass('bannerbox-fullscreen'); 
         $("#videoController").toggleClass('video-controller-fullscreen');
 
-        adjustVideoSizes(fullScreenVideoHeight, fullScreenVideoWidth);
+        adjustVideoSizes(zoomLayer1VideoHeight, zoomLayer1VideoWidth, zoomLayer2VideoHeight, zoomLayer2VideoWidth);
 
     } else {
         if (document.exitFullscreen) {
@@ -191,7 +195,13 @@ function switchScreenMode() {
         if (document.fullscreenElement || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement !== null) {       
             
             fullBackLayer.style.width = "";
-            fullBackLayer.style.height = "";             
+            fullBackLayer.style.height = "";  
+           
+            if (fullBackLayerContentAspectRatio != initialAspectRatio) {
+        
+                updateAspectRatio(fullBackLayer, fullBackLayerContentAspectRatio); 
+        
+            }
 
             zoomLayer1.removeAttribute('width');
             zoomLayer1.removeAttribute('height');
@@ -207,23 +217,26 @@ function switchScreenMode() {
             $('#videoController').removeClass('video-controller-fullscreen');
             $("#icon-fullscreen").removeClass("icon-fullscreen-exit");
             $("#icon-fullscreen").toggleClass("icon-fullscreen-enter");
-
-            videoWidth = initialWidth;
-            videoHeight = initialHeight;
-            adjustVideoSizes(videoHeight, videoWidth);
             
-            $('#zoomLayer1').width((initialWidth * 2) + "px"); 
-            $('#zoomLayer1').height((initialHeight * 2) + "px"); 
-            $('#zoomLayer2').width((initialWidth * 2) + "px"); 
-            $('#zoomLayer2').height((initialHeight * 2) + "px"); 
+            zoomLayer1VideoHeight = computeVideoDimensions(zoomLayer1ContentAspectRatio, "normal");
+            zoomLayer1VideoWidth = initialWidth;
+            zoomLayer2VideoHeight = computeVideoDimensions(zoomLayer2ContentAspectRatio, "normal");
+            zoomLayer2VideoWidth = initialWidth;    
+            
+            adjustVideoSizes(zoomLayer1VideoHeight, zoomLayer1VideoWidth, zoomLayer2VideoHeight, zoomLayer2VideoWidth);
+            
+            $('#zoomLayer1').width((zoomLayer1VideoWidth * 2) + "px"); 
+            $('#zoomLayer1').height((zoomLayer1VideoHeight * 2) + "px"); 
+            $('#zoomLayer2').width((zoomLayer2VideoWidth * 2) + "px"); 
+            $('#zoomLayer2').height((zoomLayer2VideoHeight * 2) + "px");
 
             if (currentZoomLevel == undefined) {
                 fullScreenZoomedTo = undefined;
                 
             } else if (currentZoomLevel == 0){
 
-                xPosition = (zoomLayer1.offsetLeft / fullScreenVideoWidth) * videoWidth;
-                yPosition = (zoomLayer1.offsetTop / fullScreenVideoHeight) * videoHeight;
+                xPosition = (zoomLayer1.offsetLeft / zoomLayer1VideoWidth) * zoomLayer1VideoWidth;
+                yPosition = (zoomLayer1.offsetTop / zoomLayer1VideoHeight) * zoomLayer1VideoHeight;
 
                 zoomLayer1.style.left = xPosition + 'px';
                 zoomLayer1.style.top = yPosition + 'px';
@@ -231,8 +244,8 @@ function switchScreenMode() {
 
             } else if (currentZoomLevel == 1){
 
-                xPosition = (zoomLayer2.offsetLeft / fullScreenVideoWidth) * videoWidth;
-                yPosition = (zoomLayer2.offsetTop / fullScreenVideoHeight) * videoHeight;
+                xPosition = (zoomLayer2.offsetLeft / zoomLayer2VideoWidth) * videoWidth;
+                yPosition = (zoomLayer2.offsetTop / zoomLayer2VideoHeight) * videoHeight;
 
                 zoomLayer2.style.left = xPosition + 'px';
                 zoomLayer2.style.top = yPosition + 'px';
@@ -245,31 +258,31 @@ function switchScreenMode() {
         }
     }
     
-    function adjustVideoSizes(videoHeight, videoWidth) {
+    function adjustVideoSizes(zoomLayer1VideoHeight, zoomLayer1VideoWidth, zoomLayer2VideoHeight, zoomLayer2VideoWidth) {
     
-        video1.height = videoHeight;
-        video1.width = videoWidth;
+        video1.height = zoomLayer1VideoHeight;
+        video1.width = zoomLayer1VideoWidth;
 
-        video2.height = videoHeight;
-        video2.width = videoWidth;
+        video2.height = zoomLayer1VideoHeight;
+        video2.width = zoomLayer1VideoWidth;
 
-        video3.height = videoHeight;
-        video3.width = videoWidth;
+        video3.height = zoomLayer1VideoHeight;
+        video3.width = zoomLayer1VideoWidth;
 
-        video4.height = videoHeight;
-        video4.width = videoWidth;
+        video4.height = zoomLayer1VideoHeight;
+        video4.width = zoomLayer1VideoWidth;
         
-        video5.height = videoHeight;
-        video5.width = videoWidth;
+        video5.height = zoomLayer2VideoHeight;
+        video5.width = zoomLayer2VideoWidth;
 
-        video6.height = videoHeight;
-        video6.width = videoWidth;
+        video6.height = zoomLayer2VideoHeight;
+        video6.width = zoomLayer2VideoWidth;
 
-        video7.height = videoHeight;
-        video7.width = videoWidth;
+        video7.height = zoomLayer2VideoHeight;
+        video7.width = zoomLayer2VideoWidth;
 
-        video8.height = videoHeight;
-        video8.width = videoWidth;
+        video8.height = zoomLayer2VideoHeight;
+        video8.width = zoomLayer2VideoWidth;
         
     }
     

@@ -35,8 +35,7 @@ function onClickEvent(e) {
         parentPosition = getPosition(e.currentTarget);
         xPosition = -(e.clientX - parentPosition.x);
         yPosition = -(e.clientY - parentPosition.y); 
-    } else {
-        
+    } else { 
         xPosition = -(e.clientX);
         yPosition = -(e.clientY);
     }
@@ -108,7 +107,7 @@ function updateVideoContainer(xPosition, yPosition, viewLayer, delay, resizeFact
     if (viewLayer == fullBackLayer){
         
         if (fullScreenFlag == true) {
-           $('#fullBackLayer').toggleClass('fullscreen');
+            $('#fullBackLayer').toggleClass('fullscreen');
             fullBackLayer.style.height = screen.height + "px";
             fullBackLayer.style.width = screen.width + "px";
            
@@ -151,8 +150,19 @@ function updateVideoContainer(xPosition, yPosition, viewLayer, delay, resizeFact
         setTimeout(function(){    
             setVisibleElement("zoomlayer2");
         }, delay);        
-    }
+    }   
+}
+
+function updateAspectRatio(viewLayer, contentAspectRatio) {
     
+    if (viewLayer == fullBackLayer) { 
+    
+        SRDPlayer.style.height = ((initialWidth / contentAspectRatio) + 188) + "px";
+        videoContainer.style.height = (initialWidth / contentAspectRatio) + "px";
+        fullBackLayer.style.height = (initialWidth / contentAspectRatio) + "px";
+        bannerbox.style.height = (initialWidth / contentAspectRatio) + "px"; 
+    
+    }
 }
 
 function setVisibleElement(visibleElement){
@@ -232,26 +242,51 @@ var dragtool = function(){
                 };
             }();
  
-var fullScreenDimensions = function () {
-   
-    if (screenAspectRatio  == contentAspectRatio){
+function computeVideoDimensions(contentAspectRatio, viewState) {
 
-        fullScreenVideoHeight = screen.height;
-        fullScreenVideoWidth = screen.width;
+    if (!contentAspectRatio) {
 
-    } else if (screenAspectRatio < contentAspectRatio){
-
-        fullScreenVideoHeight = screen.width / contentAspectRatio;
-        fullScreenVideoWidth = screen.width;   
-
-    } else if (screenAspectRatio > contentAspectRatio) {
-
-        fullScreenVideoHeight = screen.width / contentAspectRatio;
-        fullScreenVideoWidth = screen.width;
+        // Use fullBackLayerContentAspectRatio as fallback when input content aspect ratio is not available   
+        contentAspectRatio = fullBackLayerContentAspectRatio;
 
     }
-       
-    return [fullScreenVideoHeight, fullScreenVideoWidth]; 
+    
+    if (viewState == "fullscreen") {
+        
+        var fullScreenVideoHeight,
+            fullScreenVideoWidth;
+
+        if (screenAspectRatio  == contentAspectRatio){
+
+            fullScreenVideoHeight = screen.height;
+            fullScreenVideoWidth = screen.width;
+
+        } else if (screenAspectRatio < contentAspectRatio){
+
+            fullScreenVideoHeight = screen.width / contentAspectRatio;
+            fullScreenVideoWidth = screen.width;   
+
+        } else if (screenAspectRatio > contentAspectRatio) {
+
+            fullScreenVideoHeight = screen.width / contentAspectRatio;
+            fullScreenVideoWidth = screen.width;
+
+        }
+
+        return [fullScreenVideoHeight, fullScreenVideoWidth]; 
+        
+    } else if (viewState == "normal") {
+        
+        var normalVideoHeight;
+        normalVideoHeight = initialWidth / contentAspectRatio;
+        
+        return normalVideoHeight;
+
+    }
 };
+
+
+
+
             
             

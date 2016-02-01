@@ -78,10 +78,16 @@ tiledVideoAttacher.prototype = {
     }
     
     frameRate = videoAdaptationSet[0].Representation.frameRate;
-    contentWidth = videoAdaptationSet[0].Representation.width;
-    contentHeight = videoAdaptationSet[0].Representation.height;
-    contentAspectRatio = contentWidth / contentHeight;
+    fullBackLayerContentWidth = videoAdaptationSet[0].Representation.width;
+    fullBackLayerContentHeight = videoAdaptationSet[0].Representation.height;
+    fullBackLayerContentAspectRatio = fullBackLayerContentWidth / fullBackLayerContentHeight;
     
+    if (fullBackLayerContentAspectRatio != initialAspectRatio) {
+
+        updateAspectRatio(fullBackLayer, fullBackLayerContentAspectRatio);
+
+    }    
+      
     var fullBackLayerMPD = {"__cnt": inMPD.__cnt, 
                             "#comment": inMPD["#comment"], 
                             "#comment_asArray": inMPD["#comment_asArray"], 
@@ -135,6 +141,36 @@ tiledVideoAttacher.prototype = {
     var lastVideo = adaptationSets.slice((lastVideoIndex - 1), lastVideoIndex);
     var essentialPropertyValueLength = lastVideo[0].EssentialProperty.value.length;
     maxZoomLevel = lastVideo[0].EssentialProperty.value.slice((essentialPropertyValueLength - 1), essentialPropertyValueLength);
+    
+    if (contentHasAudio == false) { 
+        var o = 0;
+    } else {
+        var o = 1;
+    }  
+      
+    for (var i = 1 + o; i < adaptationSets.length; i++) {
+        
+        var essentialPropertyValueLength = adaptationSets[i].EssentialProperty.value.length;
+        var zoomLevel = adaptationSets[i].EssentialProperty.value.slice((essentialPropertyValueLength - 1), essentialPropertyValueLength);
+          
+        if (zoomLevel == 0){
+                                    
+            if (i == 1 + o) {
+                
+                zoomLayer1ContentWidth = adaptationSets[i].Representation.width;
+                zoomLayer1ContentHeight = adaptationSets[i].Representation.height;
+                zoomLayer1ContentAspectRatio = zoomLayer1ContentWidth / zoomLayer1ContentHeight;
+                
+            }
+            
+        } else if (zoomLevel == 1) {
+                
+            zoomLayer2ContentWidth = adaptationSets[i].Representation.width;
+            zoomLayer2ContentHeight = adaptationSets[i].Representation.height;
+            zoomLayer2ContentAspectRatio = zoomLayer1ContentWidth / zoomLayer1ContentHeight;
+            break;               
+        }        
+    }
       
   },
   
@@ -174,6 +210,14 @@ tiledVideoAttacher.prototype = {
                                     type: inMPD.type,
                                     __text: inMPD.__text
                                     };
+                                    
+            if (i == 1 + o) {
+                
+                zoomLayer1ContentWidth = adaptationSets[i].Representation.width;
+                zoomLayer1ContentHeight = adaptationSets[i].Representation.height;
+                zoomLayer1ContentAspectRatio = zoomLayer1ContentWidth / zoomLayer1ContentHeight;
+                
+            }
             
         } else if (zoomLevel > currentZoomLevel) {
             break;
@@ -210,8 +254,6 @@ tiledVideoAttacher.prototype = {
     }
     
   },
-  
-  
   
   zoomLayer2Attacher: function (data) {
     var xPosition = data[0];
