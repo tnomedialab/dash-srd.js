@@ -163,18 +163,24 @@ function switchScreenMode() {
     if (browserType === "FireFox") {
         setTimeout(function() {
 
-            $(document).one("mozfullscreenchange", function () {
-                exitHandler();
-                $(document).off("mozfullscreenchange");
-            });
-        }, 100);
+        if (document.mozFullScreen) {
+                $(document).one("mozfullscreenchange", function () {
+                    exitHandler();
+                });
+            }
+        }, 250);
     } else {
+        
+        
         setTimeout(function() {
 
-            $(videoContainer).one(screenChangeEvents, function () {
-                exitHandler();
-            });
+            if (document.webkitIsFullScreen || document.fullscreen || document.msFullscreenElement) {
+                $(videoContainer).one(screenChangeEvents, function () {
+                    exitHandler();
+                });               
+            }
         }, 100);
+
     }
     
     function exitHandler() {

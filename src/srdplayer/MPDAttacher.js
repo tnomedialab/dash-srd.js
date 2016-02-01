@@ -69,8 +69,6 @@ tiledVideoAttacher.prototype = {
     var videoAdaptationSet = adaptationSets.slice(0, 1);
     var secondAdaptationSet = adaptationSets.slice(1, 2);
     
-    console.log(JSON.stringify(secondAdaptationSet, null, 4));
-    
     if (secondAdaptationSet[0].mimeType == "audio/mp4") {
         fullBackLayerAdaptationSet = [videoAdaptationSet[0], secondAdaptationSet[0]];
         contentHasAudio = true;
