@@ -108,18 +108,35 @@ tiledVideoAttacher.prototype = {
     player.attachSource(source);
 
     $("#fullBackLayer").one("canplay", function(){
-        playPause();
+
+        if (fullBackLayer.paused) {
+            fullBackLayer.play();
+            
+            if ($("#iconPlayPause").hasClass("icon-play")) { 
+                $("#iconPlayPause").removeClass("icon-play"); 
+            }
+            
+            if (!$("#iconPlayPause").hasClass("icon-pause")) {
+                $("#iconPlayPause").toggleClass("icon-pause");
+            }
+        }
 
          // Set the video duration
         duration = fullBackLayer.duration;
         document.getElementById("videoDuration").innerHTML = secondsToTimeString(duration);
 
         // Set the videotimer    
-        var timerInterval = duration / 4;    
+        var timerInterval = duration / 2;    
 
-        setInterval(function(){
+        var videoTimer = setInterval(function(){
             document.getElementById("videoTime").innerHTML = secondsToTimeString(fullBackLayer.currentTime);
             $("#seekbar").val(fullBackLayer.currentTime);
+            
+            if (fullBackLayer.currentTime == duration) {
+                // $("#iconPlayPause").toggleClass("icon-play");
+                clearInterval(videoTimer);
+            }
+            
         }, timerInterval);
 
         SynchroniseVideos();

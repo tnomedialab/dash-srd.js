@@ -25,10 +25,6 @@
  */
 
 function openVideo(){
-
-    if(!$("#iconPlayPause").hasClass("icon-play") || !$("#iconPlayPause").hasClass("icon-pause")) {
-        $("#iconPlayPause").toggleClass("icon-play"); 
-    }
     
     masterQuality = undefined;
     
@@ -188,8 +184,6 @@ function switchScreenMode() {
         } else if (document.webkitExitFullscreen) {
             document.webkitExitFullscreen();
         }
-        
-        exitHandler();
     } 
         
     screenChangeEvents = "webkitfullscreenchange fullscreenchange MSFullscreenChange";
@@ -202,7 +196,7 @@ function switchScreenMode() {
                     exitHandler();
                 });
             }
-        }, 300);
+        }, 400);
     } else {
         
         
@@ -213,7 +207,7 @@ function switchScreenMode() {
                     exitHandler();
                 });               
             }
-        }, 150);
+        }, 200);
 
     }
     
@@ -258,8 +252,7 @@ function switchScreenMode() {
             $('#zoomLayer1').width((zoomLayer1VideoWidth * 2) + "px"); 
             $('#zoomLayer1').height((zoomLayer1VideoHeight * 2) + "px"); 
             $('#zoomLayer2').width((zoomLayer2VideoWidth * 2) + "px"); 
-            $('#zoomLayer2').height((zoomLayer2VideoHeight * 2) + "px");
-            
+            $('#zoomLayer2').height((zoomLayer2VideoHeight * 2) + "px");            
      
             fullBackLayer.style.top = 0 + 'px';
 
