@@ -136,10 +136,10 @@ function switchScreenMode() {
         fullBackLayer.style.width = "";
         fullBackLayer.style.height = "";  
         
-        zoomLayer1.width = zoomLayer1VideoHeight * 2;
-        zoomLayer1.height = zoomLayer1VideoWidth * 2;         
-        zoomLayer2.width = zoomLayer2VideoHeight * 2;
-        zoomLayer2.height = zoomLayer2VideoWidth * 2;
+        zoomLayer1.width = zoomLayer1VideoWidth * 2;
+        zoomLayer1.height = zoomLayer1VideoHeight * 2;         
+        zoomLayer2.width = zoomLayer2VideoWidth * 2;
+        zoomLayer2.height = zoomLayer2VideoHeight * 2;
 
         $('#fullBackLayer').toggleClass('fullscreen');
         $('#videoContainer').toggleClass('fullscreen');
@@ -147,6 +147,36 @@ function switchScreenMode() {
         $("#videoController").toggleClass('video-controller-fullscreen');
 
         adjustVideoSizes(zoomLayer1VideoHeight, zoomLayer1VideoWidth, zoomLayer2VideoHeight, zoomLayer2VideoWidth);
+
+        if (currentZoomLevel == 0) {
+            
+            var offsetFromLeft = (parseInt(zoomLayer1.offsetLeft, 10) / initialWidth) * zoomLayer1VideoWidth;
+            var offsetFromTop = (parseInt(zoomLayer1.offsetTop, 10) / (initialHeight / zoomLayer1ContentAspectRatio)) * zoomLayer1VideoHeight;
+            
+            var eHe = zoomLayer1.height;
+            var vHe = screen.height;
+            if (offsetFromTop < (vHe - eHe)) {offsetFromTop = (vHe - eHe);}; 
+   
+            zoomLayer1.style.left = offsetFromLeft + 'px';
+            zoomLayer1.style.top = offsetFromTop + 'px';
+            fullBackLayer.style.left = offsetFromLeft + 'px';
+            fullBackLayer.style.top = offsetFromTop + 'px';
+            
+        } else if (currentZoomLevel == 1) {
+            
+            var offsetFromLeft = (parseInt(zoomLayer2.offsetLeft, 10) / initialWidth) * zoomLayer2VideoWidth;
+            var offsetFromTop = (parseInt(zoomLayer2.offsetTop, 10) / (initialHeight / zoomLayer2ContentAspectRatio)) * zoomLayer2VideoHeight;
+
+            var eHe = zoomLayer2.height;
+            var vHe = screen.height;
+            if (offsetFromTop < (vHe - eHe)) {offsetFromTop = (vHe - eHe);};
+            
+            zoomLayer2.style.left = offsetFromLeft + 'px';
+            zoomLayer2.style.top = offsetFromTop + 'px';
+            fullBackLayer.style.left = offsetFromLeft + 'px';
+            fullBackLayer.style.top = offsetFromTop + 'px';
+            
+        }
 
     } else {
         if (document.exitFullscreen) {
@@ -172,7 +202,7 @@ function switchScreenMode() {
                     exitHandler();
                 });
             }
-        }, 250);
+        }, 300);
     } else {
         
         
@@ -183,7 +213,7 @@ function switchScreenMode() {
                     exitHandler();
                 });               
             }
-        }, 100);
+        }, 150);
 
     }
     
@@ -229,14 +259,19 @@ function switchScreenMode() {
             $('#zoomLayer1').height((zoomLayer1VideoHeight * 2) + "px"); 
             $('#zoomLayer2').width((zoomLayer2VideoWidth * 2) + "px"); 
             $('#zoomLayer2').height((zoomLayer2VideoHeight * 2) + "px");
+            
+     
+            fullBackLayer.style.top = 0 + 'px';
 
             if (currentZoomLevel == undefined) {
                 fullScreenZoomedTo = undefined;
                 
             } else if (currentZoomLevel == 0){
 
-                xPosition = (zoomLayer1.offsetLeft / zoomLayer1VideoWidth) * zoomLayer1VideoWidth;
-                yPosition = (zoomLayer1.offsetTop / zoomLayer1VideoHeight) * zoomLayer1VideoHeight;
+                var zoomLayer1VideoHeightFullScreen = computeVideoDimensions(zoomLayer1ContentAspectRatio, "fullscreen")[0];
+                var zoomLayer1VideoWidthFullScreen = computeVideoDimensions(zoomLayer1ContentAspectRatio, "fullscreen")[1];
+                xPosition = (zoomLayer1.offsetLeft / zoomLayer1VideoWidthFullScreen) * zoomLayer1VideoWidth; 
+                yPosition = (zoomLayer1.offsetTop / zoomLayer1VideoHeightFullScreen) * zoomLayer1VideoHeight;
 
                 zoomLayer1.style.left = xPosition + 'px';
                 zoomLayer1.style.top = yPosition + 'px';
@@ -244,8 +279,8 @@ function switchScreenMode() {
 
             } else if (currentZoomLevel == 1){
 
-                xPosition = (zoomLayer2.offsetLeft / zoomLayer2VideoWidth) * videoWidth;
-                yPosition = (zoomLayer2.offsetTop / zoomLayer2VideoHeight) * videoHeight;
+                xPosition = zoomLayer2.offsetLeft + (zoomLayer2VideoWidth / 2);
+                yPosition = zoomLayer2.offsetTop + (zoomLayer2VideoHeight / 2);
 
                 zoomLayer2.style.left = xPosition + 'px';
                 zoomLayer2.style.top = yPosition + 'px';
