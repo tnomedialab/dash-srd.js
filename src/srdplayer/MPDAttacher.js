@@ -126,14 +126,23 @@ tiledVideoAttacher.prototype = {
         document.getElementById("videoDuration").innerHTML = secondsToTimeString(duration);
 
         // Set the videotimer    
-        var timerInterval = duration / 2;    
+        var timerInterval = duration / 2;  
+        
+        
+        // Add pseudo class to seekbar if user is moving the scrubber,
+        // otherwise it can not be moved
+        var seekbar = document.getElementById("seekbar");
+        seekbar.setAttribute('onmousedown', '$("#seekbar").toggleClass("user-seek");');
+        seekbar.setAttribute('onmouseup', '$("#seekbar").removeClass("user-seek");');
 
         var videoTimer = setInterval(function(){
             document.getElementById("videoTime").innerHTML = secondsToTimeString(fullBackLayer.currentTime);
-            $("#seekbar").val(fullBackLayer.currentTime);
+            
+            if (!$("#seekbar").hasClass("user-seek")) {
+                $("#seekbar").val(fullBackLayer.currentTime);
+            }
             
             if (fullBackLayer.currentTime == duration) {
-                // $("#iconPlayPause").toggleClass("icon-play");
                 clearInterval(videoTimer);
             }
             
