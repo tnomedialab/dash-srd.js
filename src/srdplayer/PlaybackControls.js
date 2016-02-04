@@ -26,8 +26,13 @@
 
 function openVideo(){
     
+    screenAspectRatio = screen.width / screen.height;
+    fullBackLayer.style.width = "";
+    fullBackLayer.style.height = "";
+    initialWidth = parseInt(fullBackLayer.offsetWidth, 10);
+    initialHeight = parseInt(fullBackLayer.offsetHeight, 10);
+    initialAspectRatio = initialWidth / initialHeight;
     masterQuality = undefined;
-    
     var mpdURL = document.getElementById('mpdURL').value;
     
     function validURL(str) {

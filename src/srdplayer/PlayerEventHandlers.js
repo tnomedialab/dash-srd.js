@@ -64,23 +64,28 @@ function initiatePlayBack(fullBackLayer, videoList, browserType, frameRate) {
 
                 }
         ), attachDelay);
-
-    for (var i = 0; i < zoomLayer1PlayerObjects.length; i++) { 
-        var player = zoomLayer1PlayerObjects[i];
-        
-        if (i === 0) {
-            
-            if (player.getBitrateInfoListFor("video").length > 1){
-                masterQuality = player.getQualityFor("video"); 
-            }  
-        
-        } if (i > 0 && masterQuality) {            
-            player.setAutoSwitchQuality(false);
-            player.setQualityFor("video", masterQuality);
-            
-    }}
     });
+    
+    $("#video1").one("loadeddata", function() {  
+        for (var i = 0; i < zoomLayer1PlayerObjects.length; i++) { 
+            var player = zoomLayer1PlayerObjects[i];
 
+            if (i === 0) {
+
+                if (player.getBitrateInfoListFor("video").length > 1){
+                    masterQuality = player.getQualityFor("video");
+                    
+                }  
+
+            } if (i > 0 && masterQuality) {            
+                player.setQualityFor("video", masterQuality);
+
+        }}
+    
+        if (masterQuality) { 
+            emitBitrateChanges(zoomLayer1PlayerObjects, masterQuality);
+        }
+    });
 }
 
 function estimateTimeUpdateFrequency(browserType, attachDelay, frameRate) {

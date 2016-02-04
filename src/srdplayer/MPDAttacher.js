@@ -167,37 +167,108 @@ tiledVideoAttacher.prototype = {
     var lastVideo = adaptationSets.slice((lastVideoIndex - 1), lastVideoIndex);
     var essentialPropertyValueLength = lastVideo[0].EssentialProperty.value.length;
     maxZoomLevel = lastVideo[0].EssentialProperty.value.slice((essentialPropertyValueLength - 1), essentialPropertyValueLength);
+
+    var orderedAdaptationSets = [fullBackLayerAdaptationSet]; 
     
     if (contentHasAudio == false) { 
         var o = 0;
     } else {
         var o = 1;
+        orderedAdaptationSets.push(secondAdaptationSet);
     }  
-      
+              
     for (var i = 1 + o; i < adaptationSets.length; i++) {
         
-        var essentialPropertyValueLength = adaptationSets[i].EssentialProperty.value.length;
-        var zoomLevel = adaptationSets[i].EssentialProperty.value.slice((essentialPropertyValueLength - 1), essentialPropertyValueLength);
+        var essentialPropertyValue = adaptationSets[i].EssentialProperty.value; 
+        var essentialPropertyValueAsArray = essentialPropertyValue.split(",");
+        var essentialPropertyValueLength = essentialPropertyValueAsArray.length;
+        var zoomLevel = essentialPropertyValueAsArray.slice((essentialPropertyValueLength - 1), essentialPropertyValueLength);
           
         if (zoomLevel == 0){
                                     
             if (i == 1 + o) {
-                
+
                 zoomLayer1ContentWidth = adaptationSets[i].Representation.width;
                 zoomLayer1ContentHeight = adaptationSets[i].Representation.height;
                 zoomLayer1ContentAspectRatio = zoomLayer1ContentWidth / zoomLayer1ContentHeight;
                 
+             
+                if (essentialPropertyValueAsArray[3] == 1 && essentialPropertyValueAsArray[4] == 1) {
+                    
+                    tileUnitType = "arbitrary units";
+                    spatialOrderingArbitraryUnitsZoomLevel0Horizontal = []; 
+                    spatialOrderingArbitraryUnitsZoomLevel0Vertical = [];
+                    spatialOrderingArbitraryUnitsZoomLevel1Horizontal = [];      
+                    spatialOrderingArbitraryUnitsZoomLevel1Vertical = [];
+                    
+                } else {
+                    
+                    tileUnitType = "pixel units";
+                    spatialOrderingPixelUnitsZoomLevel0Horizontal = []; 
+                    spatialOrderingPixelUnitsZoomLevel0Vertical = [];
+                    spatialOrderingPixelUnitsZoomLevel1Horizontal = []; 
+                    spatialOrderingPixelUnitsZoomLevel1Vertical = []; 
+                }
+
+            } 
+            
+            if (tileUnitType == "arbitrary units") {
+ 
+                spatialOrderingArbitraryUnitsZoomLevel0Horizontal.push(essentialPropertyValueAsArray[1]);      
+                spatialOrderingArbitraryUnitsZoomLevel0Vertical.push(essentialPropertyValueAsArray[2]);   
+
+        
+            } else if (tileUnitType == "pixel units") {
+ 
+                spatialOrderingPixelUnitsZoomLevel0Horizontal.push(essentialPropertyValueAsArray[1]);   
+                spatialOrderingPixelUnitsZoomLevel0Vertical.push(essentialPropertyValueAsArray[2]); 
+        
             }
             
         } else if (zoomLevel == 1) {
-                
-            zoomLayer2ContentWidth = adaptationSets[i].Representation.width;
-            zoomLayer2ContentHeight = adaptationSets[i].Representation.height;
-            zoomLayer2ContentAspectRatio = zoomLayer1ContentWidth / zoomLayer1ContentHeight;
-            break;               
+            
+            var firstIterationFlag = true;
+            
+            if (firstIterationFlag) {
+                zoomLayer2ContentWidth = adaptationSets[i].Representation.width;
+                zoomLayer2ContentHeight = adaptationSets[i].Representation.height;
+                zoomLayer2ContentAspectRatio = zoomLayer1ContentWidth / zoomLayer1ContentHeight;
+                firstIterationFlag = false;
+            }   
+            
+            if (tileUnitType == "arbitrary units") {
+  
+
+                spatialOrderingArbitraryUnitsZoomLevel1Horizontal.push(essentialPropertyValueAsArray[1]);   
+                spatialOrderingArbitraryUnitsZoomLevel1Vertical.push(essentialPropertyValueAsArray[2]);   
+
+        
+            } else if (tileUnitType == "pixel units") {
+
+                spatialOrderingPixelUnitsZoomLevel1Horizontal.push(essentialPropertyValueAsArray[1]);  
+                spatialOrderingPixelUnitsZoomLevel1Vertical.push(essentialPropertyValueAsArray[2]);
+        
+            }           
         }        
     }
+    
+    console.log("HERE " + spatialOrderingPixelUnitsZoomLevel0Horizontal + " " + spatialOrderingPixelUnitsZoomLevel0Vertical );
+ 
+    var startX = 0;
+    var startY = 0;
       
+    if (tileUnitType == "arbitrary units") {
+        // for (var i = 0; i < spatialOrderingArbitraryUnitsZoomLevel0Horizontal.length; i++);
+        
+                
+        
+    } else if (tileUnitType == "pixel units") {
+        
+        
+    }
+    
+    // inMPD.Period.AdaptationSet = orderedAdaptationSets;
+   
   },
   
   zoomLayer1Attacher: function (data) {
@@ -255,7 +326,8 @@ tiledVideoAttacher.prototype = {
     
     for (var i = 0; i < zoomLayer1VideoElements.length; i++) { 
         var videoElement = "video" + (i + 1);
-        var player = launchDashPlayer(videoElement);        
+        var player = launchDashPlayer(videoElement);  
+        player.setAutoSwitchQuality(false);
         zoomLayer1PlayerObjects.push(player);
     }  
      
@@ -273,10 +345,6 @@ tiledVideoAttacher.prototype = {
         videoContainer.addEventListener("dblclick", onClickEvent, false);
         getClickPositionEnabled = true;
         
-    }
-    
-    if (masterQuality) { 
-        emitBitrateChanges(zoomLayer1PlayerObjects, masterQuality);
     }
     
   },

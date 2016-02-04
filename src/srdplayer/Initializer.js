@@ -79,7 +79,16 @@ var SRDPlayer,
     zoomLayer1VideoHeight,
     zoomLayer1VideoWidth,
     zoomLayer2VideoHeight,
-    zoomLayer2VideoWidth;
+    zoomLayer2VideoWidth,
+    tileUnitType,
+    spatialOrderingArbitraryUnitsZoomLevel0Horizontal,
+    spatialOrderingArbitraryUnitsZoomLevel0Vertical,
+    spatialOrderingArbitraryUnitsZoomLevel1Horizontal,      
+    spatialOrderingArbitraryUnitsZoomLevel1Vertical,
+    spatialOrderingPixelUnitsZoomLevel0Horizontal, 
+    spatialOrderingPixelUnitsZoomLevel0Vertical,
+    spatialOrderingPixelUnitsZoomLevel1Horizontal,
+    spatialOrderingPixelUnitsZoomLevel1Vertical;
     
 $(document).ready(function() {
     SRDPlayer = document.getElementById("SRDPlayer");
@@ -119,10 +128,6 @@ $(document).ready(function() {
     zoomLayer1Status = null;
     fullScreenFlag = false;
     timeUpdateIntervals = {Chrome:250, Safari:250, Opera: 250, IE:250, Edge:250, Other:250};
-    screenAspectRatio = screen.width / screen.height;
-    initialWidth = parseInt(fullBackLayer.offsetWidth, 10);
-    initialHeight = parseInt(fullBackLayer.offsetHeight, 10);
-    initialAspectRatio = initialWidth / initialHeight;
     browserType = detectBrowser();
     
 });

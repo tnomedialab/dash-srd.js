@@ -162,6 +162,10 @@ function updateVideoContainer(xPosition, yPosition, viewLayer, delay, resizeFact
     } else if (viewLayer == zoomLayer1) {
      
         var offsetFromTop = (parseInt(videoContainer.offsetHeight, 10) - (parseInt(zoomLayer1.offsetHeight, 10) / 2)) / 2;
+        
+        if (fullScreenFlag == false) {
+            offsetFromTop = 0;
+        }
         zoomLayer1.style.left = xPosition + 'px';
         zoomLayer1.style.top = (yPosition + offsetFromTop) + 'px';
 
@@ -172,8 +176,13 @@ function updateVideoContainer(xPosition, yPosition, viewLayer, delay, resizeFact
         
     } else if (viewLayer == zoomLayer2) {
         
+        var offsetFromTop = (parseInt(videoContainer.offsetHeight, 10) - (parseInt(zoomLayer2.offsetHeight, 10) / 2)) / 2;
+        
+        if (fullScreenFlag == false) {
+            offsetFromTop = 0;
+        }
         zoomLayer2.style.left = xPosition + 'px';
-        zoomLayer2.style.top = yPosition + 'px';
+        zoomLayer2.style.top = (yPosition + offsetFromTop) + 'px';
 
         setTimeout(function(){    
             setVisibleElement("zoomlayer2");
