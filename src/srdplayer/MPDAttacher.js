@@ -156,13 +156,16 @@ tiledVideoAttacher.prototype = {
         });
     });
   
+    var supplementalPropertyValue = adaptationSets[0].SupplementalProperty.value;
+    currentZoomLevel = supplementalPropertyValue.substr(supplementalPropertyValue.length - 1);  
+
     if (getClickPositionEnabled === false) {
         
         videoContainer.addEventListener("dblclick", onClickEvent, false);
         getClickPositionEnabled = true;
         
     }
-    
+  
     var lastVideoIndex = adaptationSets.length;
     var lastVideo = adaptationSets.slice((lastVideoIndex - 1), lastVideoIndex);
     var essentialPropertyValueLength = lastVideo[0].EssentialProperty.value.length;
@@ -184,14 +187,23 @@ tiledVideoAttacher.prototype = {
         var essentialPropertyValueLength = essentialPropertyValueAsArray.length;
         var zoomLevel = essentialPropertyValueAsArray.slice((essentialPropertyValueLength - 1), essentialPropertyValueLength);
           
-        if (zoomLevel == 0){
+        if (zoomLevel == 1){
                                     
             if (i == 1 + o) {
 
-                zoomLayer1ContentWidth = adaptationSets[i].Representation.width;
-                zoomLayer1ContentHeight = adaptationSets[i].Representation.height;
-                zoomLayer1ContentAspectRatio = zoomLayer1ContentWidth / zoomLayer1ContentHeight;
+                if ($.isArray(adaptationSets[i].Representation)){ 
+
+                    zoomLayer1ContentWidth = adaptationSets[i].Representation[0].width;
+                    zoomLayer1ContentHeight = adaptationSets[i].Representation[0].height;
+
+                } else {
+                    
+                    zoomLayer1ContentWidth = adaptationSets[i].Representation.width;
+                    zoomLayer1ContentHeight = adaptationSets[i].Representation.height;
+                    
+                }
                 
+                zoomLayer1ContentAspectRatio = zoomLayer1ContentWidth / zoomLayer1ContentHeight;              
              
                 if (essentialPropertyValueAsArray[3] == 1 && essentialPropertyValueAsArray[4] == 1) {
                     
@@ -225,14 +237,25 @@ tiledVideoAttacher.prototype = {
         
             }
             
-        } else if (zoomLevel == 1) {
+        } else if (zoomLevel == 2) {
             
             var firstIterationFlag = true;
             
             if (firstIterationFlag) {
-                zoomLayer2ContentWidth = adaptationSets[i].Representation.width;
-                zoomLayer2ContentHeight = adaptationSets[i].Representation.height;
-                zoomLayer2ContentAspectRatio = zoomLayer1ContentWidth / zoomLayer1ContentHeight;
+
+                if ($.isArray(adaptationSets[i].Representation)){ 
+
+                    zoomLayer2ContentWidth = adaptationSets[i].Representation[0].width;
+                    zoomLayer2ContentHeight = adaptationSets[i].Representation[0].height;
+
+                } else {
+                    
+                    zoomLayer2ContentWidth = adaptationSets[i].Representation.width;
+                    zoomLayer2ContentHeight = adaptationSets[i].Representation.height;
+                    
+                }
+                
+                zoomLayer2ContentAspectRatio = zoomLayer2ContentWidth / zoomLayer2ContentHeight;
                 firstIterationFlag = false;
             }   
             
@@ -310,9 +333,20 @@ tiledVideoAttacher.prototype = {
                                     
             if (i == 1 + o) {
                 
-                zoomLayer1ContentWidth = adaptationSets[i].Representation.width;
-                zoomLayer1ContentHeight = adaptationSets[i].Representation.height;
+                if ($.isArray(adaptationSets[i].Representation)){ 
+
+                    zoomLayer1ContentWidth = adaptationSets[i].Representation[0].width;
+                    zoomLayer1ContentHeight = adaptationSets[i].Representation[0].height;
+
+                } else {
+                    
+                    zoomLayer1ContentWidth = adaptationSets[i].Representation.width;
+                    zoomLayer1ContentHeight = adaptationSets[i].Representation.height;
+                    
+                }
+                
                 zoomLayer1ContentAspectRatio = zoomLayer1ContentWidth / zoomLayer1ContentHeight;
+
                 
             }
             

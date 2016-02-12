@@ -41,15 +41,19 @@ function onClickEvent(e) {
     }
     
     // TODO: elaborate on this to suport more zoomlevels   
-    if (typeof currentZoomLevel === "undefined") {
+    if (currentZoomLevel == 0) {
 
         viewLayer = zoomLayer1;
-        currentZoomLevel = 0;
+        currentZoomLevel = 1;
 
         if (fullScreenFlag){ 
-            updateVideoContainer(xPosition, yPosition, fullBackLayer, null, "fullscreen");
+            
+            updateVideoContainer(xPosition, yPosition, fullBackLayer, null, "fullscreen zoomed");
+            
         } else {
-            updateVideoContainer(xPosition, yPosition, fullBackLayer, null, 2);  
+            
+            updateVideoContainer(xPosition, yPosition, fullBackLayer, null, 2);
+            
         } 
 
         ServiceBus.publish("Zoom-level1", [xPosition, yPosition, viewLayer]);
@@ -58,7 +62,7 @@ function onClickEvent(e) {
         zoomLayer1.setAttribute('onmouseup', 'dragtool.stopMoving(videoContainer);');
         
         
-    } else if (currentZoomLevel === 0) {
+    } else if (currentZoomLevel == 1) {
   
         viewLayer = fullBackLayer;
         zoomLayer1.removeAttribute('onmousedown');
@@ -66,15 +70,36 @@ function onClickEvent(e) {
         
         resetPlayers(zoomLayer1PlayerObjects);
         
-        if (fullScreenZoomedTo == undefined) { 
-            updateVideoContainer(xPosition, yPosition, viewLayer, null, 0.5);
+        if (fullScreenFlag){ 
+            
+            if (browserWindowZoomedTo == 0){
+                
+                updateVideoContainer(xPosition, yPosition, viewLayer, null, 0.5);
+                
+            } else {
+                
+                updateVideoContainer(xPosition, yPosition, viewLayer, null, "fullscreen");
+            } 
+            
         } else {
-            updateVideoContainer(xPosition, yPosition, viewLayer, null, 1.0);
-            fullScreenZoomedTo = undefined;
+            
+            if (fullScreenZoomedTo == 0 ){
+                
+                updateVideoContainer(xPosition, yPosition, viewLayer, null, 0.5);
+                
+            } else if (fullScreenZoomedTo == 1 || fullScreenZoomedTo == 2 ) {
+                
+               updateVideoContainer(xPosition, yPosition, viewLayer, null, 1.0);
+               
+            } else {
+                
+               updateVideoContainer(xPosition, yPosition, viewLayer, null, 0.5);
+               
+            } 
             
         }
         
-        currentZoomLevel = undefined;
+        currentZoomLevel = 0;
        
     }
 }
@@ -108,10 +133,15 @@ function updateVideoContainer(xPosition, yPosition, viewLayer, delay, resizeFact
         
         if (fullScreenFlag == true) {
             
-            if (resizeFactor == "fullscreen") {
+            if (resizeFactor == "fullscreen zoomed") {
                 
                 fullBackLayer.style.height = (screen.width / fullBackLayerContentAspectRatio)  * 2 + "px";
                 fullBackLayer.style.width = screen.width * 2 + "px";
+              
+            } else if (resizeFactor == "fullscreen") {
+                
+                fullBackLayer.style.height = (screen.width / fullBackLayerContentAspectRatio) + "px";
+                fullBackLayer.style.width = screen.width + "px";
                 
             } else {
                 
@@ -152,11 +182,18 @@ function updateVideoContainer(xPosition, yPosition, viewLayer, delay, resizeFact
             fullBackLayer.style.left = xPosition + 'px';
             fullBackLayer.style.top = yPosition + 'px';
             
-        } else if (resizeFactor === "fullscreen") {
+        } else if (resizeFactor === "fullscreen zoomed") {
             
             fullBackLayer.style.left = xPosition + 'px';
             fullBackLayer.style.top = yPosition + 'px';
             setVisibleElement("fullbacklayer");
+            
+        } else if (resizeFactor === "fullscreen") {
+           
+            fullBackLayer.style.left = 0 + 'px';
+            fullBackLayer.style.top = 0 + 'px';
+            setVisibleElement("fullbacklayer");
+            
         }
         
     } else if (viewLayer == zoomLayer1) {
@@ -287,7 +324,7 @@ var dragtool = function(){
  
 function computeVideoDimensions(contentAspectRatio, viewState) {
 
-    if (contentAspectRatio == undefined) {
+    if (contentAspectRatio === undefined) {
 
         // Use fullBackLayerContentAspectRatio as fallback when input content aspect ratio is not available   
         contentAspectRatio = fullBackLayerContentAspectRatio;

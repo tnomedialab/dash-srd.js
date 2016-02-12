@@ -99,13 +99,14 @@ function muteSound() {
 
 function switchScreenMode() {
     
-    var videoHeight,
-        videoWidth,       
-        screenChangeEvents;
+    var screenChangeEvents;
 
     if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {
         
-        fullScreenFlag = true;       
+        fullScreenFlag = true;  
+        browserWindowZoomedTo = currentZoomLevel;
+        fullScreenZoomedTo = currentZoomLevel;
+        
         zoomLayer1VideoHeight = computeVideoDimensions(zoomLayer1ContentAspectRatio, "fullscreen")[0];
         zoomLayer1VideoWidth = computeVideoDimensions(zoomLayer1ContentAspectRatio, "fullscreen")[1];
         zoomLayer2VideoHeight = computeVideoDimensions(zoomLayer2ContentAspectRatio, "fullscreen")[0];
@@ -149,7 +150,7 @@ function switchScreenMode() {
 
         adjustVideoSizes(zoomLayer1VideoHeight, zoomLayer1VideoWidth, zoomLayer2VideoHeight, zoomLayer2VideoWidth);
 
-        if (currentZoomLevel == 0) {
+        if (currentZoomLevel == 1) {
             
             var offsetFromLeft = (parseInt(zoomLayer1.offsetLeft, 10) / initialWidth) * zoomLayer1VideoWidth;
             var offsetFromTop = (parseInt(zoomLayer1.offsetTop, 10) / (initialHeight / zoomLayer1ContentAspectRatio)) * zoomLayer1VideoHeight;
@@ -163,7 +164,12 @@ function switchScreenMode() {
             fullBackLayer.style.left = offsetFromLeft + 'px';
             fullBackLayer.style.top = offsetFromTop + 'px';
             
-        } else if (currentZoomLevel == 1) {
+            zoomLayer1.removeAttribute('onmousedown');
+            zoomLayer1.removeAttribute('onmouseup');
+            zoomLayer1.setAttribute('onmousedown', 'dragtool.startMoving(this, videoContainer, event);');
+            zoomLayer1.setAttribute('onmouseup', 'dragtool.stopMoving(videoContainer);');
+            
+        } else if (currentZoomLevel == 2) {
             
             var offsetFromLeft = (parseInt(zoomLayer2.offsetLeft, 10) / initialWidth) * zoomLayer2VideoWidth;
             var offsetFromTop = (parseInt(zoomLayer2.offsetTop, 10) / (initialHeight / zoomLayer2ContentAspectRatio)) * zoomLayer2VideoHeight;
@@ -176,6 +182,11 @@ function switchScreenMode() {
             zoomLayer2.style.top = offsetFromTop + 'px';
             fullBackLayer.style.left = offsetFromLeft + 'px';
             fullBackLayer.style.top = offsetFromTop + 'px';
+            
+            zoomLayer2.removeAttribute('onmousedown');
+            zoomLayer2.removeAttribute('onmouseup');
+            zoomLayer2.setAttribute('onmousedown', 'dragtool.startMoving(this, videoContainer, event);');
+            zoomLayer2.setAttribute('onmouseup', 'dragtool.stopMoving(videoContainer);');
             
         }
 
@@ -261,10 +272,10 @@ function switchScreenMode() {
      
             fullBackLayer.style.top = 0 + 'px';
 
-            if (currentZoomLevel == undefined) {
-                fullScreenZoomedTo = undefined;
+            if (currentZoomLevel == 0) {
+                fullScreenZoomedTo = 0;
                 
-            } else if (currentZoomLevel == 0){
+            } else if (currentZoomLevel == 1){
 
                 var zoomLayer1VideoHeightFullScreen = computeVideoDimensions(zoomLayer1ContentAspectRatio, "fullscreen")[0];
                 var zoomLayer1VideoWidthFullScreen = computeVideoDimensions(zoomLayer1ContentAspectRatio, "fullscreen")[1];
@@ -273,20 +284,21 @@ function switchScreenMode() {
 
                 zoomLayer1.style.left = xPosition + 'px';
                 zoomLayer1.style.top = yPosition + 'px';
-                fullScreenZoomedTo = 0;           
+                fullScreenZoomedTo = 1;           
 
-            } else if (currentZoomLevel == 1){
+            } else if (currentZoomLevel == 2){
 
                 xPosition = zoomLayer2.offsetLeft + (zoomLayer2VideoWidth / 2);
                 yPosition = zoomLayer2.offsetTop + (zoomLayer2VideoHeight / 2);
 
                 zoomLayer2.style.left = xPosition + 'px';
                 zoomLayer2.style.top = yPosition + 'px';
-                fullScreenZoomedTo = 1;
+                fullScreenZoomedTo = 2;
                 
             }
             
-            fullScreenFlag = false;           
+            fullScreenFlag = false;  
+            browserWindowZoomedTo = undefined;
             
         }
     }
