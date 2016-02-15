@@ -48,27 +48,83 @@ function onClickEvent(e) {
 
         if (fullScreenFlag){ 
             
-            updateVideoContainer(xPosition, yPosition, fullBackLayer, null, "fullscreen zoomed");
+            updateVideoContainer(xPosition, yPosition, fallBackLayer, null, "fullscreen zoomed");
             
         } else {
             
-            updateVideoContainer(xPosition, yPosition, fullBackLayer, null, 2);
+            updateVideoContainer(xPosition, yPosition, fallBackLayer, null, 2);
             
         } 
 
         ServiceBus.publish("Zoom-level1", [xPosition, yPosition, viewLayer]);
-        zoomLayer1Status = "attached";
         zoomLayer1.setAttribute('onmousedown', 'dragtool.startMoving(this, videoContainer, event);');
         zoomLayer1.setAttribute('onmouseup', 'dragtool.stopMoving(videoContainer);');
-        
-        
-    } else if (currentZoomLevel == 1) {
+
+    } else if (currentZoomLevel == 1) {    
+
+        if (spatialOrderingZoomLevel2.length > 0) {
+                        
+            viewLayer = zoomLayer2;
+            zoomLayer1.removeAttribute('onmousedown');
+            zoomLayer1.removeAttribute('onmouseup');
+
+            resetPlayers(zoomLayer1PlayerObjects);
+
+            currentZoomLevel = 2;
+            
+            ServiceBus.publish("Zoom-level2", [xPosition, yPosition, viewLayer]);
+            zoomLayer2.setAttribute('onmousedown', 'dragtool.startMoving(this, videoContainer, event);');
+            zoomLayer2.setAttribute('onmouseup', 'dragtool.stopMoving(videoContainer);');
+            
+            
+        } else {
   
-        viewLayer = fullBackLayer;
+            viewLayer = fallBackLayer;
+            zoomLayer1.removeAttribute('onmousedown');
+            zoomLayer1.removeAttribute('onmouseup');
+
+            resetPlayers(zoomLayer1PlayerObjects);
+
+            if (fullScreenFlag){ 
+
+                if (browserWindowZoomedTo == 0){
+
+                    updateVideoContainer(xPosition, yPosition, viewLayer, null, 0.5);
+
+                } else {
+
+                    updateVideoContainer(xPosition, yPosition, viewLayer, null, "fullscreen");
+                } 
+
+            } else {
+
+                if (fullScreenZoomedTo == 0 ){
+
+                    updateVideoContainer(xPosition, yPosition, viewLayer, null, 0.5);
+
+                } else if (fullScreenZoomedTo == 1 || fullScreenZoomedTo == 2 ) {
+
+                   updateVideoContainer(xPosition, yPosition, viewLayer, null, 1.0);
+
+                } else {
+
+                   updateVideoContainer(xPosition, yPosition, viewLayer, null, 0.5);
+
+                } 
+
+            }
+
+            currentZoomLevel = 0;
+            
+        }
+        
+    } else if (currentZoomLevel == 2) {
+  
+        viewLayer = fallBackLayer;
         zoomLayer1.removeAttribute('onmousedown');
         zoomLayer1.removeAttribute('onmouseup');
         
-        resetPlayers(zoomLayer1PlayerObjects);
+        resetPlayers(zoomLayer2PlayerObjects);
         
         if (fullScreenFlag){ 
             
@@ -129,70 +185,70 @@ function getPosition(element) {
 
 function updateVideoContainer(xPosition, yPosition, viewLayer, delay, resizeFactor) {
     
-    if (viewLayer == fullBackLayer){
+    if (viewLayer == fallBackLayer){
         
         if (fullScreenFlag == true) {
             
             if (resizeFactor == "fullscreen zoomed") {
                 
-                fullBackLayer.style.height = (screen.width / fullBackLayerContentAspectRatio)  * 2 + "px";
-                fullBackLayer.style.width = screen.width * 2 + "px";
+                fallBackLayer.style.height = (screen.width / fallBackLayerContentAspectRatio)  * 2 + "px";
+                fallBackLayer.style.width = screen.width * 2 + "px";
               
             } else if (resizeFactor == "fullscreen") {
                 
-                fullBackLayer.style.height = (screen.width / fullBackLayerContentAspectRatio) + "px";
-                fullBackLayer.style.width = screen.width + "px";
+                fallBackLayer.style.height = (screen.width / fallBackLayerContentAspectRatio) + "px";
+                fallBackLayer.style.width = screen.width + "px";
                 
             } else {
                 
-                var resizedHeight = parseInt(fullBackLayer.offsetHeight, 10) * resizeFactor;
-                var resizedWidth = parseInt(fullBackLayer.offsetWidth, 10) * resizeFactor; 
+                var resizedHeight = parseInt(fallBackLayer.offsetHeight, 10) * resizeFactor;
+                var resizedWidth = parseInt(fallBackLayer.offsetWidth, 10) * resizeFactor; 
 
-                fullBackLayer.style.height = resizedHeight + "px";
-                fullBackLayer.style.width = resizedWidth + "px";
+                fallBackLayer.style.height = resizedHeight + "px";
+                fallBackLayer.style.width = resizedWidth + "px";
                 
             }         
            
         } else if (fullScreenFlag == false) {
             
-            var resizedHeight = parseInt(fullBackLayer.offsetHeight, 10) * resizeFactor;
-            var resizedWidth = parseInt(fullBackLayer.offsetWidth, 10) * resizeFactor; 
+            var resizedHeight = parseInt(fallBackLayer.offsetHeight, 10) * resizeFactor;
+            var resizedWidth = parseInt(fallBackLayer.offsetWidth, 10) * resizeFactor; 
             
-            fullBackLayer.style.height = resizedHeight + "px";
-            fullBackLayer.style.width = resizedWidth + "px";
+            fallBackLayer.style.height = resizedHeight + "px";
+            fallBackLayer.style.width = resizedWidth + "px";
 
         }
 
         if (resizeFactor === 0.5) {    
             
-            var offsetFromTop = (parseInt(videoContainer.offsetHeight, 10) - parseInt(fullBackLayer.offsetHeight, 10)) / 2;
+            var offsetFromTop = (parseInt(videoContainer.offsetHeight, 10) - parseInt(fallBackLayer.offsetHeight, 10)) / 2;
            
-            fullBackLayer.style.left = 0 + 'px';
-            fullBackLayer.style.top = offsetFromTop + 'px';
-            setVisibleElement("fullbacklayer");   
+            fallBackLayer.style.left = 0 + 'px';
+            fallBackLayer.style.top = offsetFromTop + 'px';
+            setVisibleElement("fallbacklayer");   
             
         } else if (resizeFactor === 1.0) { 
             
-            fullBackLayer.style.left = 0 + 'px';
-            fullBackLayer.style.top = 0 + 'px';
-            setVisibleElement("fullbacklayer");
+            fallBackLayer.style.left = 0 + 'px';
+            fallBackLayer.style.top = 0 + 'px';
+            setVisibleElement("fallbacklayer");
         
         } else if (resizeFactor === 2) {
             
-            fullBackLayer.style.left = xPosition + 'px';
-            fullBackLayer.style.top = yPosition + 'px';
+            fallBackLayer.style.left = xPosition + 'px';
+            fallBackLayer.style.top = yPosition + 'px';
             
         } else if (resizeFactor === "fullscreen zoomed") {
             
-            fullBackLayer.style.left = xPosition + 'px';
-            fullBackLayer.style.top = yPosition + 'px';
-            setVisibleElement("fullbacklayer");
+            fallBackLayer.style.left = xPosition + 'px';
+            fallBackLayer.style.top = yPosition + 'px';
+            setVisibleElement("fallbacklayer");
             
         } else if (resizeFactor === "fullscreen") {
            
-            fullBackLayer.style.left = 0 + 'px';
-            fullBackLayer.style.top = 0 + 'px';
-            setVisibleElement("fullbacklayer");
+            fallBackLayer.style.left = 0 + 'px';
+            fallBackLayer.style.top = 0 + 'px';
+            setVisibleElement("fallbacklayer");
             
         }
         
@@ -229,11 +285,11 @@ function updateVideoContainer(xPosition, yPosition, viewLayer, delay, resizeFact
 
 function updateAspectRatio(viewLayer, contentAspectRatio) {
     
-    if (viewLayer == fullBackLayer) { 
+    if (viewLayer == fallBackLayer) { 
     
         SRDPlayer.style.height = ((initialWidth / contentAspectRatio) + 188) + "px";
         videoContainer.style.height = (initialWidth / contentAspectRatio) + "px";
-        fullBackLayer.style.height = (initialWidth / contentAspectRatio) + "px";
+        fallBackLayer.style.height = (initialWidth / contentAspectRatio) + "px";
         bannerbox.style.height = (initialWidth / contentAspectRatio) + "px"; 
     
     }
@@ -241,27 +297,27 @@ function updateAspectRatio(viewLayer, contentAspectRatio) {
 
 function setVisibleElement(visibleElement){
    
-   if (visibleElement === "fullbacklayer") {
-       fullBackLayer.style.visibility = "visible";
+   if (visibleElement === "fallbacklayer") {
+       fallBackLayer.style.visibility = "visible";
        zoomLayer1.style.visibility = "hidden";
        zoomLayer2.style.visibility = "hidden";
        bannerbox.style.visibility = "hidden";
 
    } else if (visibleElement === "zoomlayer1") {
        zoomLayer1.style.visibility = "visible";
-       fullBackLayer.style.visibility = "hidden";
+       fallBackLayer.style.visibility = "hidden";
        zoomLayer2.style.visibility = "hidden";
        bannerbox.style.visibility = "hidden";
 
    } else if (visibleElement === "zoomlayer2") {
        zoomLayer2.style.visibility = "visible";
-       fullBackLayer.style.visibility = "hidden";
+       fallBackLayer.style.visibility = "hidden";
        zoomLayer1.style.visibility = "hidden";
        bannerbox.style.visibility = "hidden";
 
    } else if (visibleElement === "bannerbox") {
        bannerbox.style.visibility = "visible";
-       fullBackLayer.style.visibility = "hidden";
+       fallBackLayer.style.visibility = "hidden";
        zoomLayer1.style.visibility = "hidden";
        zoomLayer2.style.visibility = "hidden";
 
@@ -273,8 +329,8 @@ var dragtool = function(){
                     move : function(divid,xpos,ypos){
                         divid.style.left = xpos + 'px';
                         divid.style.top = ypos + 'px';
-                        fullBackLayer.style.left = xpos + 'px';
-                        fullBackLayer.style.top = ypos + 'px';
+                        fallBackLayer.style.left = xpos + 'px';
+                        fallBackLayer.style.top = ypos + 'px';
                         
                     },
                     
@@ -326,8 +382,8 @@ function computeVideoDimensions(contentAspectRatio, viewState) {
 
     if (contentAspectRatio === undefined) {
 
-        // Use fullBackLayerContentAspectRatio as fallback when input content aspect ratio is not available   
-        contentAspectRatio = fullBackLayerContentAspectRatio;
+        // Use fallBackLayerContentAspectRatio as fallback when input content aspect ratio is not available   
+        contentAspectRatio = fallBackLayerContentAspectRatio;
 
     }
     

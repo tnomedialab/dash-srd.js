@@ -27,10 +27,10 @@
 function openVideo(){
     
     screenAspectRatio = screen.width / screen.height;
-    fullBackLayer.style.width = "";
-    fullBackLayer.style.height = "";
-    initialWidth = parseInt(fullBackLayer.offsetWidth, 10);
-    initialHeight = parseInt(fullBackLayer.offsetHeight, 10);
+    fallBackLayer.style.width = "";
+    fallBackLayer.style.height = "";
+    initialWidth = parseInt(fallBackLayer.offsetWidth, 10);
+    initialHeight = parseInt(fallBackLayer.offsetHeight, 10);
     initialAspectRatio = initialWidth / initialHeight;
     masterQuality = undefined;
     var mpdURL = document.getElementById('mpdURL').value;
@@ -58,8 +58,8 @@ function openVideo(){
 
 function playPause() { 
 
-    if (fullBackLayer.paused) {
-        fullBackLayer.play();
+    if (fallBackLayer.paused) {
+        fallBackLayer.play();
         video1.play();
         video2.play();
         video3.play();
@@ -68,7 +68,7 @@ function playPause() {
         $("#iconPlayPause").toggleClass("icon-pause");
 
     } else { 
-        fullBackLayer.pause();
+        fallBackLayer.pause();
         video1.pause();
         video2.pause();
         video3.pause();
@@ -80,16 +80,16 @@ function playPause() {
 
 function muteSound() { 
     
-    if (fullBackLayer.muted === false){
-        lastVolumeValue = fullBackLayer.volume;
-        fullBackLayer.muted = true;
+    if (fallBackLayer.muted === false){
+        lastVolumeValue = fallBackLayer.volume;
+        fallBackLayer.muted = true;
         $("#iconMute").removeClass("icon-mute-off");
         $("#iconMute").toggleClass("icon-mute-on");
         $("#volumebar").val(0.0);
         
-    } else if (fullBackLayer.muted === true){
-        fullBackLayer.muted = false;
-        fullBackLayer.volume = lastVolumeValue;
+    } else if (fallBackLayer.muted === true){
+        fallBackLayer.muted = false;
+        fallBackLayer.volume = lastVolumeValue;
         $("#iconMute").removeClass("icon-mute-on");
         $("#iconMute").toggleClass("icon-mute-off");
         $("#volumebar").val(lastVolumeValue);
@@ -135,15 +135,15 @@ function switchScreenMode() {
         SRDPlayer.style.height = "";
         videoContainer.style.height = "";
         bannerbox.style.height = "";
-        fullBackLayer.style.width = "";
-        fullBackLayer.style.height = "";  
+        fallBackLayer.style.width = "";
+        fallBackLayer.style.height = "";  
         
         zoomLayer1.width = zoomLayer1VideoWidth * 2;
         zoomLayer1.height = zoomLayer1VideoHeight * 2;         
         zoomLayer2.width = zoomLayer2VideoWidth * 2;
         zoomLayer2.height = zoomLayer2VideoHeight * 2;
 
-        $('#fullBackLayer').toggleClass('fullscreen');
+        $('#fallBackLayer').toggleClass('fullscreen');
         $('#videoContainer').toggleClass('fullscreen');
         $('#bannerbox').toggleClass('bannerbox-fullscreen'); 
         $("#videoController").toggleClass('video-controller-fullscreen');
@@ -161,8 +161,8 @@ function switchScreenMode() {
    
             zoomLayer1.style.left = offsetFromLeft + 'px';
             zoomLayer1.style.top = offsetFromTop + 'px';
-            fullBackLayer.style.left = offsetFromLeft + 'px';
-            fullBackLayer.style.top = offsetFromTop + 'px';
+            fallBackLayer.style.left = offsetFromLeft + 'px';
+            fallBackLayer.style.top = offsetFromTop + 'px';
             
             zoomLayer1.removeAttribute('onmousedown');
             zoomLayer1.removeAttribute('onmouseup');
@@ -180,8 +180,8 @@ function switchScreenMode() {
             
             zoomLayer2.style.left = offsetFromLeft + 'px';
             zoomLayer2.style.top = offsetFromTop + 'px';
-            fullBackLayer.style.left = offsetFromLeft + 'px';
-            fullBackLayer.style.top = offsetFromTop + 'px';
+            fallBackLayer.style.left = offsetFromLeft + 'px';
+            fallBackLayer.style.top = offsetFromTop + 'px';
             
             zoomLayer2.removeAttribute('onmousedown');
             zoomLayer2.removeAttribute('onmouseup');
@@ -234,12 +234,12 @@ function switchScreenMode() {
         
         if (document.fullscreenElement || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement !== null) {       
             
-            fullBackLayer.style.width = "";
-            fullBackLayer.style.height = "";  
+            fallBackLayer.style.width = "";
+            fallBackLayer.style.height = "";  
            
-            if (fullBackLayerContentAspectRatio != initialAspectRatio) {
+            if (fallBackLayerContentAspectRatio != initialAspectRatio) {
         
-                updateAspectRatio(fullBackLayer, fullBackLayerContentAspectRatio); 
+                updateAspectRatio(fallBackLayer, fallBackLayerContentAspectRatio); 
         
             }
 
@@ -248,7 +248,7 @@ function switchScreenMode() {
             zoomLayer2.removeAttribute('width');
             zoomLayer2.removeAttribute('height');
             
-            $('#fullBackLayer').removeClass('fullscreen');
+            $('#fallBackLayer').removeClass('fullscreen');
             $('#zoomLayer1').removeClass('fullscreen'); 
             $('#zoomLayer2').removeClass('fullscreen'); 
             $('video').removeClass('fullscreen');
@@ -270,7 +270,7 @@ function switchScreenMode() {
             $('#zoomLayer2').width((zoomLayer2VideoWidth * 2) + "px"); 
             $('#zoomLayer2').height((zoomLayer2VideoHeight * 2) + "px");            
      
-            fullBackLayer.style.top = 0 + 'px';
+            fallBackLayer.style.top = 0 + 'px';
 
             if (currentZoomLevel == 0) {
                 fullScreenZoomedTo = 0;
@@ -284,7 +284,12 @@ function switchScreenMode() {
 
                 zoomLayer1.style.left = xPosition + 'px';
                 zoomLayer1.style.top = yPosition + 'px';
-                fullScreenZoomedTo = 1;           
+                fullScreenZoomedTo = 1;      
+                
+                zoomLayer1.removeAttribute('onmousedown');
+                zoomLayer1.removeAttribute('onmouseup');
+                zoomLayer1.setAttribute('onmousedown', 'dragtool.startMoving(this, videoContainer, event);');
+                zoomLayer1.setAttribute('onmouseup', 'dragtool.stopMoving(videoContainer);');
 
             } else if (currentZoomLevel == 2){
 

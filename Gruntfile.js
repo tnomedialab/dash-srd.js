@@ -15,6 +15,7 @@ module.exports = function(grunt) {
       build: {
         src: ['src/srdplayer/Initializer.js',
             'src/srdplayer/VideoSynchroniser.js',
+            'src/utils/ArrayTools.js',
             'src/utils/ServiceBus.js',
             'src/utils/CrossOriginRequest.js',
             'src/utils/xml2json.js',

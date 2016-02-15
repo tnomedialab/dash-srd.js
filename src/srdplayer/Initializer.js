@@ -29,7 +29,7 @@ var SRDPlayer,
     videoContainer,
     bannerbox,
     frameRate,
-    fullBackLayer,
+    fallBackLayer,
     zoomLayer1,
     zoomLayer2,
     video1,
@@ -51,7 +51,6 @@ var SRDPlayer,
     inMPD,
     currentZoomLevel,
     maxZoomLevel,
-    zoomLayer1Status,
     fullScreenFlag,
     browserWindowZoomedTo,
     fullScreenZoomedTo,
@@ -61,9 +60,9 @@ var SRDPlayer,
     initialWidth,
     initialHeight,
     initialAspectRatio,
-    fullBackLayerContentWidth,
-    fullBackLayerContentHeight,
-    fullBackLayerContentAspectRatio,   
+    fallBackLayerContentWidth,
+    fallBackLayerContentHeight,
+    fallBackLayerContentAspectRatio,   
     zoomLayer1ContentWidth,
     zoomLayer1ContentHeight,
     zoomLayer1ContentAspectRatio,
@@ -82,20 +81,20 @@ var SRDPlayer,
     zoomLayer2VideoHeight,
     zoomLayer2VideoWidth,
     tileUnitType,
-    spatialOrderingArbitraryUnitsZoomLevel0Horizontal,
-    spatialOrderingArbitraryUnitsZoomLevel0Vertical,
-    spatialOrderingArbitraryUnitsZoomLevel1Horizontal,      
-    spatialOrderingArbitraryUnitsZoomLevel1Vertical,
-    spatialOrderingPixelUnitsZoomLevel0Horizontal, 
-    spatialOrderingPixelUnitsZoomLevel0Vertical,
-    spatialOrderingPixelUnitsZoomLevel1Horizontal,
-    spatialOrderingPixelUnitsZoomLevel1Vertical;
+    spatialOrderingZoomLevel1,
+    spatialOrderingZoomLevel2,
+    spatialOrderingDimensionsZoomLevel1,
+    spatialOrderingDimensionsZoomLevel2,
+    zoomLevel1TotalWidth,
+    zoomLevel2TotalWidth,
+    zoomLevel1TotalHeight,
+    zoomLevel2TotalHeight;
     
 $(document).ready(function() {
     SRDPlayer = document.getElementById("SRDPlayer");
     videoContainer = document.getElementById("videoContainer");
     bannerbox = document.getElementById("bannerbox");
-    fullBackLayer = document.getElementById("fullBackLayer");
+    fallBackLayer = document.getElementById("fallBackLayer");
     zoomLayer1 = document.getElementById("zoomLayer1");
     zoomLayer2 = document.getElementById("zoomLayer2");
     video1 = document.getElementById("video1");
@@ -112,8 +111,10 @@ $(document).ready(function() {
     zoomLayer2VideoElements = [video5, video6, video7, video8];  
     zoomLayer1PlayerObjects = [];
     zoomLayer2PlayerObjects = [];
+    spatialOrderingZoomLevel1 = [];
+    spatialOrderingZoomLevel2 = [];
     
-    fullBackLayer.style.visibility = 'visible';
+    fallBackLayer.style.visibility = 'visible';
     zoomLayer1.style.visibility = 'hidden';
     zoomLayer2.style.visibility = 'hidden';    
     
@@ -126,7 +127,6 @@ $(document).ready(function() {
     video7.muted = true;
     video8.muted = true;
     getClickPositionEnabled = false;
-    zoomLayer1Status = null;
     fullScreenFlag = false;
     timeUpdateIntervals = {Chrome:250, Safari:250, Opera: 250, IE:250, Edge:250, Other:250};
     browserType = detectBrowser();

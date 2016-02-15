@@ -40,10 +40,10 @@ normalVideoAttacher.prototype = {
         videoContainer.removeEventListener("dblclick", getClickPosition);
     }     
 
-    var player = launchDashPlayer("fullBackLayer");
+    var player = launchDashPlayer("fallBackLayer");
     player.attachSource(data);
 
-    $.when(fullBackLayer.readyState === 4).then((function() {
+    $.when(fallBackLayer.readyState === 4).then((function() {
         playPause();
     }));
 
@@ -53,7 +53,7 @@ normalVideoAttacher.prototype = {
 
 var tiledVideoAttacher = function() {
     
-  ServiceBus.subscribe("SRD-MPD", this.fullBackLayerAttacher, "fullBackLayerAttacher");
+  ServiceBus.subscribe("SRD-MPD", this.fallBackLayerAttacher, "fallBackLayerAttacher");
   ServiceBus.subscribe("Zoom-level1", this.zoomLayer1Attacher, "zoomLayer1Attacher");
   ServiceBus.subscribe("Zoom-level2", this.zoomLayer2Attacher, "zoomLayer2Attacher");
 
@@ -61,40 +61,40 @@ var tiledVideoAttacher = function() {
 
 tiledVideoAttacher.prototype = {
     
-  fullBackLayerAttacher: function (data) {
+  fallBackLayerAttacher: function (data) {
     
-    var fullBackLayerAdaptationSet;
+    var fallBackLayerAdaptationSet;
     inMPD = data[1]; 
     var adaptationSets = inMPD.Period.AdaptationSet;
     var videoAdaptationSet = adaptationSets.slice(0, 1);
     var secondAdaptationSet = adaptationSets.slice(1, 2);
     
     if (secondAdaptationSet[0].mimeType == "audio/mp4") {
-        fullBackLayerAdaptationSet = [videoAdaptationSet[0], secondAdaptationSet[0]];
+        fallBackLayerAdaptationSet = [videoAdaptationSet[0], secondAdaptationSet[0]];
         contentHasAudio = true;
     } else {
-        fullBackLayerAdaptationSet = videoAdaptationSet;
+        fallBackLayerAdaptationSet = videoAdaptationSet;
         contentHasAudio = false;
     }
     
     frameRate = videoAdaptationSet[0].Representation.frameRate;
-    fullBackLayerContentWidth = videoAdaptationSet[0].Representation.width;
-    fullBackLayerContentHeight = videoAdaptationSet[0].Representation.height;
-    fullBackLayerContentAspectRatio = fullBackLayerContentWidth / fullBackLayerContentHeight;
+    fallBackLayerContentWidth = videoAdaptationSet[0].Representation.width;
+    fallBackLayerContentHeight = videoAdaptationSet[0].Representation.height;
+    fallBackLayerContentAspectRatio = fallBackLayerContentWidth / fallBackLayerContentHeight;
     
-    if (fullBackLayerContentAspectRatio != initialAspectRatio) {
+    if (fallBackLayerContentAspectRatio != initialAspectRatio) {
 
-        updateAspectRatio(fullBackLayer, fullBackLayerContentAspectRatio);
+        updateAspectRatio(fallBackLayer, fallBackLayerContentAspectRatio);
 
     }    
       
-    var fullBackLayerMPD = {"__cnt": inMPD.__cnt, 
+    var fallBackLayerMPD = {"__cnt": inMPD.__cnt, 
                             "#comment": inMPD["#comment"], 
                             "#comment_asArray": inMPD["#comment_asArray"], 
                             BaseURL:inMPD.BaseURL, 
                             BaseURL_asArray: inMPD.BaseURL_asArray, 
-                            Period: {"__cnt": inMPD.Period.__cnt, AdaptationSet: fullBackLayerAdaptationSet, AdaptationSet_asArray: fullBackLayerAdaptationSet, __children: fullBackLayerAdaptationSet}, 
-                            Period_asArray: [{AdaptationSet: fullBackLayerAdaptationSet, AdaptationSet_asArray: fullBackLayerAdaptationSet, __children: fullBackLayerAdaptationSet}],
+                            Period: {"__cnt": inMPD.Period.__cnt, AdaptationSet: fallBackLayerAdaptationSet, AdaptationSet_asArray: fallBackLayerAdaptationSet, __children: fallBackLayerAdaptationSet}, 
+                            Period_asArray: [{AdaptationSet: fallBackLayerAdaptationSet, AdaptationSet_asArray: fallBackLayerAdaptationSet, __children: fallBackLayerAdaptationSet}],
                             xmlns: inMPD.xmlns,
                             mediaPresentationDuration: inMPD.mediaPresentationDuration,
                             minBufferTime: inMPD.minBufferTime,
@@ -103,14 +103,14 @@ tiledVideoAttacher.prototype = {
                             __text: inMPD.__text
                             };     
 
-    var player = launchDashPlayer("fullBackLayer");
-    var source = [mpdURL, fullBackLayerMPD];
+    var player = launchDashPlayer("fallBackLayer");
+    var source = [mpdURL, fallBackLayerMPD];
     player.attachSource(source);
 
-    $("#fullBackLayer").one("canplay", function(){
+    $("#fallBackLayer").one("canplay", function(){
 
-        if (fullBackLayer.paused) {
-            fullBackLayer.play();
+        if (fallBackLayer.paused) {
+            fallBackLayer.play();
             
             if ($("#iconPlayPause").hasClass("icon-play")) { 
                 $("#iconPlayPause").removeClass("icon-play"); 
@@ -122,7 +122,7 @@ tiledVideoAttacher.prototype = {
         }
 
          // Set the video duration
-        duration = fullBackLayer.duration;
+        duration = fallBackLayer.duration;
         document.getElementById("videoDuration").innerHTML = secondsToTimeString(duration);
 
         // Set the videotimer    
@@ -136,13 +136,13 @@ tiledVideoAttacher.prototype = {
         seekbar.setAttribute('onmouseup', '$("#seekbar").removeClass("user-seek");');
 
         var videoTimer = setInterval(function(){
-            document.getElementById("videoTime").innerHTML = secondsToTimeString(fullBackLayer.currentTime);
+            document.getElementById("videoTime").innerHTML = secondsToTimeString(fallBackLayer.currentTime);
             
             if (!$("#seekbar").hasClass("user-seek")) {
-                $("#seekbar").val(fullBackLayer.currentTime);
+                $("#seekbar").val(fallBackLayer.currentTime);
             }
             
-            if (fullBackLayer.currentTime == duration) {
+            if (fallBackLayer.currentTime == duration) {
                 clearInterval(videoTimer);
             }
             
@@ -152,7 +152,7 @@ tiledVideoAttacher.prototype = {
 
         $("#volumebar").bind("change", function() {
           var val = this.value;
-          fullBackLayer.volume = val;
+          fallBackLayer.volume = val;
         });
     });
   
@@ -171,14 +171,15 @@ tiledVideoAttacher.prototype = {
     var essentialPropertyValueLength = lastVideo[0].EssentialProperty.value.length;
     maxZoomLevel = lastVideo[0].EssentialProperty.value.slice((essentialPropertyValueLength - 1), essentialPropertyValueLength);
 
-    var orderedAdaptationSets = [fullBackLayerAdaptationSet]; 
+    var orderedAdaptationSets = fallBackLayerAdaptationSet; 
     
     if (contentHasAudio == false) { 
         var o = 0;
+        var orderedAdaptationSets = [fallBackLayerAdaptationSet[0]]; 
     } else {
         var o = 1;
-        orderedAdaptationSets.push(secondAdaptationSet);
-    }  
+        var orderedAdaptationSets = fallBackLayerAdaptationSet;  
+    }   
               
     for (var i = 1 + o; i < adaptationSets.length; i++) {
         
@@ -208,34 +209,17 @@ tiledVideoAttacher.prototype = {
                 if (essentialPropertyValueAsArray[3] == 1 && essentialPropertyValueAsArray[4] == 1) {
                     
                     tileUnitType = "arbitrary units";
-                    spatialOrderingArbitraryUnitsZoomLevel0Horizontal = []; 
-                    spatialOrderingArbitraryUnitsZoomLevel0Vertical = [];
-                    spatialOrderingArbitraryUnitsZoomLevel1Horizontal = [];      
-                    spatialOrderingArbitraryUnitsZoomLevel1Vertical = [];
                     
                 } else {
                     
                     tileUnitType = "pixel units";
-                    spatialOrderingPixelUnitsZoomLevel0Horizontal = []; 
-                    spatialOrderingPixelUnitsZoomLevel0Vertical = [];
-                    spatialOrderingPixelUnitsZoomLevel1Horizontal = []; 
-                    spatialOrderingPixelUnitsZoomLevel1Vertical = []; 
+ 
                 }
 
-            } 
-            
-            if (tileUnitType == "arbitrary units") {
+            }             
  
-                spatialOrderingArbitraryUnitsZoomLevel0Horizontal.push(essentialPropertyValueAsArray[1]);      
-                spatialOrderingArbitraryUnitsZoomLevel0Vertical.push(essentialPropertyValueAsArray[2]);   
-
-        
-            } else if (tileUnitType == "pixel units") {
- 
-                spatialOrderingPixelUnitsZoomLevel0Horizontal.push(essentialPropertyValueAsArray[1]);   
-                spatialOrderingPixelUnitsZoomLevel0Vertical.push(essentialPropertyValueAsArray[2]); 
-        
-            }
+            spatialOrderingZoomLevel1.push({index: i, x: essentialPropertyValueAsArray[1], y: essentialPropertyValueAsArray[2]});      
+   
             
         } else if (zoomLevel == 2) {
             
@@ -259,38 +243,39 @@ tiledVideoAttacher.prototype = {
                 firstIterationFlag = false;
             }   
             
-            if (tileUnitType == "arbitrary units") {
-  
-
-                spatialOrderingArbitraryUnitsZoomLevel1Horizontal.push(essentialPropertyValueAsArray[1]);   
-                spatialOrderingArbitraryUnitsZoomLevel1Vertical.push(essentialPropertyValueAsArray[2]);   
-
-        
-            } else if (tileUnitType == "pixel units") {
-
-                spatialOrderingPixelUnitsZoomLevel1Horizontal.push(essentialPropertyValueAsArray[1]);  
-                spatialOrderingPixelUnitsZoomLevel1Vertical.push(essentialPropertyValueAsArray[2]);
-        
-            }           
+        spatialOrderingZoomLevel2.push({index: i, x: essentialPropertyValueAsArray[1], y: essentialPropertyValueAsArray[2]});    
+            
         }        
     }
     
-    console.log("HERE " + spatialOrderingPixelUnitsZoomLevel0Horizontal + " " + spatialOrderingPixelUnitsZoomLevel0Vertical );
- 
-    var startX = 0;
-    var startY = 0;
-      
-    if (tileUnitType == "arbitrary units") {
-        // for (var i = 0; i < spatialOrderingArbitraryUnitsZoomLevel0Horizontal.length; i++);
+    if (spatialOrderingZoomLevel1.length > 0) {
+        spatialOrderingZoomLevel1 = spatialOrderingZoomLevel1.sort(orderByProperty('x', 'y'));
         
-                
+        for (var i = 0; i < spatialOrderingZoomLevel1.length; i++) {
+            var index = spatialOrderingZoomLevel1[i]['index'];
+            orderedAdaptationSets.push(adaptationSets[index]);
+        }
         
-    } else if (tileUnitType == "pixel units") {
-        
-        
+        spatialOrderingDimensionsZoomLevel1 = countUniques(spatialOrderingZoomLevel1);       
+        zoomLevel1TotalWidth = spatialOrderingDimensionsZoomLevel1[1].slice(0, 1);
+        zoomLevel1TotalHeight = spatialOrderingDimensionsZoomLevel1[0].length;
+
     }
     
-    // inMPD.Period.AdaptationSet = orderedAdaptationSets;
+    if (spatialOrderingZoomLevel2.length > 0) {
+        spatialOrderingZoomLevel2 = spatialOrderingZoomLevel2.sort(orderByProperty('x', 'y'));
+
+        for (var i = 0; i < spatialOrderingZoomLevel2.length; i++) {
+            var index = spatialOrderingZoomLevel2[i]['index'];
+            orderedAdaptationSets.push(adaptationSets[index]);
+        }
+        
+        spatialOrderingDimensionsZoomLevel2 = countUniques(spatialOrderingZoomLevel2);       
+        zoomLevel2TotalWidth = spatialOrderingDimensionsZoomLevel2[1].slice(0, 1);
+        zoomLevel2TotalHeight = spatialOrderingDimensionsZoomLevel2[0].length;
+    }
+      
+    inMPD.Period.AdaptationSet = orderedAdaptationSets;
    
   },
   
@@ -371,7 +356,7 @@ tiledVideoAttacher.prototype = {
         player.attachSource(source);
     }  
     
-    initiatePlayBack(fullBackLayer, zoomLayer1VideoElements, browserType, frameRate, viewLayer);  
+    initiatePlayBack(fallBackLayer, zoomLayer1VideoElements, browserType, frameRate, viewLayer);  
     updateViewLayerOnReadyState(zoomLayer1VideoElements, xPosition, yPosition, viewLayer); 
     
     if (getClickPositionEnabled === false) {

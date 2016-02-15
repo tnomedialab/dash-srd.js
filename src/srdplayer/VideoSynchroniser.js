@@ -27,7 +27,7 @@
 var SynchroniseVideos = function(){
     
     var videos = {
-        a: Popcorn("#fullBackLayer"),
+        a: Popcorn("#fallBackLayer"),
         b: Popcorn("#video1"),
         c: Popcorn("#video2"),
         d: Popcorn("#video3"),

@@ -24,7 +24,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-function initiatePlayBack(fullBackLayer, videoList, browserType, frameRate) { 
+function initiatePlayBack(fallBackLayer, videoList, browserType, frameRate) { 
    
     var attachDelay,
         currentTime1,
@@ -35,14 +35,14 @@ function initiatePlayBack(fullBackLayer, videoList, browserType, frameRate) {
     initialTimeOffset = 0.001;
     attachDelay = estimateTimeUpdateFrequency(browserType, attachDelay, frameRate);
 
-    $("#fullBackLayer").one("timeupdate", function() {
+    $("#fallBackLayer").one("timeupdate", function() {
 
-        currentTime1 = fullBackLayer.currentTime;
+        currentTime1 = fallBackLayer.currentTime;
 
         setTimeout(
                 (function(){
 
-                    currentTime2 = fullBackLayer.currentTime;
+                    currentTime2 = fallBackLayer.currentTime;
 
                     if (currentTime1 < currentTime2){
                         initialTimeOffset += (currentTime2 - currentTime1);
@@ -55,7 +55,7 @@ function initiatePlayBack(fullBackLayer, videoList, browserType, frameRate) {
                         videoTile.currentTime = playBackTime;
                     }
 
-                    if (!fullBackLayer.paused){                    
+                    if (!fallBackLayer.paused){                    
                         for (var i = 0; i < videoList.length; i++) {
                             var videoTile = videoList[i];
                             videoTile.play();
