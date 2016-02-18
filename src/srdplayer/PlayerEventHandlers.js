@@ -66,9 +66,34 @@ function initiatePlayBack(fallBackLayer, videoList, browserType, frameRate) {
         ), attachDelay);
     });
     
-    $("#video1").one("loadeddata", function() {  
-        for (var i = 0; i < zoomLayer1PlayerObjects.length; i++) { 
-            var player = zoomLayer1PlayerObjects[i];
+    var masterVideo;
+        
+    if (currentZoomLevel == 1) {
+
+        masterVideo = "#video1";
+
+    } else if (currentZoomLevel == 2) {
+
+        masterVideo = "#video5";
+
+    } 
+    
+    $(masterVideo).one("loadeddata", function() { 
+        
+        var playerContainer = [];
+        
+        if (currentZoomLevel == 1) {
+            
+            playerContainer = zoomLayer1PlayerObjects;
+            
+        } else if (currentZoomLevel == 2) {
+            
+            playerContainer = zoomLayer2PlayerObjects;
+            
+        }
+        
+        for (var i = 0; i < playerContainer.length; i++) { 
+            var player = playerContainer[i];
 
             if (i === 0) {
 
@@ -83,7 +108,7 @@ function initiatePlayBack(fallBackLayer, videoList, browserType, frameRate) {
         }}
     
         if (masterQuality) { 
-            emitBitrateChanges(zoomLayer1PlayerObjects, masterQuality);
+            emitBitrateChanges(playerContainer, masterQuality);
         }
     });
 }
@@ -119,7 +144,6 @@ function emitBitrateChanges(playerList, masterQuality) {
         }
         
     });   
-
 }
 
 function resetPlayers(playerList) {

@@ -257,8 +257,8 @@ tiledVideoAttacher.prototype = {
         }
         
         spatialOrderingDimensionsZoomLevel1 = countUniques(spatialOrderingZoomLevel1);       
-        zoomLevel1TotalWidth = spatialOrderingDimensionsZoomLevel1[1].slice(0, 1);
-        zoomLevel1TotalHeight = spatialOrderingDimensionsZoomLevel1[0].length;
+        zoomLevel1TilesHorizontal = spatialOrderingDimensionsZoomLevel1[1].slice(0, 1);
+        zoomLevel1TilesVertical = spatialOrderingDimensionsZoomLevel1[0].length;
 
     }
     
@@ -271,8 +271,9 @@ tiledVideoAttacher.prototype = {
         }
         
         spatialOrderingDimensionsZoomLevel2 = countUniques(spatialOrderingZoomLevel2);       
-        zoomLevel2TotalWidth = spatialOrderingDimensionsZoomLevel2[1].slice(0, 1);
-        zoomLevel2TotalHeight = spatialOrderingDimensionsZoomLevel2[0].length;
+        zoomLevel2TilesHorizontal = spatialOrderingDimensionsZoomLevel2[1].slice(0, 1);
+        zoomLevel2TilesVertical = spatialOrderingDimensionsZoomLevel2[0].length;
+
     }
       
     inMPD.Period.AdaptationSet = orderedAdaptationSets;
@@ -369,50 +370,135 @@ tiledVideoAttacher.prototype = {
   },
   
   zoomLayer2Attacher: function (data) {
-    var xPosition = data[0];
-    var yPosition = data[1];
-    
+      
+    var tile1,
+        tile2,
+        tile3,
+        tile4;
+
     var adaptationSets = inMPD.Period.AdaptationSet; 
     var tileMPDs = [];
-      
-    for (var i = 2; i < adaptationSets.length; i++) {
-        
-        var tileBaseURL = adaptationSets[i].Representation.BaseURL;
-        var zoomLevel = tileBaseURL.substring(tileBaseURL.lastIndexOf("Level_")+6,tileBaseURL.lastIndexOf("/Tile_"));
           
-        if (zoomLevel == currentZoomLevel){
-            
-            var tileMPD = new Object(inMPD);
-            var tileAdaptationSet = adaptationSets.slice(i, (i + 1));
+    var xPosition = data[0];
+    var yPosition = data[1]; 
+    var viewLayer = data[2];
     
-            tileMPD.Period.AdaptationSet = tileAdaptationSet;
-            tileMPD.Period.AdaptationSet_asArray = tileAdaptationSet;
-            tileMPD.Period.__children = tileAdaptationSet;
+    var videoContainerWidth = parseInt(videoContainer.offsetWidth, 10);
+    var videoContainerHeight = parseInt(videoContainer.offsetHeight, 10);
 
-            tileMPD.Period_asArray[0].AdaptationSet = tileAdaptationSet;
-            tileMPD.Period_asArray[0].AdaptationSet_asArray = tileAdaptationSet;
-            tileMPD.Period_asArray[0].__children = tileAdaptationSet;
-            
-            tileMPDs.push(tileMPD);            
-            
-        } else if (zoomLevel > currentZoomLevel) {
-            break;
-        }
+    var selectedTiles = [];
+    var numberOfTilesZoomLayer1 = zoomLevel1TilesHorizontal * zoomLevel1TilesVertical;
+
+    var selectedTileX = Math.ceil(Math.abs(xPosition) / (videoContainerWidth / zoomLevel2TilesHorizontal));
+    var selectedTileY = Math.ceil(Math.abs(yPosition) / (videoContainerHeight / zoomLevel2TilesVertical));
+    var selectedTile1D = (selectedTileY - 1) * zoomLevel2TilesHorizontal + selectedTileX;
+       
+    if (selectedTileX < zoomLevel2TilesHorizontal && selectedTileY < zoomLevel2TilesVertical) {
         
-    }
-    
-    for (var i = 0; i < playerObjects.length; i++) { 
-        var player = playerObjects[i];
-        player.attachSource([mpdURL, tileMPDs[i]]);
+        tile1 = selectedTile1D;
+        tile2 = selectedTile1D + 1;
+        tile3 = selectedTile1D + parseInt(zoomLevel2TilesHorizontal);
+        tile4 = selectedTile1D + parseInt(zoomLevel2TilesHorizontal) + 1;
+        
+    } else if (selectedTileX == zoomLevel2TilesHorizontal && selectedTileY < zoomLevel2TilesVertical) { 
+        
+        tile1 = selectedTile1D - 1;
+        tile2 = selectedTile1D;
+        tile3 = selectedTile1D + parseInt(zoomLevel2TilesHorizontal) - 1;
+        tile4 = selectedTile1D + parseInt(zoomLevel2TilesHorizontal);
+        
+    } else if (selectedTileX < zoomLevel2TilesHorizontal && selectedTileY == zoomLevel2TilesVertical) {
+ 
+        tile1 = selectedTile1D - parseInt(zoomLevel2TilesHorizontal);
+        tile2 = (selectedTile1D - parseInt(zoomLevel2TilesHorizontal)) + 1;
+        tile3 = selectedTile1D;
+        tile4 = selectedTile1D + 1;
+        
+    } else if (selectedTileX == zoomLevel2TilesHorizontal && selectedTileY == zoomLevel2TilesVertical) {
+        
+        tile1 = selectedTile1D - parseInt(zoomLevel2TilesHorizontal) - 1;
+        tile2 = selectedTile1D - parseInt(zoomLevel2TilesHorizontal);
+        tile3 = selectedTile1D - 1;
+        tile4 = selectedTile1D;
     }  
     
-    //TODO: enable support for more zoom levels
+    selectedTiles = [tile1, tile2, tile3, tile4];
+        
+ 
+    if (contentHasAudio == false) { 
+        var o = 0;
+    } else {
+        var o = 1;
+    }  
+      
+    for (var i = 1 + o; i < adaptationSets.length; i++) {
+        
+        var essentialPropertyValueLength = adaptationSets[i].EssentialProperty.value.length;
+        var zoomLevel = adaptationSets[i].EssentialProperty.value.slice((essentialPropertyValueLength - 1), essentialPropertyValueLength);
+        
+        if (i == 1 + o) {
+
+            var n = 0;
+            var tileNumber = selectedTiles[n];
+            
+            if ($.isArray(adaptationSets[i].Representation)){ 
+
+                zoomLayer2ContentWidth = adaptationSets[i].Representation[0].width;
+                zoomLayer2ContentHeight = adaptationSets[i].Representation[0].height;
+
+            } else {
+
+                zoomLayer2ContentWidth = adaptationSets[i].Representation.width;
+                zoomLayer2ContentHeight = adaptationSets[i].Representation.height;
+
+            }
+
+            zoomLayer2ContentAspectRatio = zoomLayer2ContentWidth / zoomLayer2ContentHeight;
+                
+        }
+        
+        
+        if (i == (tileNumber + o + numberOfTilesZoomLayer1)) {
+ 
+            var arrayIndex = n;            
+            tileMPDs[arrayIndex] = {"__cnt": inMPD.__cnt, 
+                                    "#comment": inMPD["#comment"], 
+                                    "#comment_asArray": inMPD["#comment_asArray"], 
+                                    BaseURL:inMPD.BaseURL, 
+                                    BaseURL_asArray: inMPD.BaseURL_asArray, 
+                                    Period: {"__cnt": inMPD.Period.__cnt, AdaptationSet: adaptationSets[i], AdaptationSet_asArray: [adaptationSets[i]], __children: adaptationSets[i]}, 
+                                    Period_asArray: [{AdaptationSet: adaptationSets[i], AdaptationSet_asArray: [adaptationSets[i]], __children: adaptationSets[i]}],
+                                    xmlns: inMPD.xmlns,
+                                    mediaPresentationDuration: inMPD.mediaPresentationDuration,
+                                    minBufferTime: inMPD.minBufferTime,
+                                    profiles: inMPD.profiles,
+                                    type: inMPD.type,
+                                    __text: inMPD.__text
+                                    };
+                                    
+            n += 1;
+            tileNumber = selectedTiles[n];
+            
+        }
+    }
+     
+    zoomLayer2PlayerObjects = [];
     
-    for (var i = 0; i < zoomLayerVideoElements.length; i++) {
-        var videoElement = zoomLayerVideoElements[i];
-        $.when(videoElement.readyState === 4).then(setTimeout(function() {playPause();}, 1));
+    for (var i = 0; i < zoomLayer2VideoElements.length; i++) { 
+        var videoElement = "video" + (i + 5);
+        var player = launchDashPlayer(videoElement);  
+        player.setAutoSwitchQuality(false);
+        zoomLayer2PlayerObjects.push(player);
+    }  
+
+    for (var i = 0; i < zoomLayer2PlayerObjects.length; i++) { 
+        var player = zoomLayer2PlayerObjects[i];
+        var source = [mpdURL, tileMPDs[i]];  
+        player.attachSource(source);
+    }  
     
-      }  
+    initiatePlayBack(fallBackLayer, zoomLayer2VideoElements, browserType, frameRate, viewLayer);  
+    updateViewLayerOnReadyState(zoomLayer2VideoElements, xPosition, yPosition, viewLayer); 
     
   }
 };

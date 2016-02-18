@@ -39,22 +39,30 @@ MPDParser.prototype = {
     mpdURL = data[0];
     var x2js = new X2JS(matchers,'', true);
     var mpdJSON = x2js.xml_str2json(data[1]); 
-    
-    // TODO: fix this when done developing
-    // the if statement itself does not work for Klagenfurt Big Buck Bunny MPD
-    // 
-    // try {
-        
-    if (mpdJSON.Period.AdaptationSet[0].SupplementalProperty === undefined) {
+      
+    if ($.isArray(mpdJSON.Period.AdaptationSet)) {
 
-        ServiceBus.publish("Non-SRD-MPD", [mpdURL, mpdJSON]);
-        
+      if ("SupplementalProperty" in mpdJSON.Period.AdaptationSet[0]) {
+
+          ServiceBus.publish("SRD-MPD", [mpdURL, mpdJSON]);      
+
+      } else {
+
+          ServiceBus.publish("Non-SRD-MPD", [mpdURL, mpdJSON]);
+
+      }
+
     } else {
 
-    //} catch(err) {
-        
-        ServiceBus.publish("SRD-MPD", [mpdURL, mpdJSON]);
-        
+      if ("SupplementalProperty" in mpdJSON.Period.AdaptationSet) {
+
+          ServiceBus.publish("SRD-MPD", [mpdURL, mpdJSON]);
+
+      } else {
+
+          ServiceBus.publish("Non-SRD-MPD", [mpdURL, mpdJSON]);
+
+      }
     }
     
   }

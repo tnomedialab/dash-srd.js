@@ -39,8 +39,7 @@ function onClickEvent(e) {
         xPosition = -(e.clientX);
         yPosition = -(e.clientY);
     }
-    
-    // TODO: elaborate on this to suport more zoomlevels   
+      
     if (currentZoomLevel == 0) {
 
         viewLayer = zoomLayer1;
@@ -63,10 +62,20 @@ function onClickEvent(e) {
     } else if (currentZoomLevel == 1) {    
 
         if (spatialOrderingZoomLevel2.length > 0) {
-                        
+            
             viewLayer = zoomLayer2;
             zoomLayer1.removeAttribute('onmousedown');
             zoomLayer1.removeAttribute('onmouseup');
+            
+            if (fullScreenFlag){ 
+
+                updateVideoContainer(xPosition, yPosition, fallBackLayer, null, "fullscreen zoomed double");
+
+            } else {
+
+                updateVideoContainer(xPosition, yPosition, fallBackLayer, null, 3);
+
+            } 
 
             resetPlayers(zoomLayer1PlayerObjects);
 
@@ -74,16 +83,13 @@ function onClickEvent(e) {
             
             ServiceBus.publish("Zoom-level2", [xPosition, yPosition, viewLayer]);
             zoomLayer2.setAttribute('onmousedown', 'dragtool.startMoving(this, videoContainer, event);');
-            zoomLayer2.setAttribute('onmouseup', 'dragtool.stopMoving(videoContainer);');
-            
+            zoomLayer2.setAttribute('onmouseup', 'dragtool.stopMoving(videoContainer);');          
             
         } else {
   
             viewLayer = fallBackLayer;
             zoomLayer1.removeAttribute('onmousedown');
             zoomLayer1.removeAttribute('onmouseup');
-
-            resetPlayers(zoomLayer1PlayerObjects);
 
             if (fullScreenFlag){ 
 
@@ -94,6 +100,8 @@ function onClickEvent(e) {
                 } else {
 
                     updateVideoContainer(xPosition, yPosition, viewLayer, null, "fullscreen");
+                    
+                    browserWindowZoomedTo = 0;
                 } 
 
             } else {
@@ -113,6 +121,8 @@ function onClickEvent(e) {
                 } 
 
             }
+            
+            resetPlayers(zoomLayer1PlayerObjects);
 
             currentZoomLevel = 0;
             
@@ -124,37 +134,56 @@ function onClickEvent(e) {
         zoomLayer1.removeAttribute('onmousedown');
         zoomLayer1.removeAttribute('onmouseup');
         
-        resetPlayers(zoomLayer2PlayerObjects);
-        
         if (fullScreenFlag){ 
-            
-            if (browserWindowZoomedTo == 0){
+             
+            if (browserWindowZoomedTo === 2){
                 
-                updateVideoContainer(xPosition, yPosition, viewLayer, null, 0.5);
+                updateVideoContainer(xPosition, yPosition, viewLayer, null, "fullscreen");
                 
             } else {
                 
-                updateVideoContainer(xPosition, yPosition, viewLayer, null, "fullscreen");
-            } 
+                updateVideoContainer(xPosition, yPosition, viewLayer, null, 0.333);
+                
+            }
+
             
         } else {
             
-            if (fullScreenZoomedTo == 0 ){
+            if (!fullScreenZoomedTo || fullScreenZoomedTo == 0 ){
+                
+                if (currentZoomLevel === 1) {
+                    
+                    updateVideoContainer(xPosition, yPosition, viewLayer, null, 0.5);
+                
+                } else if (currentZoomLevel === 2) {
+                    
+                    updateVideoContainer(xPosition, yPosition, viewLayer, null, 0.16667);
+                    
+                }
+                
+            } else if (fullScreenZoomedTo == 1) {
                 
                 updateVideoContainer(xPosition, yPosition, viewLayer, null, 0.5);
                 
-            } else if (fullScreenZoomedTo == 1 || fullScreenZoomedTo == 2 ) {
+                fullScreenZoomedTo = 0;
+               
+            } else if (fullScreenZoomedTo == 2 ) {
                 
-               updateVideoContainer(xPosition, yPosition, viewLayer, null, 1.0);
+                updateVideoContainer(xPosition, yPosition, viewLayer, null, 1.0);
+                
+                fullScreenZoomedTo = 0;
                
             } else {
                 
-               updateVideoContainer(xPosition, yPosition, viewLayer, null, 0.5);
+               updateVideoContainer(xPosition, yPosition, viewLayer, null, 1.0);
                
             } 
             
+            browserWindowZoomedTo = 0;
+            
         }
         
+        resetPlayers(zoomLayer2PlayerObjects);
         currentZoomLevel = 0;
        
     }
@@ -193,6 +222,11 @@ function updateVideoContainer(xPosition, yPosition, viewLayer, delay, resizeFact
                 
                 fallBackLayer.style.height = (screen.width / fallBackLayerContentAspectRatio)  * 2 + "px";
                 fallBackLayer.style.width = screen.width * 2 + "px";
+                
+            } else if (resizeFactor == "fullscreen zoomed double") {
+                
+                fallBackLayer.style.height = (screen.width / fallBackLayerContentAspectRatio)  * 3 + "px";
+                fallBackLayer.style.width = screen.width * 3 + "px";
               
             } else if (resizeFactor == "fullscreen") {
                 
@@ -219,7 +253,13 @@ function updateVideoContainer(xPosition, yPosition, viewLayer, delay, resizeFact
 
         }
 
-        if (resizeFactor === 0.5) {    
+        if (resizeFactor === 0.16667) {    
+           
+            fallBackLayer.style.left = 0 + 'px';
+            fallBackLayer.style.top = 0 + 'px';
+            setVisibleElement("fallbacklayer");  
+
+        } else if (resizeFactor === 0.333 || resizeFactor === 0.5) {    
             
             var offsetFromTop = (parseInt(videoContainer.offsetHeight, 10) - parseInt(fallBackLayer.offsetHeight, 10)) / 2;
            
@@ -237,11 +277,23 @@ function updateVideoContainer(xPosition, yPosition, viewLayer, delay, resizeFact
             
             fallBackLayer.style.left = xPosition + 'px';
             fallBackLayer.style.top = yPosition + 'px';
+
+        } else if (resizeFactor === 3) {
+            
+            fallBackLayer.style.left = (xPosition - (parseInt(fallBackLayer.offsetWidth, 10)/ 2)) + 'px';
+            fallBackLayer.style.top = (yPosition - (parseInt(fallBackLayer.offsetHeight, 10)/ 2)) + 'px';
+            setVisibleElement("fallbacklayer");
             
         } else if (resizeFactor === "fullscreen zoomed") {
             
             fallBackLayer.style.left = xPosition + 'px';
             fallBackLayer.style.top = yPosition + 'px';
+            setVisibleElement("fallbacklayer");
+
+        } else if (resizeFactor === "fullscreen zoomed double") {
+
+            fallBackLayer.style.left = (xPosition - (parseInt(fallBackLayer.offsetWidth, 10)/ 4)) + 'px';
+            fallBackLayer.style.top = (yPosition - (parseInt(fallBackLayer.offsetHeight, 10)/ 4)) + 'px';
             setVisibleElement("fallbacklayer");
             
         } else if (resizeFactor === "fullscreen") {

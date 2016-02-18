@@ -85,10 +85,10 @@ var SRDPlayer,
     spatialOrderingZoomLevel2,
     spatialOrderingDimensionsZoomLevel1,
     spatialOrderingDimensionsZoomLevel2,
-    zoomLevel1TotalWidth,
-    zoomLevel2TotalWidth,
-    zoomLevel1TotalHeight,
-    zoomLevel2TotalHeight;
+    zoomLevel1TilesHorizontal,
+    zoomLevel2TilesHorizontal,
+    zoomLevel1TilesVertical,
+    zoomLevel2TilesVertical;
     
 $(document).ready(function() {
     SRDPlayer = document.getElementById("SRDPlayer");

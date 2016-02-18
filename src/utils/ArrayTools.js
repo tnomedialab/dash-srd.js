@@ -44,7 +44,6 @@ function countUniques(arr) {
         b = [], 
         prev;
     
-    arr.sort();
     for ( var i = 0; i < arr.length; i++ ) {
         if ( arr[i]["x"] !== prev ) {
             a.push(arr[i]["x"]);
