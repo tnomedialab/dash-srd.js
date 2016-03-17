@@ -33,7 +33,18 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Attaches MPD or part of it to Dash player
+/* Attaches MPD or a part of it to Dash.js instance in the form 
+ * of an MPD object. There are two attacher types, the normalVideoAttacher 
+ * for (non SRD) legacy content and the tiledVideoAttacher.
+ * The tiledVideoAttacher has three prototypes:
+ * - fallBackLayerAttacher
+ * - zoomLayer1Attacher
+ * - zoomLayer2Attacher 
+ *
+ * The normalVideoAttacher and fallBackLayerAttacher 
+ * subscribe to an event (either Non-SRD-MPD or SRD-MPD) 
+ * which is triggered when a MPD file is parsed. The zoomLayerAttachers get 
+ * triggered by a UI event, which is handled by UIEventHandlers.js */
 
 var normalVideoAttacher = function() {
     

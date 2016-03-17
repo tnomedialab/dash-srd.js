@@ -33,7 +33,11 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Basic script to parse JSON extracted from incoming MPD file and route it based on the SupplementalProperty
+/* Script to parse JSON extracted from incoming MPD file 
+ * and fire either an SRD-MPD event or a Non-SRD-MPD event
+ * based on the presence of the SupplementalProperty from the
+ * Spatial Reference Description. The MPD is included as 
+ * payload of the event message. */
 
 "use strict";
    

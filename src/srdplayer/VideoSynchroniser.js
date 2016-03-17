@@ -33,6 +33,8 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+// This script synchronises videos to the fallBackLayer using Popcorn.js
+
 var SynchroniseVideos = function(){
     
     var videos = {

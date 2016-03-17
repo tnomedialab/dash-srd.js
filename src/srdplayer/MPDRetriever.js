@@ -33,7 +33,7 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Basic script to retrieve MPD files and convert them to JSON.
+// Script to retrieve MPD files and convert them to JSON.
 
 "use strict";
 

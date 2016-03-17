@@ -33,6 +33,10 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+/* Script to handle the start of a video and bitrate changes.
+ * Bitrate changes on the left upper tile/dash.js instance (in a zoomed in condition)
+ * are propagated to the other playing dash.js instances within that layer. */
+
 function initiatePlayBack(fallBackLayer, videoList, browserType, frameRate) { 
    
     var attachDelay,

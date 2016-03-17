@@ -33,6 +33,9 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+
+// This script handles click, resizing events and the dragging to pan and zoom.
+
 function onClickEvent(e) {
     
     var parentPosition,

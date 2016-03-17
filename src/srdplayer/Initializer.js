@@ -32,7 +32,9 @@
 * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 * THE POSSIBILITY OF SUCH DAMAGE.
 */
-// Global variables
+
+// Declaration of global variables
+
 var SRDPlayer,
     videoContainer,
     bannerbox,
@@ -97,7 +99,13 @@ var SRDPlayer,
     zoomLevel2TilesHorizontal,
     zoomLevel1TilesVertical,
     zoomLevel2TilesVertical;
-    
+
+/* Variable assignments to be executed when DOM loading is finished.
+ * This is needed to get hooks to DOM elements and do some settings.
+ * If you want to change the id of DOM elements in your HTML file (e.g. zoomLayer1 or video1),
+ * be sure to change them here as well in each occurence: 
+ * document.getElementById("<yourElementId>") */
+
 $(document).ready(function() {
     SRDPlayer = document.getElementById("SRDPlayer");
     videoContainer = document.getElementById("videoContainer");
