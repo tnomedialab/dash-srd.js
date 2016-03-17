@@ -48,10 +48,9 @@ MPDRetriever.prototype = {
 
       if (err) {
 
-    return console.err(err);
+      return err;
     }   
-
-    callback(null, data); 
+      callback(null, data); 
   }); 
   
 },
@@ -64,10 +63,13 @@ MPDRetriever.prototype = {
 
       if (err) {
 
-    return console.err(err);
-    }
-    
-    ServiceBus.publish("MPD-incoming", [mpdURL, data]);
+        console.log(err);    
+      
+      } else {
+      
+        ServiceBus.publish("MPD-incoming", [mpdURL, data]);
+
+      }
 
 });}
 };

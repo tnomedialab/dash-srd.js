@@ -37,7 +37,8 @@
  * and fire either an SRD-MPD event or a Non-SRD-MPD event
  * based on the presence of the SupplementalProperty from the
  * Spatial Reference Description. The MPD is included as 
- * payload of the event message. */
+ * payload of the event message. 
+ */
 
 "use strict";
    
@@ -49,9 +50,10 @@ MPDParser.prototype = {
   parseMPD: function (data) {
 
     mpdURL = data[0];
+    
     var x2js = new X2JS(matchers,'', true);
-    var mpdJSON = x2js.xml_str2json(data[1]); 
-      
+    var mpdJSON = x2js.xml_str2json(data[1]);
+
     if ($.isArray(mpdJSON.Period.AdaptationSet)) {
 
       if ("SupplementalProperty" in mpdJSON.Period.AdaptationSet[0]) {
@@ -76,6 +78,7 @@ MPDParser.prototype = {
 
       }
     }
+
     
   }
 };

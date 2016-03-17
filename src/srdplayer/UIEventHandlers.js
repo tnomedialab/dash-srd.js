@@ -34,7 +34,7 @@
 */
 
 
-// This script handles click, resizing events and the dragging to pan and zoom.
+// This script handles click, resizing events and dragging to pan and zoom.
 
 function onClickEvent(e) {
     

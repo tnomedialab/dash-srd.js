@@ -104,7 +104,8 @@ var SRDPlayer,
  * This is needed to get hooks to DOM elements and do some settings.
  * If you want to change the id of DOM elements in your HTML file (e.g. zoomLayer1 or video1),
  * be sure to change them here as well in each occurence: 
- * document.getElementById("<yourElementId>") */
+ * document.getElementById("<yourElementId>") 
+ */
 
 $(document).ready(function() {
     SRDPlayer = document.getElementById("SRDPlayer");

@@ -44,7 +44,8 @@
  * The normalVideoAttacher and fallBackLayerAttacher 
  * subscribe to an event (either Non-SRD-MPD or SRD-MPD) 
  * which is triggered when a MPD file is parsed. The zoomLayerAttachers get 
- * triggered by a UI event, which is handled by UIEventHandlers.js */
+ * triggered by a UI event, which is handled by UIEventHandlers.js 
+ */
 
 var normalVideoAttacher = function() {
     

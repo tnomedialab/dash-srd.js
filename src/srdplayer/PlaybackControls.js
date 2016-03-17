@@ -37,7 +37,8 @@
  * - openVideo() opens a video when a valid MPD file URL is provided and Open video is clicked
  * - playPause() either plays a video when paused or pauses it when playing
  * - muteSound() mutes the audio
- * - switchScreenMode() allows the user to switch to fullscreen mode or back */
+ * - switchScreenMode() allows the user to switch to fullscreen mode or back 
+ */
 
 function openVideo(){
     

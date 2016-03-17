@@ -52,7 +52,7 @@ function crossOriginRequest (url, callback){
     function callOtherDomain() {
       if (invocation) {
         if(isIE8) {
-          invocation.onload = returnResult;
+          invocation.onload = crossOriginRequestHandler;
           invocation.open("GET", url, true);
           invocation.send();
         }
@@ -71,14 +71,17 @@ function crossOriginRequest (url, callback){
       if (invocation.readyState == 4) {
           if (invocation.status == 200) {
               var response = invocation.responseText;
+              
               callback(null, response);
           }
           else {
-            console.log("crossOriginRequestHandler: " + "Invocation Errors Occured");
+              callback(invocation.statusText, null);
+              console.log("crossOriginRequestHandler: " + "Invocation Errors Occured");
           }
       }
     }
-  callOtherDomain();
+    
+    callOtherDomain();
 }
 
 
