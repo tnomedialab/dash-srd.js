@@ -19,7 +19,7 @@ git clone https://github.com/tnomedialab/dash-srd.js
 
 Whichever webserver that serves your needs, Apache, NGINX of just Python SimpleHTTPServer. 
 
-An important notice, is that if the mpd file and content reside on a different host and/or port than the dash-srd.js player. Either an Allow Cross Origin Request header needs to be used on the content host, or the URL needs to be routed. With NGINX you can route incoming traffic on http://localhost/ to http://localhost/public  for the SRD player and http://localhost/content to http://contentserver for the content.
+For your convenience, we have example content at http://www.tnomedialab.nl/mmsys16/dash-srd/. Each directory contains the content of a video. In a subdirectory named "mpeg_dash_srd" there is a .mpd file, the link to that file can be used to open a video. When hosting content yourself, it is important to consider Cross Domain request policy. In case the MPD file and content reside on a different host and/or port than the dash-srd.js player, you need to take care of the following. Either an Allow Cross Origin Request header needs to be used on the content host, or the URL needs to be routed. With NGINX you can route incoming traffic on http://localhost/ to http://localhost/public  for the SRD player and http://localhost/content to http://contentserver for the content.
 
 Python SimpleHTTPServer is easy to use for testing environments. Just go to your local repository directory with a command line tool and type python –m SimpleHTTPServer (or python 3 –m http.server when on Python 3). This will host the dash-srd.js player on http://localhost:8000/public/
 
@@ -35,6 +35,6 @@ git clone https://github.com/tnomedialab/dash-srd.js
 ### Install Dependencies
 1.	[install nodejs](http://nodejs.org/)
 2.	[install grunt](http://gruntjs.com/getting-started)
-* npm install -g grunt-cli
+        * npm install -g grunt-cli
 
 The source files are contained in the src directory. They consist of the player files, in subdirectory srdplayer and utilities for generic tasks in JavaScript. All the necessary source files are included Grunftile.js, such that you can build dash-srd.min.js from the command line with the command grunt. Provided that dash-srd is the current directory and grunt is correctly installed. If all went well (Grunt will tell you), the dash-srd.min.js script can be found in the build subdirectory.
