@@ -97,7 +97,9 @@ var SRDPlayer,
     zoomLevel1TilesHorizontal,
     zoomLevel2TilesHorizontal,
     zoomLevel1TilesVertical,
-    zoomLevel2TilesVertical;
+    zoomLevel2TilesVertical,
+    zoomLayer1Hammer,
+    zoomLayer2Hammer;
 
 /* Variable assignments to be executed when DOM loading is finished.
  * This is needed to get hooks to DOM elements and do some settings.
@@ -113,6 +115,8 @@ $(document).ready(function() {
     fallBackLayer = document.getElementById("fallBackLayer");
     zoomLayer1 = document.getElementById("zoomLayer1");
     zoomLayer2 = document.getElementById("zoomLayer2");
+    zoomLayer1Hammer = new Hammer(zoomLayer1);
+    zoomLayer2Hammer = new Hammer(zoomLayer2);
     video1 = document.getElementById("video1");
     video2 = document.getElementById("video2");
     video3 = document.getElementById("video3");

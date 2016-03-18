@@ -178,11 +178,22 @@ function switchScreenMode() {
             zoomLayer1.style.top = offsetFromTop + 'px';
             fallBackLayer.style.left = offsetFromLeft + 'px';
             fallBackLayer.style.top = offsetFromTop + 'px';
+                        
+            zoomLayer1Hammer.off('panstart', function(evt) {
+                dragtool.startMoving(zoomLayer1, videoContainer, evt);
+            });
+
+            zoomLayer1Hammer.off('panend', function(evt) {
+                dragtool.stopMoving(videoContainer);
+            }); 
             
-            zoomLayer1.removeAttribute('onmousedown');
-            zoomLayer1.removeAttribute('onmouseup');
-            zoomLayer1.setAttribute('onmousedown', 'dragtool.startMoving(this, videoContainer, event);');
-            zoomLayer1.setAttribute('onmouseup', 'dragtool.stopMoving(videoContainer);');
+            zoomLayer1Hammer.on('panstart', function(evt) {
+                dragtool.startMoving(zoomLayer1, videoContainer, evt);
+            });
+
+            zoomLayer1Hammer.on('panend', function(evt) {
+                dragtool.stopMoving(videoContainer);
+            });
             
         } else if (currentZoomLevel == 2) {
             
@@ -198,10 +209,21 @@ function switchScreenMode() {
             fallBackLayer.style.left = offsetFromLeft + 'px';
             fallBackLayer.style.top = offsetFromTop + 'px';
             
-            zoomLayer2.removeAttribute('onmousedown');
-            zoomLayer2.removeAttribute('onmouseup');
-            zoomLayer2.setAttribute('onmousedown', 'dragtool.startMoving(this, videoContainer, event);');
-            zoomLayer2.setAttribute('onmouseup', 'dragtool.stopMoving(videoContainer);');
+            zoomLayer2Hammer.off('panstart', function(evt) {
+                dragtool.startMoving(zoomLayer2, videoContainer, evt);
+            });
+
+            zoomLayer2Hammer.off('panend', function(evt) {
+                dragtool.stopMoving(videoContainer);
+            });
+
+            zoomLayer2Hammer.on('panstart', function(evt) {
+                dragtool.startMoving(zoomLayer2, videoContainer, evt);
+            });
+
+            zoomLayer2Hammer.on('panend', function(evt) {
+                dragtool.stopMoving(videoContainer);
+            });
             
         }
 
@@ -301,10 +323,21 @@ function switchScreenMode() {
                 zoomLayer1.style.top = yPosition + 'px';
                 fullScreenZoomedTo = 1;      
                 
-                zoomLayer1.removeAttribute('onmousedown');
-                zoomLayer1.removeAttribute('onmouseup');
-                zoomLayer1.setAttribute('onmousedown', 'dragtool.startMoving(this, videoContainer, event);');
-                zoomLayer1.setAttribute('onmouseup', 'dragtool.stopMoving(videoContainer);');
+                zoomLayer1Hammer.off('panstart', function(evt) {
+                    dragtool.startMoving(zoomLayer1, videoContainer, evt);
+                });
+
+                zoomLayer1Hammer.off('panend', function(evt) {
+                    dragtool.stopMoving(videoContainer);
+                });
+                
+                zoomLayer1Hammer.on('panstart', function(evt) {
+                    dragtool.startMoving(zoomLayer1, videoContainer, evt);
+                });
+
+                zoomLayer1Hammer.on('panend', function(evt) {
+                    dragtool.stopMoving(videoContainer);
+                });
 
             } else if (currentZoomLevel == 2){
 

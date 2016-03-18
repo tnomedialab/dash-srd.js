@@ -67,16 +67,28 @@ function onClickEvent(e) {
         } 
 
         ServiceBus.publish("Zoom-level1", [xPosition, yPosition, viewLayer]);
-        zoomLayer1.setAttribute('onmousedown', 'dragtool.startMoving(this, videoContainer, event);');
-        zoomLayer1.setAttribute('onmouseup', 'dragtool.stopMoving(videoContainer);');
+        
+        zoomLayer1Hammer.on('panstart', function(evt) {
+            dragtool.startMoving(zoomLayer1, videoContainer, evt);
+        });
+        
+        zoomLayer1Hammer.on('panend', function(evt) {
+            dragtool.stopMoving(videoContainer);
+        });
 
     } else if (currentZoomLevel == 1) {    
 
         if (spatialOrderingZoomLevel2.length > 0) {
             
             viewLayer = zoomLayer2;
-            zoomLayer1.removeAttribute('onmousedown');
-            zoomLayer1.removeAttribute('onmouseup');
+        
+            zoomLayer1Hammer.off('panstart', function(evt) {
+                dragtool.startMoving(zoomLayer1, videoContainer, evt);
+            });
+
+            zoomLayer1Hammer.off('panend', function(evt) {
+                dragtool.stopMoving(videoContainer);
+            });
             
             if (fullScreenFlag){ 
 
@@ -93,14 +105,26 @@ function onClickEvent(e) {
             currentZoomLevel = 2;
             
             ServiceBus.publish("Zoom-level2", [xPosition, yPosition, viewLayer]);
-            zoomLayer2.setAttribute('onmousedown', 'dragtool.startMoving(this, videoContainer, event);');
-            zoomLayer2.setAttribute('onmouseup', 'dragtool.stopMoving(videoContainer);');          
+
+            zoomLayer2Hammer.on('panstart', function(evt) {
+                dragtool.startMoving(zoomLayer2, videoContainer, evt);
+            });
+
+            zoomLayer2Hammer.on('panend', function(evt) {
+                dragtool.stopMoving(videoContainer);
+            });         
             
         } else {
   
             viewLayer = fallBackLayer;
-            zoomLayer1.removeAttribute('onmousedown');
-            zoomLayer1.removeAttribute('onmouseup');
+            
+            zoomLayer1Hammer.off('panstart', function(evt) {
+                dragtool.startMoving(zoomLayer1, videoContainer, evt);
+            });
+
+            zoomLayer1Hammer.off('panend', function(evt) {
+                dragtool.stopMoving(videoContainer);
+            });
 
             if (fullScreenFlag){ 
 
@@ -142,8 +166,14 @@ function onClickEvent(e) {
     } else if (currentZoomLevel == 2) {
   
         viewLayer = fallBackLayer;
-        zoomLayer1.removeAttribute('onmousedown');
-        zoomLayer1.removeAttribute('onmouseup');
+        
+            zoomLayer1Hammer.off('panstart', function(evt) {
+                dragtool.startMoving(zoomLayer1, videoContainer, evt);
+            });
+
+            zoomLayer1Hammer.off('panend', function(evt) {
+                dragtool.stopMoving(videoContainer);
+            });
         
         if (fullScreenFlag){ 
              
