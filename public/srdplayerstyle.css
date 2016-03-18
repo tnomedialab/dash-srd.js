@@ -166,3 +166,11 @@ button:focus, input:focus {
     position:absolute;
     right: 0%;
 }
+
+#usageHint {
+    position: static; 
+    text-align: center;
+    font-family: Arial; 
+    font-size: 14px; 
+    color: darkgray;
+}

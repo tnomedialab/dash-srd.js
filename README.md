@@ -5,9 +5,7 @@ Dash-srd.js is a reference implementation of the Spatial Relationship Descriptio
 Dash-srd.js is designed as a wrapper around Dash.js (based upon version 1.5.0). It parses the spatial segments from a MPD file and feeds the relevant part for a segment as an object to a Dash.js instance. Therefor, Dash.js is slightly modified to be able to handle a MPD object as input. On top of the standard, the dash-srd.js player makes two assumptions. The first assumption is that the legacy content for the fallback layer is in the first AdaptationSet of the manifest file. And the second, that is there is a separate AdaptationSet for the audio of the fallback layer, this will be in de second AdaptationSet of the manifest file. 
 
 ## License
-Please view the license in the LICENSE.md file. This software may be subject to other third party
-and contributor rights, including patent rights, and no such rights are
-granted under this license.
+Please view the license in the LICENSE.md file.
 
 ## Quick Start for Users
 
@@ -19,7 +17,7 @@ git clone https://github.com/tnomedialab/dash-srd.js
 
 Whichever webserver that serves your needs, Apache, NGINX of just Python SimpleHTTPServer. 
 
-For your convenience, we have example content at http://www.tnomedialab.nl/mmsys16/dash-srd/. Each directory contains the content of a video. In a subdirectory named "mpeg_dash_srd" there is a .mpd file, the link to that file can be used to open a video. When hosting content yourself, it is important to consider Cross Domain request policy. In case the MPD file and content reside on a different host and/or port than the dash-srd.js player, you need to take care of the following. Either an Allow Cross Origin Request header needs to be used on the content host, or the URL needs to be routed. With NGINX you can route incoming traffic on http://localhost/ to http://localhost/public  for the SRD player and http://localhost/content to http://contentserver for the content.
+For your convenience, we have example content at http://www.tnomedialab.nl/mmsys16/dash-srd/non-overlapping/. Each directory contains the content of a video. In a subdirectory named "mpeg_dash_srd" there is a .mpd file, the link to that file can be used to open a video. When hosting content yourself, it is important to consider Cross Domain request policy. In case the MPD file and content reside on a different host and/or port than the dash-srd.js player, you need to take care of the following. Either an Allow Cross Origin Request header needs to be used on the content host, or the URL needs to be routed. With NGINX you can route incoming traffic on http://localhost/ to http://localhost/public  for the SRD player and http://localhost/content to http://contentserver for the content.
 
 Python SimpleHTTPServer is easy to use for testing environments. Just go to your local repository directory with a command line tool and type python –m SimpleHTTPServer (or python 3 –m http.server when on Python 3). This will host the dash-srd.js player on http://localhost:8000/public/
 

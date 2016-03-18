@@ -118,10 +118,6 @@
         <div id="muteBtn" class="btn-mute" title="Mute" onclick="muteSound()">
             <span id="iconMute" class="icon-mute-off"></span>
         </div>
-        
-        <!-- <div id="captionBtn" class="btn-caption" title="Closed Caption">
-            <span class="icon-caption"></span>
-        </div> commented out because captions are not supported (yet) -->
 
         <span id="videoDuration" class="duration-display">00:00:00</span>
 
@@ -132,17 +128,17 @@
     <br>
 
     <div id="videoLoader"> 
-    <input type="text" id="mpdURL">
+    <input type="text" id="mpdURL" value="http://www.tnomedialab.nl/mmsys16/dash-srd/non-overlapping/Dancers/output.mpd">
     <input type="submit" name="Open video" id="mpdButton" onclick="openVideo()" value="Open video" />
     </div>
-    
+    <br>    
+    <br>  
+    <br>  
+    <p id="usageHint">Double click on a video zooms in or out. When zoomed in, the video can also be dragged.</p>
 </div>
 <br>    
 <br>  
 <br>  
 <br>  
-<p style="position: absolute; bottom: 10%; left: 30%; right: 30%; font-family: Arial; font-size: 14px; color: darkgray;">Example url: http://localhost:8000/Documents/Test%20content/Sample%20SRD/output.mpd</p>
-    
-
 </body> 
 </html>
