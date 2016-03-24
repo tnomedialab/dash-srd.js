@@ -1,7 +1,8 @@
 /* 
-* The copyright in this software is being made available under the license below. 
-* This software may be subject to other third party and TNO rights, 
-* including patent rights, and no such rights are granted under this license.
+* The copyright in this software is being made available under the following 
+* TNO license terms. This software may be subject to other third party and 
+* TNO intellectual property rights, including patent rights, 
+* and no such rights are granted under this license.
 *
 * Created by Jorrit van den Berg on 7/12/15.
 * Copyright (c) 2016, TNO.
@@ -15,14 +16,13 @@
 *  * Redistributions in binary form must reproduce the above copyright notice,
 *    this list of conditions and the following disclaimer in the documentation
 *    and/or other materials provided with the distribution.
-*  * Neither the name of TNO nor the names of its contributors may
+*  * Neither the name of TNO nor the names of its employees may
 *    be used to endorse or promote products derived from this software without
 *    specific prior written permission.
 *
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-* ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS
+* THIS SOFTWARE IS PROVIDED BY TNO "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+* INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+* FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL TNO
 * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
 * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
 * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -115,8 +115,6 @@ $(document).ready(function() {
     fallBackLayer = document.getElementById("fallBackLayer");
     zoomLayer1 = document.getElementById("zoomLayer1");
     zoomLayer2 = document.getElementById("zoomLayer2");
-    zoomLayer1Hammer = new Hammer(zoomLayer1);
-    zoomLayer2Hammer = new Hammer(zoomLayer2);
     video1 = document.getElementById("video1");
     video2 = document.getElementById("video2");
     video3 = document.getElementById("video3");
@@ -151,4 +149,14 @@ $(document).ready(function() {
     timeUpdateIntervals = {Chrome:250, Safari:250, Opera: 250, IE:250, Edge:250, Other:250};
     browserType = detectBrowser();
     
+    // Construct Hammer.js instances for gesture events on mobile devices.
+    zoomLayer1Hammer = new Hammer(zoomLayer1, {
+    
+        recognizers: [[Hammer.Pan,{ direction: Hammer.DIRECTION_ALL }],]
+    });
+    
+    zoomLayer2Hammer = new Hammer(zoomLayer2, {
+    
+        recognizers: [[Hammer.Pan,{ direction: Hammer.DIRECTION_ALL }],]
+    });
 });
