@@ -67,8 +67,8 @@ http://localhost:8000/public/
 
 Alternatively, host dash.all.js and dash-srd.min.js from the build
 directory on a different webserver and make sure that they are included
-in your HTML file with the appropriate URL. See `index.html` from the
-“public” directory as an example. The scripts are enclosed between the
+in your HTML file with the appropriate URL. See `index.html` from the `public`
+directory as an example. The scripts are enclosed between the
 <head> and </head> tags. The dash.js script is modified to support
 manifest files as objects. Notice that there are two external libraries,
 jQuery and Popcorn.js. Those can be downloaded from the CDN URLs as in
@@ -87,6 +87,7 @@ the element id references in the Initializer.js script as well.
 2. [install nodejs](http://nodejs.org/)
 3. [install grunt](http://gruntjs.com/getting-started)
  * npm install -g grunt-cli
+4. grunt
 
 The source files are contained in the `src` directory. They consist
 of the player files, in subdirectory `srdplayer`, and utilities for
