@@ -43,10 +43,8 @@ assumption is that the first AdaptationSet of the MPD contains
 the legacy content which is also the fallback layer of the
 dash-srd.js player. Having such legacy content enables backward
 compatibility of the MPD regarding non-SRD aware DASH players. And the
-second is that the audio of the fallback layer is not multiplexed.
-
-**TOASK ?**
-This will be in the second AdaptationSet of the manifest file.
+second is that if the fallbacklayer has non-multiplexed audio, 
+the audio will be in the second AdaptationSet of the manifest file.
 
 ## License
 Please view the license in the LICENSE.md file.
@@ -87,7 +85,6 @@ the element id references in the Initializer.js script as well.
 2. [install nodejs](http://nodejs.org/)
 3. [install grunt](http://gruntjs.com/getting-started)
  * npm install -g grunt-cli
-4. grunt
 
 The source files are contained in the `src` directory. They consist
 of the player files, in subdirectory `srdplayer`, and utilities for
