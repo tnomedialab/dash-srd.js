@@ -1,13 +1,13 @@
 # dash-srd.js
 
 dash-srd.js is a DASH player implementing the tiled
-streaming. It allows the user to freely navigate
+streaming concept. It allows the user to freely navigate
 in a high resolution video panorama while downloading just what
-is needed to render the user's viewpoint,
+is needed to render the user's viewpoint. 
 
-## Getting started
-
-The player can be tested in the online demo [here](http://url-of-the-demo.com).
+The software provided here is a proof of concept and does not
+reflect a final end-user product. Currently it works on desktop and
+mobile devices are not yet supported.
 
 ## Background
 
@@ -94,11 +94,3 @@ with the grunt command line. Note that you muse the command in the
 dash-srd directory and grunt must be correctly installed.
 If all went well (Grunt will tell you), the dash-srd.min.js script
 can be found in the `build` directory.
-
-### SRD test content
-
-For your convenience, we have test content available :
-
-|Content|Source|MPD URL|
-|-------|------|-------|
-|Dancers|Netflix|http://www.tnomedialab.nl/mmsys16/dash-srd/non-overlapping/|
