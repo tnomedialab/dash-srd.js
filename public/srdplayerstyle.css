@@ -1,0 +1,180 @@
+/*
+* The copyright in this software is being made available under the license below. 
+* This software may be subject to other third party and TNO rights,
+* including patent rights, and no such rights are granted under this license.
+*
+* Created by Jorrit van den Berg on 7/12/15.
+* Copyright (c) 2016, TNO.
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+*  * Redistributions of source code must retain the above copyright notice,
+*    this list of conditions and the following disclaimer.
+*  * Redistributions in binary form must reproduce the above copyright notice,
+*    this list of conditions and the following disclaimer in the documentation
+*    and/or other materials provided with the distribution.
+*  * Neither the name of TNO nor the names of its contributors may
+*    be used to endorse or promote products derived from this software without
+*    specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+* ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS
+* BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+* SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+* INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+* CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+* ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+* THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+table {
+    display: block;
+    border-collapse: collapse;
+    border:none;
+    outline: none;
+}
+
+th, tr {
+    padding: 0;
+    border-collapse: collapse;
+    border:none;
+    outline: none;
+}
+
+td, video {   
+    padding: 0;
+    vertical-align: top;
+    border-collapse: collapse;
+    border:none;
+    outline: none;
+}
+
+video.fullscreen { 
+    width: 100%; 
+    height: 100%;
+}
+
+#SRDPlayer {
+    position: absolute;
+    width: 640px;
+    height: 548px;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border-collapse: collapse;
+    border:none;
+    outline: none;
+}
+
+#videoContainer {
+    padding: 0;
+    border: none;
+    border-collapse: collapse;
+    position: relative;
+    width: 640px;
+    height: 360px;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+    background-color: black;
+}
+
+#videoContainer.fullscreen{
+    padding: 0;
+    border: none;
+    border-collapse: collapse;
+    width: 100%; 
+    height: 100%; 
+    top: 0; 
+    left: 0; 
+    margin-left: 0;
+    margin-right: 0;
+    overflow: hidden;
+    background-color: black;
+ }
+
+#bannerbox {
+    position:absolute; 
+    top:0; 
+    left: 0;
+    width:640px;
+    height:360px;
+    background:url(srdbanner.png) no-repeat center center;
+    background-color: whitesmoke;
+}
+
+#bannerbox.fullscreen {
+    position:absolute; 
+    top:0; 
+    left: 0;
+    background-color: whitesmoke;
+    height: 100%;
+    width: 100%;
+}
+
+button:focus, input:focus {
+    outline:0;
+}
+
+#fallBackLayer {
+    position:absolute; 
+    width:640px;
+    height:360px;
+    top:0; 
+    left: 0;
+}
+
+#fallBackLayer.fullscreen {
+    width: 100%; 
+    height: 100%;
+    background-color: black;
+}
+
+#zoomLayer1, #zoomLayer2 { 
+    padding: 0;
+    margin: 0;    
+    border-collapse: collapse;
+    border: none;
+    position:absolute; 
+    top:0; 
+    left: 0;
+    background-color: black;
+}
+
+#zoomLayer1.fullscreen, #zoomLayer2.fullscreen { 
+    border-collapse: collapse;
+    border: none;
+    background-color: black;
+}
+
+#videoloader {
+    position:relative;
+    width: 640px;
+    text-align:center;
+}
+
+#mpdURL {
+    position:absolute;
+    left: 0;
+    width: 550px;
+}
+
+#mpdButton {
+    position:absolute;
+    right: 0%;
+}
+
+#usageHint {
+    position: static; 
+    text-align: center;
+    font-family: Arial; 
+    font-size: 14px; 
+    color: darkgray;
+}

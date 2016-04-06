@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<!-- 
+* The copyright in this software is being made available under the following 
+* TNO license terms. This software may be subject to other third party and 
+* TNO intellectual property rights, including patent rights, 
+* and no such rights are granted under this license.
+*
+* Created by Jorrit van den Berg on 7/12/15.
+* Copyright (c) 2016, TNO.
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+*  * Redistributions of source code must retain the above copyright notice,
+*    this list of conditions and the following disclaimer.
+*  * Redistributions in binary form must reproduce the above copyright notice,
+*    this list of conditions and the following disclaimer in the documentation
+*    and/or other materials provided with the distribution.
+*  * Neither the name of TNO nor the names of its employees may
+*    be used to endorse or promote products derived from this software without
+*    specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY TNO "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+* INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+* FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL TNO
+* BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+* CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+* SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+* INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+* CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+* ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+* THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<html> 
+    
+<head>
+    <meta charset="UTF-8">
+    <title>SRD Player</title>
+ 
+    <!--CSS-->
+    <link rel="stylesheet" type="text/css" href="srdplayerstyle.css">
+    <link rel="stylesheet" type="text/css" href="controlbar.css">
+   
+    <!--3rd Party JavaScript libs-->
+    <script src="/build/dash.all.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="http://cdn.popcornjs.org/code/dist/popcorn.min.js"></script>
+    <script src="/src/lib/hammer.min.js"></script>
+    <script src="/src/lib/jquery.hammer.js"></script>
+    
+    <!--SRD Player JavaScript -->
+    <script src = "../build/dash-srd.min.js"></script>   
+</head>
+
+
+<body class="unselectable" onLoad="Dash.createAll()"> 
+
+<div id="SRDPlayer" class="unselectable">   
+    <div id="videoContainer">    
+    <div id="bannerbox">
+    </div>    
+    <video id="fallBackLayer" width="640" class="dashjs-player unselectable"></video>
+    <table id="zoomLayer1" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>  
+         <video id="video1" width="640" class="dashjs-player unselectable"></video>
+        </td>
+        <td>
+         <video id="video2" width="640" class="dashjs-player unselectable"></video>
+        </td>    
+      </tr>
+      <tr>		
+        <td>
+         <video id="video3" width="640" class="dashjs-player unselectable"></video>       
+        </td>
+        <td>
+         <video id="video4" width="640" class="dashjs-player"></video>
+        </td>		
+      </tr>
+    </table>
+        
+    <table id="zoomLayer2" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>  
+         <video id="video5" width="640" class="dashjs-player unselectable"></video>
+        </td>
+        <td>
+         <video id="video6" width="640" class="dashjs-player unselectable"></video>
+        </td>    
+      </tr>
+      <tr>		
+        <td>
+         <video id="video7" width="640" class="dashjs-player unselectable"></video>       
+        </td>
+        <td>
+         <video id="video8" width="640" class="dashjs-player unselectable"></video>
+        </td>		
+      </tr>
+    </table>
+
+    </div>
+    
+    <div id="videoController" class="video-controller unselectable"> 
+        
+        
+        <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause" onclick="playPause()">
+            <span id="iconPlayPause" class="icon-play"></span>
+        </div>
+        <span id="videoTime" class="time-display">00:00:00</span>
+
+        <div id="fullscreenBtn" class="btn-fullscreen" title="Fullscreen" onclick="switchScreenMode()">
+            <span id="icon-fullscreen" class="icon-fullscreen-enter"></span>
+        </div>
+        <input type="range" id="volumebar" class="volumebar" value="1" min="0" max="1" step="0.01" />
+
+        <div id="muteBtn" class="btn-mute" title="Mute" onclick="muteSound()">
+            <span id="iconMute" class="icon-mute-off"></span>
+        </div>
+
+        <span id="videoDuration" class="duration-display">00:00:00</span>
+
+        <div class="seekContainer">
+            <input type="range" id="seekbar" value="0" class="seekbar" min="0" step="0.01"/>
+        </div>
+    </div> 
+    <br>
+
+    <div id="videoLoader"> 
+    <input type="text" id="mpdURL" value="http://www.tnomedialab.nl/mmsys16/dash-srd/non-overlapping/Dancers/output.mpd">
+    <input type="submit" name="Open video" id="mpdButton" onclick="openVideo()" value="Open video" />
+    </div>
+    <br>    
+    <br>  
+    <br>  
+    <p id="usageHint">Double click on a video zooms in or out. When zoomed in, the video can also be dragged.</p>
+</div>
+<br>    
+<br>  
+<br>  
+<br>  
+</body> 
+</html>
