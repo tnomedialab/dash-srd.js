@@ -6,8 +6,11 @@ in a high resolution video panorama while downloading just what
 is needed to render the user's viewpoint. 
 
 The software provided here is a proof of concept and does not
-reflect a final end-user product. Currently it works on desktop and
-mobile devices are not yet supported.
+reflect the performances of a final end-user product.
+
+## Requirements
+
+Currently it works on desktop and mobile devices are not yet supported.
 
 ## Background
 
@@ -67,15 +70,15 @@ Alternatively, host dash.all.js and dash-srd.min.js from the build
 directory on a different webserver and make sure that they are included
 in your HTML file with the appropriate URL. See `index.html` from the `public`
 directory as an example. The scripts are enclosed between the
-<head> and </head> tags. The dash.js script is modified to support
+`<head>` and `</head>` tags. The dash.js script is modified to support
 manifest files as objects. Notice that there are two external libraries,
 jQuery and Popcorn.js. Those can be downloaded from the CDN URLs as in
-the index.html example.
+the `index.html` example.
 
 The div’s and tables of the `index.html` file are the DOM elements
 of the player. Their id’s and classes are used within the
 dash-srd.min.js script, so they can only be changed if you modify
-the element id references in the Initializer.js script as well.
+the element id references in the `Initializer.js` script as well.
 
 ## Development
 
