@@ -32,42 +32,25 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-module.exports = function(grunt) {
+function milliSecondsToTimeString(inputMilliSeconds) {
+    
+    var durationDate = new Date(inputMilliSeconds);
+    var hh = durationDate.getUTCHours();
+    var mm = durationDate.getUTCMinutes();
+    var ss = durationDate.getSeconds();   
 
-  // Project configuration.
-  grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
-    uglify: {
-      options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-      },
-      build: {
-        src: ['src/srdplayer/Initializer.js',
-            'src/srdplayer/VideoSynchroniser.js',
-            'src/utils/ArrayTools.js',
-            'src/utils/ServiceBus.js',
-            'src/utils/CrossOriginRequest.js',
-            'src/utils/xml2json.js',
-            'src/utils/Matchers.js',
-            'src/utils/DateTime.js',
-            'src/utils/BrowserDetector.js',
-            'src/srdplayer/DashLauncher.js',
-            'src/srdplayer/MPDRetriever.js',
-            'src/srdplayer/MPDParser.js',
-            'src/srdplayer/MPDAttacher.js',
-            'src/srdplayer/MPDManager.js',
-            'src/srdplayer/PlaybackControls.js',
-            'src/srdplayer/UIEventHandlers.js',
-            'src/srdplayer/PlayerEventHandlers.js'],
-        dest: 'build/<%= pkg.name %>.min.js'
-      }
-    }
-  });
+    if (hh < 10) {hh = "0"+hh;}
+    if (mm < 10) {mm = "0"+mm;}
+    if (ss < 10) {ss = "0"+ss;}
 
-  // Load the plugin that provides the "uglify" task.
-  grunt.loadNpmTasks('grunt-contrib-uglify');
+    var timeString = hh + ":" + mm + ":" + ss;
+    return timeString;
+}
 
-  // Default task(s).
-  grunt.registerTask('default', ['uglify']);
+function secondsToTimeString(inputSeconds) {
+    
+    var inputMilliSeconds = inputSeconds * 1000;
+    var timeString = milliSecondsToTimeString(inputMilliSeconds);
+    return timeString;
+}
 
-};

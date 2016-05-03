@@ -32,42 +32,48 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-module.exports = function(grunt) {
+function detectBrowser(){
 
-  // Project configuration.
-  grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
-    uglify: {
-      options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-      },
-      build: {
-        src: ['src/srdplayer/Initializer.js',
-            'src/srdplayer/VideoSynchroniser.js',
-            'src/utils/ArrayTools.js',
-            'src/utils/ServiceBus.js',
-            'src/utils/CrossOriginRequest.js',
-            'src/utils/xml2json.js',
-            'src/utils/Matchers.js',
-            'src/utils/DateTime.js',
-            'src/utils/BrowserDetector.js',
-            'src/srdplayer/DashLauncher.js',
-            'src/srdplayer/MPDRetriever.js',
-            'src/srdplayer/MPDParser.js',
-            'src/srdplayer/MPDAttacher.js',
-            'src/srdplayer/MPDManager.js',
-            'src/srdplayer/PlaybackControls.js',
-            'src/srdplayer/UIEventHandlers.js',
-            'src/srdplayer/PlayerEventHandlers.js'],
-        dest: 'build/<%= pkg.name %>.min.js'
-      }
+    var detectedBrowser;
+    var isOpera = false;
+    var isIE = false;
+  
+    if (!!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0) {
+        
+        detectedBrowser = "Chrome"; // Opera 8.0+ 
+        isOpera = true;
     }
-  });
 
-  // Load the plugin that provides the "uglify" task.
-  grunt.loadNpmTasks('grunt-contrib-uglify');
+    if (typeof InstallTrigger !== 'undefined') {
+        
+        detectedBrowser = "FireFox";   // Firefox 1.0+
+    }   
 
-  // Default task(s).
-  grunt.registerTask('default', ['uglify']);
+    if (Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0) {
+        
+        detectedBrowser = "Safari";   // Safari 3+: 
+    }
 
-};
+    if (!!window.chrome && !isOpera === true) {
+        
+        detectedBrowser = "Chrome"; // Chrome 1+
+    }
+    
+    if (/*@cc_on!@*/false || !!document.documentMode) {
+        
+        detectedBrowser = "IE";  // IE6+
+        isIE = true;
+    }
+
+    if (!isIE && !!window.StyleMedia) {
+        
+        detectedBrowser = "Edge"; // Edge 20+
+    }
+
+    if (detectedBrowser === undefined){
+        
+        detectedBrowser = "Other";
+    }
+
+    return detectedBrowser;
+}

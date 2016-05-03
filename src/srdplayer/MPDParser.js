@@ -32,42 +32,52 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-module.exports = function(grunt) {
+/* Script to parse JSON extracted from incoming MPD file 
+ * and fire either an SRD-MPD event or a Non-SRD-MPD event
+ * based on the presence of the SupplementalProperty from the
+ * Spatial Reference Description. The MPD is included as 
+ * payload of the event message. 
+ */
 
-  // Project configuration.
-  grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
-    uglify: {
-      options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-      },
-      build: {
-        src: ['src/srdplayer/Initializer.js',
-            'src/srdplayer/VideoSynchroniser.js',
-            'src/utils/ArrayTools.js',
-            'src/utils/ServiceBus.js',
-            'src/utils/CrossOriginRequest.js',
-            'src/utils/xml2json.js',
-            'src/utils/Matchers.js',
-            'src/utils/DateTime.js',
-            'src/utils/BrowserDetector.js',
-            'src/srdplayer/DashLauncher.js',
-            'src/srdplayer/MPDRetriever.js',
-            'src/srdplayer/MPDParser.js',
-            'src/srdplayer/MPDAttacher.js',
-            'src/srdplayer/MPDManager.js',
-            'src/srdplayer/PlaybackControls.js',
-            'src/srdplayer/UIEventHandlers.js',
-            'src/srdplayer/PlayerEventHandlers.js'],
-        dest: 'build/<%= pkg.name %>.min.js'
+"use strict";
+   
+var MPDParser = function() {
+  ServiceBus.subscribe("MPD-incoming", this.parseMPD, "MPDParser");
+};
+
+MPDParser.prototype = {
+  parseMPD: function (data) {
+
+    mpdURL = data[0];
+    
+    var x2js = new X2JS(matchers,'', true);
+    var mpdJSON = x2js.xml_str2json(data[1]);
+
+    if ($.isArray(mpdJSON.Period.AdaptationSet)) {
+
+      if ("SupplementalProperty" in mpdJSON.Period.AdaptationSet[0]) {
+
+          ServiceBus.publish("SRD-MPD", [mpdURL, mpdJSON]);      
+
+      } else {
+
+          ServiceBus.publish("Non-SRD-MPD", [mpdURL, mpdJSON]);
+
+      }
+
+    } else {
+
+      if ("SupplementalProperty" in mpdJSON.Period.AdaptationSet) {
+
+          ServiceBus.publish("SRD-MPD", [mpdURL, mpdJSON]);
+
+      } else {
+
+          ServiceBus.publish("Non-SRD-MPD", [mpdURL, mpdJSON]);
+
       }
     }
-  });
 
-  // Load the plugin that provides the "uglify" task.
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-
-  // Default task(s).
-  grunt.registerTask('default', ['uglify']);
-
+    
+  }
 };

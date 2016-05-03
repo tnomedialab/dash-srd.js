@@ -32,42 +32,56 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-module.exports = function(grunt) {
+// Script to enable server side Publishing/Subscribing.
 
-  // Project configuration.
-  grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
-    uglify: {
-      options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-      },
-      build: {
-        src: ['src/srdplayer/Initializer.js',
-            'src/srdplayer/VideoSynchroniser.js',
-            'src/utils/ArrayTools.js',
-            'src/utils/ServiceBus.js',
-            'src/utils/CrossOriginRequest.js',
-            'src/utils/xml2json.js',
-            'src/utils/Matchers.js',
-            'src/utils/DateTime.js',
-            'src/utils/BrowserDetector.js',
-            'src/srdplayer/DashLauncher.js',
-            'src/srdplayer/MPDRetriever.js',
-            'src/srdplayer/MPDParser.js',
-            'src/srdplayer/MPDAttacher.js',
-            'src/srdplayer/MPDManager.js',
-            'src/srdplayer/PlaybackControls.js',
-            'src/srdplayer/UIEventHandlers.js',
-            'src/srdplayer/PlayerEventHandlers.js'],
-        dest: 'build/<%= pkg.name %>.min.js'
+"use strict";
+
+var lastUid = -1;
+var ServiceBus = {
+
+  topics: {},
+
+  subscribe: function(topic, listener, subscriber) {
+
+    // Create the topic if not yet created
+    if(!this.topics[topic]) this.topics[topic] = [];
+
+    // Create unsubscribe token and add the listener  
+    var token = (++lastUid).toString();
+
+        this.topics[topic].push({listener: listener, token: token, subscriber: subscriber});
+
+        var subscriber = subscriber;
+        console.log("Subscribing " + subscriber + " to topic " + topic);      
+
+    // Return token for unsubscribing
+    return token;
+  },
+
+  unsubscribe: function(topic, token) {
+
+    for (var i = 0; i < this.topics[topic].length; i++) {
+
+      if (this.topics[topic][i]['token'] === token){
+        console.log("Unsubscribing " + this.topics[topic][i]['subscriber'] + " from topic" + topic);  
+        this.topics[topic].splice(i, 1);        
       }
     }
-  });
 
-  // Load the plugin that provides the "uglify" task.
-  grunt.loadNpmTasks('grunt-contrib-uglify');
+  },
 
-  // Default task(s).
-  grunt.registerTask('default', ['uglify']);
+  publish: function(topic, data) {
+    // Return if the topic doesn't exist, or there are no listeners
+    var numberOfListeners = this.topics[topic].length; 
+    if(!this.topics[topic] || numberOfListeners < 1) return;
+
+    for (var i = 0; i < numberOfListeners; i++) {
+      var listener = this.topics[topic][i]['listener'];
+            console.log("Publishing topic " + topic + " to subscriber " + this.topics[topic][i]['subscriber']);
+      listener(data || {});
+    }
+
+  }
 
 };
+

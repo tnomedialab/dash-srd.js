@@ -32,42 +32,43 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-module.exports = function(grunt) {
+// Script to retrieve MPD files and convert them to JSON.
 
-  // Project configuration.
-  grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
-    uglify: {
-      options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-      },
-      build: {
-        src: ['src/srdplayer/Initializer.js',
-            'src/srdplayer/VideoSynchroniser.js',
-            'src/utils/ArrayTools.js',
-            'src/utils/ServiceBus.js',
-            'src/utils/CrossOriginRequest.js',
-            'src/utils/xml2json.js',
-            'src/utils/Matchers.js',
-            'src/utils/DateTime.js',
-            'src/utils/BrowserDetector.js',
-            'src/srdplayer/DashLauncher.js',
-            'src/srdplayer/MPDRetriever.js',
-            'src/srdplayer/MPDParser.js',
-            'src/srdplayer/MPDAttacher.js',
-            'src/srdplayer/MPDManager.js',
-            'src/srdplayer/PlaybackControls.js',
-            'src/srdplayer/UIEventHandlers.js',
-            'src/srdplayer/PlayerEventHandlers.js'],
-        dest: 'build/<%= pkg.name %>.min.js'
+"use strict";
+
+var MPDRetriever = function (params) {
+    this.params = params;
+};
+
+MPDRetriever.prototype = {
+  retrieveAndConvert: function (mpdURL, callback) {
+
+    crossOriginRequest(mpdURL, function(err, data) {
+
+      if (err) {
+
+      return err;
+    }   
+      callback(null, data); 
+  }); 
+  
+},
+
+  getMPD: function () {
+ 
+    var mpdURL = this.params.mpdURL;
+
+    this.retrieveAndConvert (mpdURL, function(err, data) {
+
+      if (err) {
+
+        console.log(err);    
+      
+      } else {
+      
+        ServiceBus.publish("MPD-incoming", [mpdURL, data]);
+
       }
-    }
-  });
 
-  // Load the plugin that provides the "uglify" task.
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-
-  // Default task(s).
-  grunt.registerTask('default', ['uglify']);
-
+});}
 };

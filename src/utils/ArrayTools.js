@@ -32,42 +32,37 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-module.exports = function(grunt) {
-
-  // Project configuration.
-  grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
-    uglify: {
-      options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-      },
-      build: {
-        src: ['src/srdplayer/Initializer.js',
-            'src/srdplayer/VideoSynchroniser.js',
-            'src/utils/ArrayTools.js',
-            'src/utils/ServiceBus.js',
-            'src/utils/CrossOriginRequest.js',
-            'src/utils/xml2json.js',
-            'src/utils/Matchers.js',
-            'src/utils/DateTime.js',
-            'src/utils/BrowserDetector.js',
-            'src/srdplayer/DashLauncher.js',
-            'src/srdplayer/MPDRetriever.js',
-            'src/srdplayer/MPDParser.js',
-            'src/srdplayer/MPDAttacher.js',
-            'src/srdplayer/MPDManager.js',
-            'src/srdplayer/PlaybackControls.js',
-            'src/srdplayer/UIEventHandlers.js',
-            'src/srdplayer/PlayerEventHandlers.js'],
-        dest: 'build/<%= pkg.name %>.min.js'
+function orderByProperty(prop) {
+    
+    var args = Array.prototype.slice.call(arguments, 1);
+    return function (x, y) {
+        
+      var equality = x[prop] - y[prop];
+      if (equality === 0 && arguments.length > 1) {
+        return orderByProperty.apply(null, args)(x, y);
       }
+      return equality;
+      
+    };
+}
+
+function countUniques(arr) {
+    
+    var a = [], 
+        b = [], 
+        prev;
+    
+    for ( var i = 0; i < arr.length; i++ ) {
+        if ( arr[i]["x"] !== prev ) {
+            a.push(arr[i]["x"]);
+            b.push(1);
+        } else {
+            b[b.length-1]++;
+        }
+        prev = arr[i]["x"];
     }
-  });
+    
+    return [a, b];
+}
 
-  // Load the plugin that provides the "uglify" task.
-  grunt.loadNpmTasks('grunt-contrib-uglify');
 
-  // Default task(s).
-  grunt.registerTask('default', ['uglify']);
-
-};

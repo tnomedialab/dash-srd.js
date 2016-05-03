@@ -32,42 +32,55 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-module.exports = function(grunt) {
+function crossOriginRequest (url, callback){
+    
+    var isIE8 = window.XDomainRequest ? true : false;
+    var invocation = createCrossOriginRequest();
 
-  // Project configuration.
-  grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
-    uglify: {
-      options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-      },
-      build: {
-        src: ['src/srdplayer/Initializer.js',
-            'src/srdplayer/VideoSynchroniser.js',
-            'src/utils/ArrayTools.js',
-            'src/utils/ServiceBus.js',
-            'src/utils/CrossOriginRequest.js',
-            'src/utils/xml2json.js',
-            'src/utils/Matchers.js',
-            'src/utils/DateTime.js',
-            'src/utils/BrowserDetector.js',
-            'src/srdplayer/DashLauncher.js',
-            'src/srdplayer/MPDRetriever.js',
-            'src/srdplayer/MPDParser.js',
-            'src/srdplayer/MPDAttacher.js',
-            'src/srdplayer/MPDManager.js',
-            'src/srdplayer/PlaybackControls.js',
-            'src/srdplayer/UIEventHandlers.js',
-            'src/srdplayer/PlayerEventHandlers.js'],
-        dest: 'build/<%= pkg.name %>.min.js'
+    function createCrossOriginRequest(url, crossOriginRequestHandler) {
+      var request;
+      if (isIE8) {
+        request = new window.XDomainRequest();
+        }
+        else {
+          request = new XMLHttpRequest();
+        }
+      return request;
+    }
+
+    function callOtherDomain() {
+      if (invocation) {
+        if(isIE8) {
+          invocation.onload = crossOriginRequestHandler;
+          invocation.open("GET", url, true);
+          invocation.send();
+        }
+        else {
+          invocation.open('GET', url, true);
+          invocation.onreadystatechange = crossOriginRequestHandler;
+          invocation.send();
+        }
+      }
+      else {
+        console.log("callOtherDomain: " + "No Invocation TookPlace At All");
       }
     }
-  });
 
-  // Load the plugin that provides the "uglify" task.
-  grunt.loadNpmTasks('grunt-contrib-uglify');
+    function crossOriginRequestHandler(evtXHR) {
+      if (invocation.readyState == 4) {
+          if (invocation.status == 200) {
+              var response = invocation.responseText;
+              
+              callback(null, response);
+          }
+          else {
+              callback(invocation.statusText, null);
+              console.log("crossOriginRequestHandler: " + "Invocation Errors Occured");
+          }
+      }
+    }
+    
+    callOtherDomain();
+}
 
-  // Default task(s).
-  grunt.registerTask('default', ['uglify']);
 
-};
