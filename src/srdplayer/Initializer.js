@@ -51,6 +51,18 @@ var SRDPlayer,
     video8,
     zoomLayer1VideoElements,
     zoomLayer2VideoElements,
+    timingObject,
+    syncFallBackLayer,
+    syncVideo1,
+    syncVideo2,
+    syncVideo3,
+    syncVideo4,
+    syncVideo5,
+    syncVideo6,
+    syncVideo7, 
+    syncVideo8,
+    zoomLayer1VideoSyncObjects,
+    zoomLayer2VideoSyncObjects,
     visibleElement,
     zoomLayer1PlayerObjects,
     zoomLayer2PlayerObjects,
@@ -127,6 +139,11 @@ $(document).ready(function() {
 
     zoomLayer1VideoElements = [video1, video2, video3, video4];
     zoomLayer2VideoElements = [video5, video6, video7, video8];  
+
+    timingObject = timingObject = new TIMINGSRC.TimingObject({range: [0, 100]});
+    zoomLayer1VideoSyncObjects = [syncVideo1, syncVideo2, syncVideo3, syncVideo4];
+    zoomLayer2VideoSyncObjects = [syncVideo5, syncVideo6, syncVideo7, syncVideo8];
+
     zoomLayer1PlayerObjects = [];
     zoomLayer2PlayerObjects = [];
     spatialOrderingZoomLevel1 = [];

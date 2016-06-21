@@ -131,7 +131,8 @@ tiledVideoAttacher.prototype = {
 
         if (fallBackLayer.paused) {
             fallBackLayer.play();
-            
+            // syncFallBackLayer = new TIMINGSRC.MediaSync(fallBackLayer, timingObject);            
+
             if ($("#iconPlayPause").hasClass("icon-play")) { 
                 $("#iconPlayPause").removeClass("icon-play"); 
             }
@@ -152,6 +153,7 @@ tiledVideoAttacher.prototype = {
         // Add pseudo class to seekbar if user is moving the scrubber,
         // otherwise it can not be moved
         var seekbar = document.getElementById("seekbar");
+        seekbar.setAttribute('max', duration);
         seekbar.setAttribute('onmousedown', '$("#seekbar").toggleClass("user-seek");');
         seekbar.setAttribute('onmouseup', '$("#seekbar").removeClass("user-seek");');
 
@@ -167,8 +169,6 @@ tiledVideoAttacher.prototype = {
             }
             
         }, timerInterval);
-
-        SynchroniseVideos();
 
         $("#volumebar").bind("change", function() {
           var val = this.value;
@@ -373,7 +373,9 @@ tiledVideoAttacher.prototype = {
      
     for (var i = 0; i < zoomLayer1PlayerObjects.length; i++) { 
         var player = zoomLayer1PlayerObjects[i];
-        var source = [mpdURL, tileMPDs[i]];  
+        var source = [mpdURL, tileMPDs[i]];
+        zoomLayer2VideoSyncObjects[i] = null;
+        zoomLayer1VideoSyncObjects[i] = new TIMINGSRC.MediaSync(zoomLayer1VideoElements[i], timingObject);  
         player.attachSource(source);
     }  
     
@@ -513,7 +515,9 @@ tiledVideoAttacher.prototype = {
 
     for (var i = 0; i < zoomLayer2PlayerObjects.length; i++) { 
         var player = zoomLayer2PlayerObjects[i];
-        var source = [mpdURL, tileMPDs[i]];  
+        var source = [mpdURL, tileMPDs[i]];
+        zoomLayer1VideoSyncObjects[i] = null;
+        zoomLayer2VideoSyncObjects[i] = new TIMINGSRC.MediaSync(zoomLayer2VideoElements[i], timingObject); 
         player.attachSource(source);
     }  
     
