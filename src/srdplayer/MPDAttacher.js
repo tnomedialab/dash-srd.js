@@ -131,7 +131,6 @@ tiledVideoAttacher.prototype = {
 
         if (fallBackLayer.paused) {
             fallBackLayer.play();
-            // syncFallBackLayer = new TIMINGSRC.MediaSync(fallBackLayer, timingObject);            
 
             if ($("#iconPlayPause").hasClass("icon-play")) { 
                 $("#iconPlayPause").removeClass("icon-play"); 
@@ -147,8 +146,7 @@ tiledVideoAttacher.prototype = {
         document.getElementById("videoDuration").innerHTML = secondsToTimeString(duration);
 
         // Set the videotimer    
-        var timerInterval = duration / 2;  
-        
+        var timerInterval = duration / 2;      
         
         // Add pseudo class to seekbar if user is moving the scrubber,
         // otherwise it can not be moved
@@ -363,7 +361,9 @@ tiledVideoAttacher.prototype = {
     }
      
     zoomLayer1PlayerObjects = [];
-    
+
+    timingObject = new TIMINGSRC.TimingObject({position: fallBackLayer.currentTime});
+      
     for (var i = 0; i < zoomLayer1VideoElements.length; i++) { 
         var videoElement = "video" + (i + 1);
         var player = launchDashPlayer(videoElement);  
@@ -374,12 +374,10 @@ tiledVideoAttacher.prototype = {
     for (var i = 0; i < zoomLayer1PlayerObjects.length; i++) { 
         var player = zoomLayer1PlayerObjects[i];
         var source = [mpdURL, tileMPDs[i]];
-        zoomLayer2VideoSyncObjects[i] = null;
-        zoomLayer1VideoSyncObjects[i] = new TIMINGSRC.MediaSync(zoomLayer1VideoElements[i], timingObject);  
         player.attachSource(source);
     }  
     
-    initiatePlayBack(fallBackLayer, zoomLayer1VideoElements, browserType, frameRate, viewLayer);  
+    initiatePlayBack(fallBackLayer, zoomLayer1VideoElements, viewLayer);  
     updateViewLayerOnReadyState(zoomLayer1VideoElements, xPosition, yPosition, viewLayer); 
     
     if (getClickPositionEnabled === false) {
@@ -506,6 +504,8 @@ tiledVideoAttacher.prototype = {
      
     zoomLayer2PlayerObjects = [];
     
+    timingObject = new TIMINGSRC.TimingObject({position: fallBackLayer.currentTime});
+    
     for (var i = 0; i < zoomLayer2VideoElements.length; i++) { 
         var videoElement = "video" + (i + 5);
         var player = launchDashPlayer(videoElement);  
@@ -521,7 +521,7 @@ tiledVideoAttacher.prototype = {
         player.attachSource(source);
     }  
     
-    initiatePlayBack(fallBackLayer, zoomLayer2VideoElements, browserType, frameRate, viewLayer);  
+    initiatePlayBack(fallBackLayer, zoomLayer2VideoElements, viewLayer);  
     updateViewLayerOnReadyState(zoomLayer2VideoElements, xPosition, yPosition, viewLayer); 
     
   }

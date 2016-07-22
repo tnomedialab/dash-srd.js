@@ -37,48 +37,33 @@
  * are propagated to the other playing dash.js instances within that layer.
  */
 
-function initiatePlayBack(fallBackLayer, videoList, browserType, frameRate) { 
-   
-    var attachDelay,
-        currentTime1,
-        currentTime2,    
-        initialTimeOffset,
-        playBackTime;    
-
-    initialTimeOffset = 0.001;
-    attachDelay = estimateTimeUpdateFrequency(browserType, attachDelay, frameRate);
+function initiatePlayBack(fallBackLayer, videoList, viewLayer) { 
+    
 
     $("#fallBackLayer").one("timeupdate", function() {
-
-        currentTime1 = fallBackLayer.currentTime;
-
-        setTimeout(
-                (function(){
-
-                    currentTime2 = fallBackLayer.currentTime;
-
-                    if (currentTime1 < currentTime2){
-                        initialTimeOffset += (currentTime2 - currentTime1);
-                    }
-
-                    playBackTime = currentTime1 + initialTimeOffset;
-
-                    for (var i = 0; i < videoList.length; i++) {
-                        var videoTile = videoList[i];
-                        videoTile.currentTime = playBackTime;
-                    }
-
-                    if (!fallBackLayer.paused){                    
-                        for (var i = 0; i < videoList.length; i++) {
-                            var videoTile = videoList[i];
-                            videoTile.play();
-                        }
-                    }
-
-                }
-        ), attachDelay);
-    });
+        timingObject.update({position: fallBackLayer.currentTime, velocity: 0.0});
+        for (var i = 0; i < videoList.length; i++) {
+            var videoTile = videoList[i];
+            
+            if (viewLayer == zoomLayer1){
+                zoomLayer2VideoSyncObjects[i] = null;
+                zoomLayer1VideoSyncObjects[i] = new TIMINGSRC.MediaSync(zoomLayer1VideoElements[i], timingObject); 
+            } else {
+                zoomLayer1VideoSyncObjects[i] = null;
+                zoomLayer2VideoSyncObjects[i] = new TIMINGSRC.MediaSync(zoomLayer2VideoElements[i], timingObject);                
+            }
+    }
+    });  
     
+    setTimeout(function(){
+        
+            $("#fallBackLayer").one("timeupdate", function() {
+                timingObject.update({position: fallBackLayer.currentTime + 0.001, velocity: 1.0});
+            });
+
+    }, 2500);  
+
+
     var masterVideo;
         
     if (currentZoomLevel == 1) {
@@ -126,17 +111,6 @@ function initiatePlayBack(fallBackLayer, videoList, browserType, frameRate) {
     });
 }
 
-function estimateTimeUpdateFrequency(browserType, attachDelay, frameRate) {
-    
-    if (browserType === "FireFox") {
-        attachDelay = 1000 / frameRate;
-    } else {
-        attachDelay = timeUpdateIntervals[browserType];
-    }
-    
-    return attachDelay;
-}
-
 function emitBitrateChanges(playerList, masterQuality) {
 
     playerList[0].eventBus.addEventListener(MediaPlayer.events.METRIC_CHANGED, function() {
@@ -177,7 +151,7 @@ function updateViewLayerOnReadyState(videoElementsList, xPosition, yPosition, vi
         }
         
         if (i === 3){
-           updateVideoContainer(xPosition, yPosition, viewLayer, 1500, null); 
+           updateVideoContainer(xPosition, yPosition, viewLayer, 4500, null); 
         }
     }
 }

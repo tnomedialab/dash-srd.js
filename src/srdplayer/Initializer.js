@@ -75,9 +75,7 @@ var SRDPlayer,
     fullScreenFlag,
     browserWindowZoomedTo,
     fullScreenZoomedTo,
-    browserType,
     duration,
-    timeUpdateIntervals,
     initialWidth,
     initialHeight,
     initialAspectRatio,
@@ -140,7 +138,6 @@ $(document).ready(function() {
     zoomLayer1VideoElements = [video1, video2, video3, video4];
     zoomLayer2VideoElements = [video5, video6, video7, video8];  
 
-    timingObject = timingObject = new TIMINGSRC.TimingObject({range: [0, 100]});
     zoomLayer1VideoSyncObjects = [syncVideo1, syncVideo2, syncVideo3, syncVideo4];
     zoomLayer2VideoSyncObjects = [syncVideo5, syncVideo6, syncVideo7, syncVideo8];
 
@@ -163,8 +160,6 @@ $(document).ready(function() {
     video8.muted = true;
     getClickPositionEnabled = false;
     fullScreenFlag = false;
-    timeUpdateIntervals = {Chrome:250, Safari:250, Opera: 250, IE:250, Edge:250, Other:250};
-    browserType = detectBrowser();
     
     // Construct Hammer.js instances for gesture events on mobile devices.
     zoomLayer1Hammer = new Hammer(zoomLayer1, {
