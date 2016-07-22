@@ -39,12 +39,36 @@
 
 function initiatePlayBack(fallBackLayer, videoList, viewLayer) { 
     
+    if (!fallBackLayer.paused) {
+        $("#fallBackLayer").one("timeupdate", function() {
+            timingObject.update({position: fallBackLayer.currentTime, velocity: 0.0});
+            for (var i = 0; i < videoList.length; i++) {
+                var videoTile = videoList[i];
 
-    $("#fallBackLayer").one("timeupdate", function() {
+                if (viewLayer == zoomLayer1){
+                    zoomLayer2VideoSyncObjects[i] = null;
+                    zoomLayer1VideoSyncObjects[i] = new TIMINGSRC.MediaSync(zoomLayer1VideoElements[i], timingObject); 
+                } else {
+                    zoomLayer1VideoSyncObjects[i] = null;
+                    zoomLayer2VideoSyncObjects[i] = new TIMINGSRC.MediaSync(zoomLayer2VideoElements[i], timingObject);                
+                }
+        }
+        }); 
+        setTimeout(function(){
+        
+            $("#fallBackLayer").one("timeupdate", function() {
+                
+                if (!fallBackLayer.paused) {
+                    timingObject.update({position: fallBackLayer.currentTime + 0.001, velocity: 1.0});
+                }
+            });
+
+        }, 2500);  
+    } else {
         timingObject.update({position: fallBackLayer.currentTime, velocity: 0.0});
         for (var i = 0; i < videoList.length; i++) {
             var videoTile = videoList[i];
-            
+
             if (viewLayer == zoomLayer1){
                 zoomLayer2VideoSyncObjects[i] = null;
                 zoomLayer1VideoSyncObjects[i] = new TIMINGSRC.MediaSync(zoomLayer1VideoElements[i], timingObject); 
@@ -52,17 +76,8 @@ function initiatePlayBack(fallBackLayer, videoList, viewLayer) {
                 zoomLayer1VideoSyncObjects[i] = null;
                 zoomLayer2VideoSyncObjects[i] = new TIMINGSRC.MediaSync(zoomLayer2VideoElements[i], timingObject);                
             }
+        }
     }
-    });  
-    
-    setTimeout(function(){
-        
-            $("#fallBackLayer").one("timeupdate", function() {
-                timingObject.update({position: fallBackLayer.currentTime + 0.001, velocity: 1.0});
-            });
-
-    }, 2500);  
-
 
     var masterVideo;
         

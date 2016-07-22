@@ -75,19 +75,13 @@ function playPause() {
 
     if (fallBackLayer.paused) {
         fallBackLayer.play();
-        video1.play();
-        video2.play();
-        video3.play();
-        video4.play();
+        timingObject.update({position: fallBackLayer.currentTime, velocity: 1.0});
         $("#iconPlayPause").removeClass("icon-play");
         $("#iconPlayPause").toggleClass("icon-pause");
 
     } else { 
-        fallBackLayer.pause();
-        video1.pause();
-        video2.pause();
-        video3.pause();
-        video4.pause();
+        fallBackLayer.pause();        
+        timingObject.update({position: fallBackLayer.currentTime, velocity: 0.0});
         $("#iconPlayPause").removeClass("icon-pause");
         $("#iconPlayPause").toggleClass("icon-play");
     }

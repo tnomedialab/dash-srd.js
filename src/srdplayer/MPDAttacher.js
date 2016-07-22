@@ -160,6 +160,13 @@ tiledVideoAttacher.prototype = {
             
             if (!$("#seekbar").hasClass("user-seek")) {
                 $("#seekbar").val(fallBackLayer.currentTime);
+           
+            } else {
+                fallBackLayer.currentTime = $("#seekbar").val();
+                if (timingObject) {
+                    timingObject.update({position: $("#seekbar").val(), velocity: 0.0});
+                    timingObject.update({velocity: 1.0});
+                } 
             }
             
             if (fallBackLayer.currentTime == duration) {
