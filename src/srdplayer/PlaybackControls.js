@@ -75,13 +75,20 @@ function playPause() {
 
     if (fallBackLayer.paused) {
         fallBackLayer.play();
-        timingObject.update({position: fallBackLayer.currentTime, velocity: 1.0});
+        
+        if (timingObject){
+            timingObject.update({position: fallBackLayer.currentTime, velocity: 1.0});
+        }
         $("#iconPlayPause").removeClass("icon-play");
         $("#iconPlayPause").toggleClass("icon-pause");
 
     } else { 
-        fallBackLayer.pause();        
-        timingObject.update({position: fallBackLayer.currentTime, velocity: 0.0});
+        fallBackLayer.pause(); 
+        
+        if (timingObject){
+            timingObject.update({position: fallBackLayer.currentTime, velocity: 0.0});    
+        }
+
         $("#iconPlayPause").removeClass("icon-pause");
         $("#iconPlayPause").toggleClass("icon-play");
     }
