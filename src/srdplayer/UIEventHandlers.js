@@ -33,7 +33,10 @@
 */
 
 
-// This script handles click, resizing events and dragging to pan and zoom.
+/* This script handles click, resizing events and dragging to pan and zoom.
+ * Zooming to a different layer will be signalled to MPDAttacher.js via
+ * the ServiceBus.js script in utils.
+ */
 
 function onClickEvent(e) {
     

@@ -161,7 +161,9 @@ $(document).ready(function() {
     getClickPositionEnabled = false;
     fullScreenFlag = false;
     
-    // Construct Hammer.js instances for gesture events on mobile devices.
+    /* Construct Hammer.js instances for gesture events on mobile devices.
+       (currently this is not functional due to an import error of the Hammer.js library) */
+    
     zoomLayer1Hammer = new Hammer(zoomLayer1, {
     
         recognizers: [[Hammer.Pan,{ direction: Hammer.DIRECTION_ALL }],]

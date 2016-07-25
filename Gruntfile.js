@@ -49,7 +49,6 @@ module.exports = function(grunt) {
             'src/utils/xml2json.js',
             'src/utils/Matchers.js',
             'src/utils/DateTime.js',
-            'src/utils/BrowserDetector.js',
             'src/srdplayer/DashLauncher.js',
             'src/srdplayer/MPDRetriever.js',
             'src/srdplayer/MPDParser.js',

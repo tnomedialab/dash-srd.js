@@ -36,7 +36,9 @@
  * and fire either an SRD-MPD event or a Non-SRD-MPD event
  * based on the presence of the SupplementalProperty from the
  * Spatial Reference Description. The MPD is included as 
- * payload of the event message. 
+ * payload of the event message. This is an XML file which
+ * is converted to JSON with the script xml2json.js in the 
+ * utils directory.
  */
 
 "use strict";

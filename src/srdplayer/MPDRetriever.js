@@ -32,7 +32,12 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Script to retrieve MPD files and convert them to JSON.
+/* Script to retrieve MPD files from remote server.
+ * This server needs to support cross origin requests.
+ * CrossOriginRequest.js from the utils directory is used 
+ * to perform the requests.
+ */
+
 
 "use strict";
 
