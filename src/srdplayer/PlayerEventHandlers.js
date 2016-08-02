@@ -152,6 +152,7 @@ function resetPlayers(playerList) {
 
     for (var i = 0; i < playerList.length; i++) { 
         
+        
         var player = playerList[i];
         player.reset();
     }

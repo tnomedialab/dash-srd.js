@@ -99,7 +99,7 @@ function onClickEvent(e) {
 
             } else {
 
-                updateVideoContainer(xPosition, yPosition, fallBackLayer, null, 3);
+                updateVideoContainer(xPosition, yPosition, fallBackLayer, null, "double");
 
             } 
 
@@ -201,7 +201,7 @@ function onClickEvent(e) {
                 
                 } else if (currentZoomLevel === 2) {
                     
-                    updateVideoContainer(xPosition, yPosition, viewLayer, null, 0.16667);
+                    updateVideoContainer(xPosition, yPosition, viewLayer, null, 0.25); //0.16667
                     
                 }
                 
@@ -297,7 +297,7 @@ function updateVideoContainer(xPosition, yPosition, viewLayer, delay, resizeFact
 
         }
 
-        if (resizeFactor === 0.16667) {    
+        if (resizeFactor === 0.25) {    
            
             fallBackLayer.style.left = 0 + 'px';
             fallBackLayer.style.top = 0 + 'px';
@@ -322,10 +322,16 @@ function updateVideoContainer(xPosition, yPosition, viewLayer, delay, resizeFact
             fallBackLayer.style.left = xPosition + 'px';
             fallBackLayer.style.top = yPosition + 'px';
 
-        } else if (resizeFactor === 3) {
+        } else if (resizeFactor === "double") {       
+
+            var resizedHeight = parseInt(fallBackLayer.offsetHeight, 10) * 2;
+            var resizedWidth = parseInt(fallBackLayer.offsetWidth, 10) * 2; 
             
-            fallBackLayer.style.left = (xPosition - (parseInt(fallBackLayer.offsetWidth, 10)/ 2)) + 'px';
-            fallBackLayer.style.top = (yPosition - (parseInt(fallBackLayer.offsetHeight, 10)/ 2)) + 'px';
+            fallBackLayer.style.height = resizedHeight + "px";
+            fallBackLayer.style.width = resizedWidth + "px";
+          
+            fallBackLayer.style.left = (xPosition * 3) + 'px';
+            fallBackLayer.style.top = (yPosition * 3)  + 'px';            
             setVisibleElement("fallbacklayer");
             
         } else if (resizeFactor === "fullscreen zoomed") {
