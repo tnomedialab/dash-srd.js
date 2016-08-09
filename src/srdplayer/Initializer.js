@@ -73,6 +73,7 @@ var SRDPlayer,
     currentZoomLevel,
     maxZoomLevel,
     fullScreenFlag,
+    browserType,
     browserWindowZoomedTo,
     fullScreenZoomedTo,
     duration,
@@ -160,6 +161,7 @@ $(document).ready(function() {
     video8.muted = true;
     getClickPositionEnabled = false;
     fullScreenFlag = false;
+    browserType = detectBrowser();
     
     /* Construct Hammer.js instances for gesture events on mobile devices.
        (currently this is not functional due to an import error of the Hammer.js library) */
