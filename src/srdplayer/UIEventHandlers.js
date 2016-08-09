@@ -103,7 +103,7 @@ function onClickEvent(e) {
 
             } 
 
-            resetPlayers(zoomLayer1PlayerObjects);
+            zoomLayer1PlayerObjects = [];
 
             currentZoomLevel = 2;
             
@@ -160,7 +160,7 @@ function onClickEvent(e) {
 
             }
             
-            resetPlayers(zoomLayer1PlayerObjects);
+            zoomLayer1PlayerObjects = [];
 
             currentZoomLevel = 0;
             
@@ -227,7 +227,8 @@ function onClickEvent(e) {
             
         }
         
-        resetPlayers(zoomLayer2PlayerObjects);
+        zoomLayer2PlayerObjects = [];
+        
         currentZoomLevel = 0;
        
     }

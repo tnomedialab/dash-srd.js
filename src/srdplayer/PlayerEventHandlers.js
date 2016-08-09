@@ -148,16 +148,6 @@ function emitBitrateChanges(playerList, masterQuality) {
     });   
 }
 
-function resetPlayers(playerList) {
-
-    for (var i = 0; i < playerList.length; i++) { 
-        
-        
-        var player = playerList[i];
-        player.reset();
-    }
-}
-
 function updateViewLayerOnReadyState(videoElementsList, xPosition, yPosition, viewLayer) {
 
     for (var i = 0; i < videoElementsList.length; i++) {
