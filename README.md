@@ -93,7 +93,7 @@ The source files are contained in the `src` directory. They consist
 of the player files, in subdirectory `srdplayer`, and utilities for
 generic tasks in JavaScript. All the necessary source files are
 included in `Gruntfile.js`, such that you can build dash-srd.min.js
-with the grunt command line. Note that you muse the command in the
+with the grunt command line. Note that you must use the command in the
 dash-srd directory and grunt must be correctly installed.
 If all went well (Grunt will tell you), the dash-srd.min.js script
 can be found in the `build` directory.
